@@ -17,27 +17,18 @@ var express = require('express'),
     http = require('http'),
     path = require('path'),
     fs = require('fs'),
+    bodyParser = require('body-parser'),
+    methodOverride = require('method-override'),
+    logger = require('morgan'),
+    errorHandler = require('errorhandler'),
+    multipart = require('connect-multiparty'),
+    ejs = require('ejs');   
+    
 
-//HTML Render engine
-var ejs = require('ejs');
-var date = new Date();
-const tokenGenerator = require('./library/token_generator');
-
-/**
- * @Expressvalues
- *
- */
 var app = express();
-var bodyParser = require('body-parser');
-var methodOverride = require('method-override');
-var logger = require('morgan');
-var errorHandler = require('errorhandler');
-var multipart = require('connect-multiparty');
+var date = new Date();
 var multipartMiddleware = multipart();
 
-var dbCredentials = {
-    dbName: 'my_sample_db'
-};
 
 /**
  * @Configuration
@@ -119,16 +110,12 @@ initDBConnection();
 var encrypt = require('./library/encryption');
 
 
-
 app.get("/dashboard", function (request, response) {
     response.sendFile(__dirname + '/public/dashboard.html');
 });
 
 
 app.get('/', routes.index);
-
-
-
 
 
 /**
