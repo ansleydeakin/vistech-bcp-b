@@ -1,126 +1,43 @@
-/**
- * @file app.js
- * #VISTECH BCP project core service
- *
- */
-//////////////////////////////////////////////////////////////////////////////////////////////////
-/**
- * @dependencies
- */
-/**
- * Module dependencies.
- */
-require('dotenv').load();
-var express = require('express'),
-    routes = require('./routes'),
-    user = require('./routes/user'),
-    http = require('http'),
-    path = require('path'),
-    fs = require('fs'),
-    bodyParser = require('body-parser'),
-    methodOverride = require('method-override'),
-    logger = require('morgan'),
-    errorHandler = require('errorhandler'),
-    multipart = require('connect-multiparty'),
-    ejs = require('ejs');   
-    
+// Uncomment following to enable zipkin tracing, tailor to fit your network configuration:
+// var appzip = require('appmetrics-zipkin')({
+//     host: 'localhost',
+//     port: 9411,
+//     serviceName:'frontend'
+// });
 
-var app = express();
-var date = new Date();
-var multipartMiddleware = multipart();
+require('appmetrics-dash').attach();
+require('appmetrics-prometheus').attach();
+const appName = require('./../package').name;
+const http = require('http');
+const express = require('express');
+const log4js = require('log4js');
+const localConfig = require('./config/local.json');
+const path = require('path');
 
+const logger = log4js.getLogger(appName);
+logger.level = process.env.LOG_LEVEL || 'info'
+const app = express();
+const server = http.createServer(app);
 
-/**
- * @Configuration
- *
- */
-// all environments
-app.set('port', process.env.PORT || 3000);
-app.set('views', __dirname + '/public');
-app.set('view engine', 'ejs');
-app.engine('html', require('ejs').renderFile);
-app.use(logger('dev'));
-app.use(bodyParser.urlencoded({
-    extended: true
-}));
-app.use(bodyParser.json());
-app.use(methodOverride());
-app.use(express.static(path.join(__dirname, 'public')));
-app.use('/style', express.static(path.join(__dirname, '/views/style')));
+app.use(log4js.connectLogger(logger, { level: logger.level }));
+const serviceManager = require('./services/service-manager');
+require('./services/index')(app);
+require('./routers/index')(app, server);
 
-// development only
-if ('development' == app.get('env')) {
-    app.use(errorHandler());
-}
+// Add your code here
 
-
-/**
- * @CloudAntDB
- *
- */
-function getDBCredentialsUrl(jsonData) {
-    var vcapServices = JSON.parse(jsonData);
-    // Pattern match to find the first instance of a Cloudant service in
-    // VCAP_SERVICES. If you know your service key, you can access the
-    // service credentials directly by using the vcapServices object.
-    for (var vcapService in vcapServices) {
-        if (vcapService.match(/cloudant/i)) {
-            return vcapServices[vcapService][0].credentials.url;
-        }
-    }
-}
-
-function initDBConnection() {
-    //When running on Bluemix, this variable will be set to a json object
-    //containing all the service credentials of all the bound services
-    if (process.env.VCAP_SERVICES) {
-        dbCredentials.url = getDBCredentialsUrl(process.env.VCAP_SERVICES);
-    } else { //When running locally, the VCAP_SERVICES will not be set
-
-        // When running this app locally you can get your Cloudant credentials
-        // from Bluemix (VCAP_SERVICES in "cf env" output or the Environment
-        // Variables section for an app in the Bluemix console dashboard).
-        // Once you have the credentials, paste them into a file called vcap-local.json.
-        // Alternately you could point to a local database here instead of a
-        // Bluemix service.
-        // url will be in this format: https://username:password@xxxxxxxxx-bluemix.cloudant.com
-        // dbCredentials.url = getDBCredentialsUrl(fs.readFileSync("vcap-local.json", "utf-8"));
-    }
-
-    //cloudant = require('cloudant')(dbCredentials.url);
-
-    // check if DB exists if not create
-    /*
-    cloudant.db.create(dbCredentials.dbName, function (err, res) {
-        if (err) {
-            console.log('Could not create new db: ' + dbCredentials.dbName + ', it might already exist.');
-        }
-    });
-
-    db = cloudant.use(dbCredentials.dbName);
-    */
-}
-
-initDBConnection();
-
-/**
- * @Encryption
- *
- */
-var encrypt = require('./library/encryption');
-
-
-app.get("/dashboard", function (request, response) {
-    response.sendFile(__dirname + '/public/dashboard.html');
+const port = process.env.PORT || localConfig.port;
+server.listen(port, function(){
+  logger.info(`VISTECHBCPB listening on http://localhost:${port}/appmetrics-dash`);
+  logger.info(`VISTECHBCPB listening on http://localhost:${port}`);
 });
 
-
-app.get('/', routes.index);
-
-
-/**
- * @start
- */
-http.createServer(app).listen(app.get('port'), '0.0.0.0', function () {
-    console.log('Express server listening on port ' + app.get('port'));
+app.use(function (req, res, next) {
+  res.sendFile(path.join(__dirname, '../public', '404.html'));
 });
+
+app.use(function (err, req, res, next) {
+	res.sendFile(path.join(__dirname, '../public', '500.html'));
+});
+
+module.exports = server;
