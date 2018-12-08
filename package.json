@@ -1,36 +1,28 @@
 {
-  "name": "vistechbcpb",
-  "version": "1.0.0",
-  "description": "A generated IBM Cloud application",
+  "name": "cloudant_boilerplate_nodejs",
+  "version": "0.0.2",
   "private": true,
-  "engines": {
-    "node": "^8.11.1"
-  },
   "scripts": {
-    "start": "node server/server.js",
-    "debug": "node --inspect=0.0.0.0:9229 server/server.js",
-    "debug:legacy": "node --debug=0.0.0.0:5858 server/server.js",
-    "test": "nyc mocha --exit",
-    "dev": "nodemon server/server.js"
-  },
-  "nodemonConfig": {
-    "env": {
-      "NODE_HEAPDUMP_OPTIONS": "nosignal"
-    }
+    "start": "node app.js"
   },
   "dependencies": {
-    "appmetrics-dash": "^4.0.0",
-    "appmetrics-prometheus": "^2.0.0",
-    "appmetrics-zipkin": "^1.0.4",
-    "body-parser": "^1.17.2",
-    "express": "^4.15.3",
-    "log4js": "^3.0.5",
-    "ibm-cloud-env": "^0"
+    "body-parser": "1.17.x",
+    "cloudant": "1.7.x",
+    "connect-multiparty": "2.0.x",
+    "ejs": "^2.6.1",
+    "errorhandler": "1.5.x",
+    "express": "4.15.x",
+    "method-override": "2.3.x",
+    "morgan": "1.8.x",
+    "dotenv": "^4.0.0",
+    "twilio": "^3.0.0"
+  },
+  "repository": {},
+  "engines": {
+    "node": "6.x"
   },
   "devDependencies": {
-    "nodemon": "^1.12.1",
-    "chai": "^4.0.0",
-    "mocha": "^5.2.0",
-    "nyc": "^13.1.0"
+    "jest": "^19.0.2",
+    "jsonwebtoken": "^7.4.0"
   }
 }
