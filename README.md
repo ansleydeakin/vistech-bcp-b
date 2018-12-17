@@ -1,99 +1,36 @@
 ## BCPAPP
 
-Basic Web project with ExpressJS on NodeJS
+## Run the app locally
 
-[![](https://img.shields.io/badge/IBM%20Cloud-powered-blue.svg)](https://bluemix.net)
-![Platform](https://img.shields.io/badge/platform-NODE-lightgrey.svg?style=flat)
+Author: Ansley Lam
 
-### Table of Contents
-* [Summary](#summary)
-* [Requirements](#requirements)
-* [Configuration](#configuration)
-* [Run](#run)
-* [Debug](#debug)
+1. To run the app locally, please ensure the following have been installed:
 
-<a name="summary"></a>
-### Summary
-The Web basic starter contains an opinionated set of files for web serving:
+Node.js - https://nodejs.org/en/download/
+Visual Studio Code -https://code.visualstudio.com/
+Githuh Desktop - https://desktop.github.com/
 
-- `public/index.html`
-- `public/404.html`
-- `public/500.html`
+2. Ensure Github Desktop has cloned the respository to your local drive. 
+ - Select File> Clone Repository
+ - Input URL (https://github.com/ansleydeakin/vistech-bcp-b)
+ 
+*Pretty straight forward, best practice is to pull first, apply changes and push. In this case, we will be pushing changes direct to Master branch
 
+3. Run Visual Studio Code
+ - Selecy "Open Folder"
+ - Open the local clone of the Github respository
+ - Select the cross at the bottom left of the screen
+ - Select "Terminal" option
+ - Type "npm install" *It will begin installing modules based on what has been specified in Package.json
+ - Type "cd server" to change the directory to "vistech-bcp-b\server"
+ - Type "npm start" to run the web server
+ 
+*Once completed, you'll be able to access the locally hosted web server via http://localhost:3000
 
-
-<a name="enablement"></a>
-### IBM Cloud Enablement
-
-<a name="requirements"></a>
-### Requirements
-#### Local Development Tools Setup (optional)
-
-- Install the latest [NodeJS](https://nodejs.org/en/download/) 6+ LTS version.
-
-#### IBM Cloud development tools setup (optional)
-
-1. Install [IBM Cloud Developer Tools](https://console.bluemix.net/docs/cli/idt/setting_up_idt.html#add-cli) on your machine  
-2. Install the plugin with: `bx plugin install dev -r bluemix`
-
-
-#### IBM Cloud DevOps setup (optional)
-
-[![Create Toolchain](https://console.ng.bluemix.net/devops/graphics/create_toolchain_button.png)](https://console.ng.bluemix.net/devops/setup/deploy/)
-
-[IBM Cloud DevOps](https://www.ibm.com/cloud-computing/bluemix/devops) services provides toolchains as a set of tool integrations that support development, deployment, and operations tasks inside IBM Cloud. The "Create Toolchain" button creates a DevOps toolchain and acts as a single-click deploy to IBM Cloud including provisioning all required services. 
-
-***Note** you must publish your project to [Github](https://github.com/) for this to work.
-
-
-
-<a name="configuration"></a>
-### Configuration
-
-The project contains IBM Cloud specific files that are used to deploy the application as part of an IBM Cloud DevOps flow. The `.bluemix` directory contains files used to define the IBM Cloud toolchain and pipeline for your application. The `manifest.yml` file specifies the name of your application in IBM Cloud, the timeout value during deployment, and which services to bind to.
-
-Service credentials are taken from the VCAP_SERVICES environment variable if running IBM Cloud Cloud Foundry, from individual environment variables per service if running on IBM Cloud Container Service (see ./server/config/mappings.json), or from a config file if running locally, named`./server/config/localdev-config.js`.
-
-
-<a name="run"></a>
-### Run
-#### Using IBM Cloud development CLI
-The IBM Cloud development plugin makes it easy to compile and run your application if you do not have all of the tools installed on your computer yet. Your application will be compiled with Docker containers. To compile and run your app, run:
-
-```bash
-bx dev build
-bx dev run
-```
-
-
-#### Using your local development environment
-
-
-
-##### Endpoints
-
-Your application is running at: `http://localhost:3000/` in your browser.
-
-- Health endpoint: `/appmetrics-dash`
-
-
-##### Session Store
-You may see this warning when running `bx dev run`:
-```
-Warning: connect.session() MemoryStore is not
-designed for a production environment, as it will leak
-memory, and will not scale past a single process.
-```
-When deploying to production, it is best practice to configure sessions to be stored in an external persistence service.
-
-
-<a name="debug"></a>
-### Debug
-
-#### Using IBM Cloud development CLI
-To build and debug your app, run:
-```bash
-bx dev build --debug
-bx dev debug
-```
+For Front-end Developer & UX/UI Designer
+ - Front-end related files can be found in the "vistech-bcp-b\public folder"
+ 
+For Back-end Developer 
+ - Back-end .js can be found in "vistech-bcp-b\server\server.js"
+ - MySQL DB can be access via MySQL Workbench with the provided credentials
 
