@@ -5,8 +5,8 @@
 //     serviceName:'frontend'
 // });
 
-require('appmetrics-dash').attach();
-require('appmetrics-prometheus').attach();
+//require('appmetrics-dash').attach();
+//require('appmetrics-prometheus').attach();
 const appName = require('./../package').name;
 const http = require('http');
 const express = require('express');
@@ -45,9 +45,13 @@ var routes = require('./routes')
 var user = require('./routes/user')
 var methodOverride = require('method-override')
 
-//var engines = require('consolidate');
-//app.engine('html', engines.mustache);
-//app.set('view engine', 'html');
+var session = require('express-session'); //for session middleware
+app.use(session({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { maxAge: 60000 } //60 secs, please increase time to extend session time
+}))
 
 // **********************************Add your code here*******************************************
 
@@ -67,13 +71,13 @@ con.connect();
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
-/* LOGIN  ANSLEY 15/12/2018*/
+/* ADD LOGIN  ANSLEY 15/12/2018*/
 
-app.get('/token', function (req, res) {
-  const identity = req.query.identity || 'identity';
-  const room = req.query.room;
-  res.send(tokenGenerator(identity, room));
-});
+//app.get('/token', function (req, res) {
+  //const identity = req.query.identity || 'identity';
+  //const room = req.query.room;
+  //res.send(tokenGenerator(identity, room));
+//});
 
 app.get("/login", function (req, res) {
   res.sendFile(path.join(__dirname, '../public', 'login.html'));
@@ -85,44 +89,87 @@ app.post('/loginsubmit', function (req, res) {
     res.sendFile(path.join(__dirname, '../public', 'login.html'));
   }
 
-  var username = req.body.username;
-  var password = encrypt.sha1hash(req.body.password);
+    var sess = req.session; 
 
-  console.log(password);
+    var username = req.body.username;
+    var password = encrypt.sha1hash(req.body.password);
 
-  con.query('SELECT * from users WHERE username = \"' + username + '\" AND password = \"' + password + '\"', function (err, rows, fields) {
-      if (!err) {    
-        console.log(rows[0]);
-            if (rows.length > 0) {                   
-                console.log(rows);
-                res.render(path.join(__dirname, '../public', 'dashboard.html'), {
-                username: username
-                });
-            }
-            else {
-            //ERROR
-            res.sendFile(path.join(__dirname, '../public', 'login.html'));
-            }
+    console.log(password);
+
+    con.query('SELECT * from users WHERE username = \"' + username + '\" AND password = \"' + password + '\"', function (err, rows, fields) {
+        if (!err) {    
+       
+              if (rows.length > 0) {                   
+
+                  // Cookie info
+                  req.session.username = rows[0].Username;
+                  req.session.userid = rows[0].UserID;
+                  req.session.roles = rows[0].Roles;
+                  req.session.firstname = rows[0].Firstname;
+                  req.session.Lastname = rows[0].Lastname;
+
+                  console.log(rows[0]);
+                  console.log(rows[0].UserID);
+                
+                  res.redirect('/dashboard');
+              }
+              else {
+              //ERROR
+              res.sendFile(path.join(__dirname, '../public', 'login.html'));
+              }
+        }
+      else {
+        //ERROR
+        res.render(path.join(__dirname, '../public', 'login.html'));
       }
-    else {
-      //ERROR
-      res.render(path.join(__dirname, '../public', 'login.html'));
-    }
-  });
+    });
+
+   
+});
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+/* ADD DASHBOARD ANSLEY 21/12/2018*/
+
+app.get("/dashboard", function (req, res) {
+
+	var username =  req.session.username;
+	var userid = req.session.userid;
+  console.log(req.session)
+
+	if(userid == null){
+		res.render(path.join(__dirname, '../public', 'login.html'));
+		return;
+	}
+	 
+	 var sql="SELECT * FROM users WHERE userid ='"+userid+"'";
+	 
+	   con.query(sql, function(err, rows){
+  
+		   console.log("hello " + username);
+      
+		   res.render(path.join(__dirname, '../public', 'dashboard.html'),{username:username});	  
+      
+		});	 
 
 });
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
+/* ADD LOGOUT DASHBOARD ANSLEY 21/12/2018*/
 
+app.get("/logout", function (req, res) {
 
+  if (req.session) {
 
+    req.session.destroy(function(err) {
+    return res.redirect('/login');
+    
+    })
 
+  }
 
-
-
-
-
+});
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
