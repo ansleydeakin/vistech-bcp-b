@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>DASHBOARD</title>
+    <title>USER MANAGEMENT</title>
     <meta charset=utf-8>
     <!--[if IE]>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
@@ -57,7 +57,7 @@
     <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
 
 </head>
-<body onload="ToggleOnOff()">
+<body>
 
 <!-- LOADER -->
 <div id="loader-overflow">
@@ -100,13 +100,14 @@
                 <div class="row">
 
                     <div class="col-md-8">
-                        <h1 class="page-title">DASHBOARD</h1>
+                        <h1 class="page-title">USER ACCOUNT</h1>
                     </div>
 
                     <div class="col-md-4">
                         <div class="breadcrumbs">
-                            <a href="index.html">HOME</a><span class="slash-divider">/</span><span
-                                class="bread-current">DASHBOARD</span>
+                            <a href="index.html">HOME</a><span class="slash-divider">/</span><a href="/dashboard">DASHBOARD</a><span class="slash-divider">/</span>
+                            <a href="/admin">ADMIN</a><span class="slash-divider">/</span>
+                            <span class="bread-current">USER ACCOUNT</span>
                         </div>
                     </div>
 
@@ -117,17 +118,27 @@
             <div class="row">
                 <div class="grey-light-bg leave-comment-cont col-lg-12">
                     <!-- TITLE -->
-                   <!--  <h4 class="blog-page-title mt-50 mb-25">DASHBOARD</h4> -->
+                    <h4 class="blog-page-title mt-50 mb-25">USERS</h4>
                     <div class="row">
                         <div class="col-lg-4">
-                            Welcome <%= username %>
-                            <div class="form-group col-lg-12">
-                    
-                            </div>
-                        </div>
-                        <div class="col-lg-8" style="overflow-x:auto;">
-                        
+						    <div class="form-group col-lg-12">
 
+                                      <div class="col-lg-8">
+                                            <table id="table_value" class="display nowrap">
+                                                    <%- table -%>
+                                                    </table>
+                                      </div>
+
+                                        <div class="contact-form-container row">
+                                      
+                                            <div class="col-lg-8">
+                                                    <br>
+                                                    <a href="/newuser" class='button button-full-center medium btn-block' target="_blank">NEW USER</a><a href="" class='button button-full-center medium btn-block' target="_blank">DELETE USER</a>
+                                            </div>
+                                    
+                                        </div>
+                                       
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -231,7 +242,46 @@
 
 <!-- FULL SCREEN MENU -->
 <script src="js/fs-menu.js"></script>
+<script>
 
+    $(document).ready(function () {
+        $('#table_value').DataTable({
+            "autoWidth": true,
+            "scrollX": false,
+            "searching": false,
+            "select": true,
+            "ordering": true,
+            "paging": false,
+            "info": false
+        });
+    });
+
+    var preview = function () {
+
+        var data = {
+            UserID: UserID,
+            Username: Username,
+            Password: Password,
+            Firstname: Firstname,
+            Lastname: Lastname,
+			Email:Email,
+			Roles: Roles
+        }
+
+//   this is our ajax call
+        $.post("/preview", data, function (result) {
+            $("#table_value").html(result);
+        });
+
+    }
+
+    $(document).ready(function () {
+        console.log('The page has now loaded')
+        $('#btnPreview').bind('click touch', preview)
+    });
+
+    //**/
+</script>
 
 
 <!-- JS end -->

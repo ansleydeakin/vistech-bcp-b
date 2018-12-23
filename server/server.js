@@ -50,7 +50,7 @@ app.use(session({
   secret: 'keyboard cat',
   resave: false,
   saveUninitialized: true,
-  cookie: { maxAge: 60000 } //60 secs, please increase time to extend session time
+  cookie: { maxAge: 300000 } //5 mins, please increase time to extend session time
 }))
 
 // **********************************Add your code here*******************************************
@@ -96,7 +96,7 @@ app.post('/loginsubmit', function (req, res) {
 
     console.log(password);
 
-    con.query('SELECT * from users WHERE username = \"' + username + '\" AND password = \"' + password + '\"', function (err, rows, fields) {
+    con.query('SELECT * FROM users WHERE username = \"' + username + '\" AND password = \"' + password + '\"', function (err, rows, fields) {
         if (!err) {    
        
               if (rows.length > 0) {                   
@@ -134,7 +134,11 @@ app.post('/loginsubmit', function (req, res) {
 app.get("/dashboard", function (req, res) {
 
 	var username =  req.session.username;
-	var userid = req.session.userid;
+  var userid = req.session.userid;
+  var roles = req.session.roles;
+  var firstname = req.session.firstname;
+  var lastname = req.session.Lastname;
+  
   console.log(req.session)
 
 	if(userid == null){
@@ -142,7 +146,7 @@ app.get("/dashboard", function (req, res) {
 		return;
 	}
 	 
-	 var sql="SELECT * FROM users WHERE userid ='"+userid+"'";
+	 var sql="SELECT * FROM users WHERE userid ='" + userid + "'";
 	 
 	   con.query(sql, function(err, rows){
   
@@ -161,12 +165,246 @@ app.get("/dashboard", function (req, res) {
 app.get("/logout", function (req, res) {
 
   if (req.session) {
-
     req.session.destroy(function(err) {
-    return res.redirect('/login');
-    
+      return res.redirect('/login');
     })
+  }
 
+});
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+/* ADD USER MANAGEMENT ANSLEY 22/12/2018*/
+
+app.get("/usermanagement", function (req, res) {
+
+  var username =  req.session.username;
+  var userid = req.session.userid;
+  var roles = req.session.roles;
+  var firstname = req.session.firstname;
+  var lastname = req.session.Lastname;
+
+  if (req.session) {
+
+    if (req.session.roles == "admin"){
+
+      con.query('SELECT * FROM users limit 50', function (err, rows, fields) {
+        if (!err) {
+            //console.log(rows[0]);
+            var table = "";
+            table += "<thead><tr>";
+            table += "<th>UserID</th>" + "<th>Username</th>" + "<th>Password</th>" + "<th>Firstname</th>" + "<th>Lastname</th>" + "<th>Email</th>" + "<th>Role</th>"; //7
+            table += "</tr></thead>";
+            table += "<tbody>";
+            if (rows.length > 0) {
+                for (var i = 0; i < rows.length; i++) {
+
+                    table += '<tr>';
+                    table += '<td>' + rows[i].UserID + '</td>';
+                    table += '<td>' + rows[i].Username + '</td>';
+
+                    if (rows[i].Password.length > 0){
+                    table += '<td>' + '*********' + '</td>';
+                    }
+
+                    table += '<td>' + rows[i].Firstname + '</td>';
+                    table += '<td>' + rows[i].Lastname + '</td>';
+                    table += '<td>' + rows[i].Email + '</td>';
+                    table += '<td>' + rows[i].Roles + '</td>';
+
+                    table += '</tr>';
+                }
+                console.log(table);
+                table += '</tbody>';
+                res.render(path.join(__dirname, '../public', 'usermanagement.html'), {
+                    table: table
+                });
+            }
+            else {
+                //Fail
+                //console.log(err.message);
+                res.render(path.join(__dirname, '../public', 'login.html'));
+            }
+        }
+        else {
+            //ERROR
+            console.log(err.message);
+            res.render(path.join(__dirname, '../public', 'login.html'));
+        }
+    });
+
+    }
+    else{
+      res.render(path.join(__dirname, '../public', 'login.html'));
+    }
+
+  }
+  else {
+
+    res.redirect('/login');
+  
+  }
+
+});
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+/* ADD INSERT NEW USER ANSLEY 21/12/2018*/
+
+app.get("/newuser", function (req, res) {
+
+  var username =  req.session.username;
+  var userid = req.session.userid;
+  var roles = req.session.roles;
+  var firstname = req.session.firstname;
+  var lastname = req.session.Lastname;
+
+  if (req.session) {
+
+    if (req.session.roles == "admin"){
+      res.sendFile(path.join(__dirname, '../public', 'newuser.html'));
+    }
+    else {
+      res.render(path.join(__dirname, '../public', 'login.html'));
+    }
+
+  }
+  else {
+
+    res.redirect('/login');
+
+  }
+});
+ 
+
+app.post("/newusersubmit", function (req, res) {
+
+  if (req.body.constructor === Object && Object.keys(req.body).length === 0) {
+    res.sendFile(path.join(__dirname, '../public', 'newuser.html'));
+}
+
+  var username =  req.session.username;
+  var userid = req.session.userid;
+  var roles = req.session.roles;
+  var firstname = req.session.firstname;
+  var lastname = req.session.Lastname;
+ 
+  var newusername = req.body.username;
+  var newpassword = encrypt.sha1hash(req.body.password);
+  var newfirstname = req.body.firstname;
+  var newlastname = req.body.lastname;
+  var newemail = req.body.email;
+  var newroles = req.body.roles;
+
+
+  if (req.session) {
+
+    if (req.session.roles == "admin"){
+
+      con.query('SELECT * from users WHERE username = \"' + newusername + '\" OR email = \"' + newemail + '\"', function (err, rows, fields) {
+        if (!err) {
+            console.log(rows);
+            if (rows.length > 0) {
+                //duplicate user
+                res.send("Username or Email already exist");
+            }
+            else {
+                console.log("Insert user");
+                con.query("INSERT INTO users (username,password,firstname,lastname," +
+                    "email,roles) VALUES ('" + newusername + "','" + newpassword + "','" + newfirstname + "','" +
+                    newlastname + "','" + newemail + "','" + newroles + "')",
+                    function (err, rows, fields) {
+                        if (!err) {
+                          res.redirect("/usermanagement");
+                        }
+                        else {
+                            //ERROR
+                            console.log(err.message);
+                            console.log("Insert user error");
+                            res.send("There was an issue adding the new user, please try again");
+                        }
+                    });
+            }
+        }
+        else {
+            //ERROR
+            console.log(err);
+            console.log("Select user error");
+            res.sendFile(path.join(__dirname, '../public', 'newuser.html'));
+        }
+    });
+
+    }
+    else{
+      console.log("Not admin");
+      res.sendFile(path.join(__dirname, '../public', 'login.html'));
+    }
+
+  }
+  else {
+    console.log("No Session");
+    res.redirect('/login');
+  
+  }
+
+});
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+/* ADD DELETE USER ANSLEY 21/12/2018*/
+
+app.get("/deleteuser", function (req, res) {
+
+  var username =  req.session.username;
+  var userid = req.session.userid;
+  var roles = req.session.roles;
+  var firstname = req.session.firstname;
+  var lastname = req.session.Lastname;
+
+  if (req.session) {
+
+    if (req.session.roles == "admin"){
+      
+    }
+    else{
+      res.render(path.join(__dirname, '../public', 'login.html'));
+    }
+
+  }
+  else {
+
+    res.redirect('/login');
+  
+  }
+
+});
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+/* ADD ADMIN DASHBOARD ANSLEY 21/12/2018*/
+
+app.get("/admin", function (req, res) {
+
+  var username =  req.session.username;
+  var userid = req.session.userid;
+  var roles = req.session.roles;
+  var firstname = req.session.firstname;
+  var lastname = req.session.Lastname;
+
+  if (req.session) {
+
+    if (req.session.roles == "admin"){
+      res.sendFile(path.join(__dirname, '../public', 'admin.html'));
+    }
+    else{
+      res.render(path.join(__dirname, '../public', 'login.html'));
+    }
+
+  }
+  else {
+
+    res.redirect('/login');
+  
   }
 
 });
