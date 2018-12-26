@@ -50,10 +50,8 @@ app.use(session({
   secret: 'keyboard cat',
   resave: false,
   saveUninitialized: true,
-  cookie: { maxAge: 300000 } //5 mins, please increase time to extend session time
+  cookie: { maxAge: 3000000 } //50 mins, please increase time to extend session time
 }))
-
-// **********************************Add your code here*******************************************
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -71,6 +69,8 @@ con.connect();
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
+// **********************************Add your code here*******************************************
+
 /* ADD LOGIN  ANSLEY 15/12/2018*/
 
 //app.get('/token', function (req, res) {
@@ -80,7 +80,12 @@ con.connect();
 //});
 
 app.get("/login", function (req, res) {
-  res.sendFile(path.join(__dirname, '../public', 'login.html'));
+  if (req.session) {
+    res.redirect('/dashboard');
+  }
+  else {
+    res.redirect('/login');
+  }
 });
 
 app.post('/loginsubmit', function (req, res) {
@@ -297,7 +302,7 @@ app.post("/newusersubmit", function (req, res) {
   var newroles = req.body.roles;
 
 
-  if (req.session) {
+  if (req.session) { 
 
     if (req.session.roles == "admin"){
 
@@ -353,7 +358,7 @@ app.post("/newusersubmit", function (req, res) {
 
 /* ADD DELETE USER ANSLEY 21/12/2018*/
 
-app.get("/deleteuser", function (req, res) {
+app.post("/deleteuser", function (req, res) {
 
   var username =  req.session.username;
   var userid = req.session.userid;
@@ -361,9 +366,25 @@ app.get("/deleteuser", function (req, res) {
   var firstname = req.session.firstname;
   var lastname = req.session.Lastname;
 
+  var tableuserid = req.body.tableuserid;
+  console.log(tableuserid);
+
   if (req.session) {
 
     if (req.session.roles == "admin"){
+
+      con.query('DELETE FROM users WHERE userid <> 1 and userid = \"' + tableuserid + '\"', function (err, rows, fields) {
+        if (!err) {
+            console.log(rows);
+            res.end();
+        }
+        else {
+            //ERROR
+            console.log(err);
+            console.log("Select user error");
+            res.sendFile(path.join(__dirname, '../public', 'newuser.html'));
+        }
+    });
       
     }
     else{
@@ -412,6 +433,8 @@ app.get("/admin", function (req, res) {
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 // **********************************************************************************************
+
+/* START THE APP & LISTEN TO THE PORT */
 
 const port = process.env.PORT || localConfig.port;
 server.listen(port, function(){

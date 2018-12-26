@@ -36,6 +36,7 @@
     <!-- ANIMATE -->
     <link rel='stylesheet' href="css/animate.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/sl-1.2.6/datatables.min.css"/>
 	
     <!-- CSS end -->
 
@@ -50,11 +51,15 @@
 
     <!-- Enabling & Disabling filter options script-->
     <script src="js/filtertoggle.js"></script>
+
     <script type="text/javascript" charset="utf8"
             src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
 
     <!-- Datatable filter API & Jquery-->
     <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/sl-1.2.6/datatables.min.js"></script>
+
 
 </head>
 <body>
@@ -126,18 +131,28 @@
                                       <div class="col-lg-8">
                                             <table id="table_value" class="display nowrap">
                                                     <%- table -%>
-                                                    </table>
-                                      </div>
+                                            </table>
+                                      </div>      
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="grey-light-bg leave-comment-cont">
+                            <!-- TITLE -->
+                            <div class="contact-form-container row">
+        
+                                <div class="card col-lg-3">
+        
+                                    <div class="card-body">
+                                        <a href="/newuser" class="button button-full-center medium btn-block">NEW USER</a>
+                                    </div>
+                                </div>
+                                <div class="card col-lg-3">
 
-                                        <div class="contact-form-container row">
-                                      
-                                            <div class="col-lg-8">
-                                                    <br>
-                                                    <a href="/newuser" class='button button-full-center medium btn-block' target="_blank">NEW USER</a><a href="" class='button button-full-center medium btn-block' target="_blank">DELETE USER</a>
-                                            </div>
-                                    
-                                        </div>
-                                       
+                                    <div class="card-body">
+                                        <button id="btnDeleteUser" class='button button-full-center medium btn-block'>DELETE USER</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -244,8 +259,10 @@
 <script src="js/fs-menu.js"></script>
 <script>
 
+//DataTable JS
     $(document).ready(function () {
-        $('#table_value').DataTable({
+
+         usertable = $('#table_value').DataTable({
             "autoWidth": true,
             "scrollX": false,
             "searching": false,
@@ -254,31 +271,69 @@
             "paging": false,
             "info": false
         });
+        
+                 usertable.row( { selected: true } ).data();
+                 
+                //  $('#table_value tbody').on( 'click', 'tr', function () {
+
     });
+   // });
 
-    var preview = function () {
+                    var submitdelete = function () {
+                        
+                       // var tableuserid = tabledata[0].toString();
+                       // console.log(tabledata[0].toString());
+                       
+                        
+                        if (usertable.row('.selected').any()){
+                            var count = usertable.row( { selected: true } ).count();
+                           
+                            console.log(count);
+                            console.log('rows selected');
 
-        var data = {
-            UserID: UserID,
-            Username: Username,
-            Password: Password,
-            Firstname: Firstname,
-            Lastname: Lastname,
-			Email:Email,
-			Roles: Roles
-        }
+                            console.log(usertable.row('.selected').data());
+                            tabledata = usertable.row('.selected').data();
+                        }
+                        else {     
+                            console.log('no rows selected');
+                            tabledata = '';
+                        }
+                            
+                            
+                        if (tabledata === ''){
+                            
+                            console.log('0');
+                            var tableuserid = '0';
+                        }    
+                        
+                        else if (tabledata.length > 0 && tabledata != ''){
+                            
+                            console.log(tabledata[0].toString());
+                            var tableuserid = tabledata[0].toString();
 
-//   this is our ajax call
-        $.post("/preview", data, function (result) {
-            $("#table_value").html(result);
-        });
+                            
+                        }
 
-    }
+                        var data = {
+                                tableuserid: tableuserid
+                        }
 
-    $(document).ready(function () {
-        console.log('The page has now loaded')
-        $('#btnPreview').bind('click touch', preview)
-    });
+                        //   this is our ajax call
+                        $.post("/deleteuser", data, function () {
+                            location.reload();
+                        });
+
+                    }
+
+                $(document).ready(function () {
+                    console.log('The page has now loaded')
+                    $('#btnDeleteUser').bind('click touch', submitdelete)
+                });
+
+       
+        
+    
+
 
     //**/
 </script>
