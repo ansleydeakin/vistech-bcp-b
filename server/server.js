@@ -431,7 +431,73 @@ app.get("/admin", function (req, res) {
 });
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
+/* ADD REFERENCE TABLE DISPLAY PATRICK 21/12/2018*/
 
+app.get("/referencetables", function (req, res) {
+
+  var username =  req.session.username;
+  var userid = req.session.userid;
+  var roles = req.session.roles;
+  var firstname = req.session.firstname;
+  var lastname = req.session.Lastname;
+
+  if (req.session) {
+
+    if (req.session.roles == "admin"){
+
+      con.query('SELECT * FROM r1ImpactRef limit 50', function (err, rows, fields) {
+        if (!err) {
+            console.log(rows[0]);
+            var table = "";
+            table += "<thead><tr>";
+            table += "<th>RowID</th>" + "<th>Impact Category</th>" + "<th>Rating</th>" + "<th>Description</th>";
+            table += "</tr></thead>";
+            table += "<tbody>";
+            if (rows.length > 0) {
+                for (var i = 0; i < rows.length; i++) {
+
+                    table += '<tr>';
+                    table += '<td>' + rows[i].R1ID + '</td>';
+                    table += '<td>' + rows[i].ImpactCategory + '</td>';
+                    table += '<td>' + rows[i].Rating + '</td>';
+                    table += '<td>' + rows[i].Description + '</td>';
+
+                    table += '</tr>';
+                }
+                console.log(table);
+                table += '</tbody>';
+                res.render(path.join(__dirname, '../public', 'referencetables.html'), {
+                    table: table
+                });
+            }
+            else {
+                //Fail
+                console.log(err.message);
+                res.render(path.join(__dirname, '../public', 'login.html'));
+            }
+        }
+        else {
+            //ERROR
+            console.log(err.message);
+            res.render(path.join(__dirname, '../public', 'login.html'));
+        }
+    });
+
+    }
+    else{
+      res.render(path.join(__dirname, '../public', 'login.html'));
+    }
+
+  }
+  else {
+
+    res.redirect('/login');
+  
+  }
+
+});
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
 // **********************************************************************************************
 
 /* START THE APP & LISTEN TO THE PORT */
