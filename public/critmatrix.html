@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>ADMIN</title>
+    <title>CRITICALITY MATRICES</title>
     <meta charset=utf-8>
     <!--[if IE]>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
     <meta name="robots" content="index, follow">
     <meta name="keywords" content="VISTECH-BCP-B">
     <meta name="description" content="VISTECH-BCP-B">
-    <meta name="author" content="ANSLEY LAM">
+    <meta name="author" content="P.W.">
 
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -36,6 +36,7 @@
     <!-- ANIMATE -->
     <link rel='stylesheet' href="css/animate.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/sl-1.2.6/datatables.min.css"/>
 	
     <!-- CSS end -->
 
@@ -50,14 +51,18 @@
 
     <!-- Enabling & Disabling filter options script-->
     <script src="js/filtertoggle.js"></script>
+
     <script type="text/javascript" charset="utf8"
             src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
 
     <!-- Datatable filter API & Jquery-->
     <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
 
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/sl-1.2.6/datatables.min.js"></script>
+
+
 </head>
-<body onload="ToggleOnOff()">
+<body>
 
 <!-- LOADER -->
 <div id="loader-overflow">
@@ -100,13 +105,14 @@
                 <div class="row">
 
                     <div class="col-md-8">
-                        <h1 class="page-title">USER AND PLAN ADMINISTRATION</h1>
+                        <h1 class="page-title">CRITICALITY MATRICES</h1>
                     </div>
 
                     <div class="col-md-4">
                         <div class="breadcrumbs">
-                            <a href="index.html">HOME</a><span class="slash-divider">/</span><a href="/dashboard">DASHBOARD</a><span class="slash-divider">/</span><span
-                                class="bread-current">ADMIN</span>
+                            <a href="index.html">HOME</a><span class="slash-divider">/</span><a href="/dashboard">DASHBOARD</a><span class="slash-divider">/</span>
+                            <a href="/admin">ADMIN</a><span class="slash-divider">/</span>
+                            <span class="bread-current">CRITICALITY MATRICES</span>
                         </div>
                     </div>
 
@@ -117,37 +123,17 @@
             <div class="row">
                 <div class="grey-light-bg leave-comment-cont col-lg-12">
                     <!-- TITLE -->
-                   <!--  <h4 class="blog-page-title mt-50 mb-25">DASHBOARD</h4> -->
+                    <h4 class="blog-page-title mt-50 mb-25">CRITICALITY MATRICS</h4>
                     <div class="row">
                         <div class="col-lg-4">
-								
-                
-                                <a href="/usermanagement">USER ACCOUNT</a>
-                                
-                    
-								
-                            <div class="form-group col-lg-12">
-                    
+						    <div class="form-group col-lg-12">
+
+                                      <div class="col-lg-8">
+                                            <table id="table_value" class="display nowrap">
+                                                    <%- table -%>
+                                            </table>
+                                      </div>      
                             </div>
-                        </div>
-                        <div class="col-lg-8" style="overflow-x:auto;">
-                        
-
-                        </div>
-                        <div class="col-lg-4">
-
-                            <a href="/referencetables">REFERENCE TABLES</a>
-                            
-                        </div>
-                        <div class="col-lg-4">
-
-                            <a href="/bcpplans">BCP PLANS</a>
-                            
-                        </div>
-                        <div class="col-lg-4">
-
-                            <a href="/critmatrix">CRITICALITY MATRICES</a>
-                            
                         </div>
                     </div>
                 </div>
@@ -251,7 +237,30 @@
 
 <!-- FULL SCREEN MENU -->
 <script src="js/fs-menu.js"></script>
+<script>
 
+//DataTable JS
+    $(document).ready(function () {
+
+         ref1table = $('#table_value').DataTable({
+            "autoWidth": true,
+            "scrollX": false,
+            "searching": false,
+            "select": true,
+            "ordering": true,
+            "paging": false,
+            "info": false
+        });
+        
+                 ref1table.row( { selected: true } ).data();
+                 
+                //  $('#table_value tbody').on( 'click', 'tr', function () {
+
+    });
+   // });
+
+    //**/
+</script>
 
 
 <!-- JS end -->

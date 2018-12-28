@@ -431,7 +431,7 @@ app.get("/admin", function (req, res) {
 });
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
-/* ADD REFERENCE TABLE DISPLAY PATRICK 21/12/2018*/
+/* ADD REFERENCE TABLE DISPLAY PATRICK 27/12/2018*/
 
 app.get("/referencetables", function (req, res) {
 
@@ -467,6 +467,152 @@ app.get("/referencetables", function (req, res) {
                 console.log(table);
                 table += '</tbody>';
                 res.render(path.join(__dirname, '../public', 'referencetables.html'), {
+                    table: table
+                });
+            }
+            else {
+                //Fail
+                console.log(err.message);
+                res.render(path.join(__dirname, '../public', 'login.html'));
+            }
+        }
+        else {
+            //ERROR
+            console.log(err.message);
+            res.render(path.join(__dirname, '../public', 'login.html'));
+        }
+    });
+
+    }
+    else{
+      res.render(path.join(__dirname, '../public', 'login.html'));
+    }
+
+  }
+  else {
+
+    res.redirect('/login');
+  
+  }
+
+});
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+/* ADD BCP PLANS DISPLAY PATRICK 28/12/2018*/
+
+app.get("/bcpplans", function (req, res) {
+
+  var username =  req.session.username;
+  var userid = req.session.userid;
+  var roles = req.session.roles;
+  var firstname = req.session.firstname;
+  var lastname = req.session.Lastname;
+
+  if (req.session) {
+
+    if (req.session.roles == "admin"){
+
+      con.query('SELECT * FROM OS5BCP limit 50', function (err, rows, fields) {
+        if (!err) {
+            console.log(rows[0]);
+            var table = "";
+            table += "<thead><tr>";
+            table += "<th>BCP ID</th>" + "<th>Program</th>" + "<th>System</th>" + "<th>Function</th>" + "<th>Activity</th>" + "<th>Clinical Unit</th>" + "<th>Immediate Action</th>" + "<th>Maintained Duration</th>" + "<th>Sustained Action</th>" + "<th>Resources</th>" + "<th>Draft</th>";
+            table += "</tr></thead>";
+            table += "<tbody>";
+            if (rows.length > 0) {
+                for (var i = 0; i < rows.length; i++) {
+
+                    table += '<tr>';
+                    table += '<td>' + rows[i].OS5ID + '</td>';
+                    table += '<td>' + rows[i].Program + '</td>';
+                    table += '<td>' + rows[i].System + '</td>';
+                    table += '<td>' + rows[i].Function + '</td>';
+                    table += '<td>' + rows[i].Activity + '</td>';
+                    table += '<td>' + rows[i].ClinicalUnit + '</td>';
+                    table += '<td>' + rows[i].ImmediateAction + '</td>';
+                    table += '<td>' + rows[i].MaintainDuration + '</td>';
+                    table += '<td>' + rows[i].SustainAction + '</td>';
+                    table += '<td>' + rows[i].Resources + '</td>';
+                    table += '<td>' + rows[i].Draft + '</td>';
+
+                    table += '</tr>';
+                }
+                console.log(table);
+                table += '</tbody>';
+                res.render(path.join(__dirname, '../public', 'bcpplans.html'), {
+                    table: table
+                });
+            }
+            else {
+                //Fail
+                console.log(err.message);
+                res.render(path.join(__dirname, '../public', 'login.html'));
+            }
+        }
+        else {
+            //ERROR
+            console.log(err.message);
+            res.render(path.join(__dirname, '../public', 'login.html'));
+        }
+    });
+
+    }
+    else{
+      res.render(path.join(__dirname, '../public', 'login.html'));
+    }
+
+  }
+  else {
+
+    res.redirect('/login');
+  
+  }
+
+});
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+/* ADD CRITICALITY MATRIX DISPLAY PATRICK 28/12/2018*/
+
+app.get("/critmatrix", function (req, res) {
+
+  var username =  req.session.username;
+  var userid = req.session.userid;
+  var roles = req.session.roles;
+  var firstname = req.session.firstname;
+  var lastname = req.session.Lastname;
+
+  if (req.session) {
+
+    if (req.session.roles == "admin"){
+
+      con.query('SELECT * FROM OS4Crit limit 50', function (err, rows, fields) {
+        if (!err) {
+            console.log(rows[0]);
+            var table = "";
+            table += "<thead><tr>";
+            table += "<th>Matrix ID</th>" + "<th>System</th>" + "<th>Type</th>" + "<th>Class</th>" + "<th>RTO</th>" + "<th>RPO</th>" + "<th>MTPD</th>" + "<th>Dependencies</th>" + "<th>Other</th>";
+            table += "</tr></thead>";
+            table += "<tbody>";
+            if (rows.length > 0) {
+                for (var i = 0; i < rows.length; i++) {
+
+                    table += '<tr>';
+                    table += '<td>' + rows[i].OS4ID + '</td>';
+                    table += '<td>' + rows[i].System + '</td>';
+                    table += '<td>' + rows[i].Type + '</td>';
+                    table += '<td>' + rows[i].Class + '</td>';
+                    table += '<td>' + rows[i].RTO + '</td>';
+                    table += '<td>' + rows[i].RPO + '</td>';
+                    table += '<td>' + rows[i].MTPD + '</td>';
+                    table += '<td>' + rows[i].Dependencies + '</td>';
+                    table += '<td>' + rows[i].Other + '</td>';
+
+                    table += '</tr>';
+                }
+                console.log(table);
+                table += '</tbody>';
+                res.render(path.join(__dirname, '../public', 'critmatrix.html'), {
                     table: table
                 });
             }
