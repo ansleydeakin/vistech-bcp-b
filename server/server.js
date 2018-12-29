@@ -72,12 +72,8 @@ con.connect();
 // **********************************Add your code here*******************************************
 
 /* ADD LOGIN  ANSLEY 15/12/2018*/
+/* UPDATE LOGIN PARAM & MySQL Query ANSLEY 30/12/2018*/
 
-//app.get('/token', function (req, res) {
-  //const identity = req.query.identity || 'identity';
-  //const room = req.query.room;
-  //res.send(tokenGenerator(identity, room));
-//});
 
 app.get("/login", function (req, res) {
   if (req.session) {
@@ -96,12 +92,15 @@ app.post('/loginsubmit', function (req, res) {
 
     var sess = req.session; 
 
-    var username = req.body.username;
-    var password = encrypt.sha1hash(req.body.password);
+    var email = req.body.inputEmail;
+    var password = encrypt.sha1hash(req.body.inputPassword);
+
+    //var username = req.body.username;
+    //var password = encrypt.sha1hash(req.body.password);
 
     console.log(password);
 
-    con.query('SELECT * FROM users WHERE username = \"' + username + '\" AND password = \"' + password + '\"', function (err, rows, fields) {
+    con.query('SELECT * FROM users WHERE email = \"' + email + '\" AND password = \"' + password + '\"', function (err, rows, fields) {
         if (!err) {    
        
               if (rows.length > 0) {                   
