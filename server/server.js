@@ -431,9 +431,9 @@ app.get("/admin", function (req, res) {
 });
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
-/* ADD REFERENCE TABLE DISPLAY PATRICK 27/12/2018*/
+/* ADD REFERENCE TABLE 1 DISPLAY PATRICK 27/12/2018*/
 
-app.get("/referencetables", function (req, res) {
+app.get("/r1", function (req, res) {
 
   var username =  req.session.username;
   var userid = req.session.userid;
@@ -466,7 +466,340 @@ app.get("/referencetables", function (req, res) {
                 }
                 console.log(table);
                 table += '</tbody>';
-                res.render(path.join(__dirname, '../public', 'referencetables.html'), {
+                res.render(path.join(__dirname, '../public', 'r1.html'), {
+                    table: table
+                });
+            }
+            else {
+                //Fail
+                console.log(err.message);
+                res.render(path.join(__dirname, '../public', 'login.html'));
+            }
+        }
+        else {
+            //ERROR
+            console.log(err.message);
+            res.render(path.join(__dirname, '../public', 'login.html'));
+        }
+    });
+
+    }
+    else{
+      res.render(path.join(__dirname, '../public', 'login.html'));
+    }
+
+  }
+  else {
+
+    res.redirect('/login');
+  
+  }
+
+});
+//////////////////////////////////////////////////////////////////////////////////////////////////
+/* ADD REFERENCE TABLE 2.1 DISPLAY PATRICK 29/12/2018*/
+
+app.get("/r21", function (req, res) {
+
+  var username =  req.session.username;
+  var userid = req.session.userid;
+  var roles = req.session.roles;
+  var firstname = req.session.firstname;
+  var lastname = req.session.Lastname;
+
+  if (req.session) {
+
+    if (req.session.roles == "admin"){
+
+      con.query('SELECT * FROM r21DepRef limit 50', function (err, rows, fields) {
+        if (!err) {
+            console.log(rows[0]);
+            var table = "";
+            table += "<thead><tr>";
+            table += "<th>RowID</th>" + "<th>Dependency Scale</th>" + "<th>Level</th>" + "<th>Description</th>" + "<th>Summary</th>";
+            table += "</tr></thead>";
+            table += "<tbody>";
+            if (rows.length > 0) {
+                for (var i = 0; i < rows.length; i++) {
+
+                    table += '<tr>';
+                    table += '<td>' + rows[i].R21ID + '</td>';
+                    table += '<td>' + rows[i].DependencyScale + '</td>';
+                    table += '<td>' + rows[i].Level + '</td>';
+                    table += '<td>' + rows[i].Description + '</td>';
+                    table += '<td>' + rows[i].Summary + '</td>';
+
+                    table += '</tr>';
+                }
+                console.log(table);
+                table += '</tbody>';
+                res.render(path.join(__dirname, '../public', 'r21.html'), {
+                    table: table
+                });
+            }
+            else {
+                //Fail
+                console.log(err.message);
+                res.render(path.join(__dirname, '../public', 'login.html'));
+            }
+        }
+        else {
+            //ERROR
+            console.log(err.message);
+            res.render(path.join(__dirname, '../public', 'login.html'));
+        }
+    });
+
+    }
+    else{
+      res.render(path.join(__dirname, '../public', 'login.html'));
+    }
+
+  }
+  else {
+
+    res.redirect('/login');
+  
+  }
+
+});
+//////////////////////////////////////////////////////////////////////////////////////////////////
+/* ADD REFERENCE TABLE 2.2 DISPLAY PATRICK 29/12/2018*/
+
+app.get("/r22", function (req, res) {
+
+  var username =  req.session.username;
+  var userid = req.session.userid;
+  var roles = req.session.roles;
+  var firstname = req.session.firstname;
+  var lastname = req.session.Lastname;
+
+  if (req.session) {
+
+    if (req.session.roles == "admin"){
+
+      con.query('SELECT * FROM r22MTPD limit 50', function (err, rows, fields) {
+        if (!err) {
+            console.log(rows[0]);
+            var table = "";
+            table += "<thead><tr>";
+            table += "<th>RowID</th>" +  "<th>Rating</th>" + "<th>Criteria</th>";
+            table += "</tr></thead>";
+            table += "<tbody>";
+            if (rows.length > 0) {
+                for (var i = 0; i < rows.length; i++) {
+
+                    table += '<tr>';
+                    table += '<td>' + rows[i].R22ID + '</td>';
+                    table += '<td>' + rows[i].Rating + '</td>';
+                    table += '<td>' + rows[i].Criteria + '</td>';
+
+                    table += '</tr>';
+                }
+                console.log(table);
+                table += '</tbody>';
+                res.render(path.join(__dirname, '../public', 'r22.html'), {
+                    table: table
+                });
+            }
+            else {
+                //Fail
+                console.log(err.message);
+                res.render(path.join(__dirname, '../public', 'login.html'));
+            }
+        }
+        else {
+            //ERROR
+            console.log(err.message);
+            res.render(path.join(__dirname, '../public', 'login.html'));
+        }
+    });
+
+    }
+    else{
+      res.render(path.join(__dirname, '../public', 'login.html'));
+    }
+
+  }
+  else {
+
+    res.redirect('/login');
+  
+  }
+
+});
+//////////////////////////////////////////////////////////////////////////////////////////////////
+/* ADD REFERENCE TABLE 3 DISPLAY PATRICK 29/12/2018*/
+
+app.get("/r3", function (req, res) {
+
+  var username =  req.session.username;
+  var userid = req.session.userid;
+  var roles = req.session.roles;
+  var firstname = req.session.firstname;
+  var lastname = req.session.Lastname;
+
+  if (req.session) {
+
+    if (req.session.roles == "admin"){
+
+      con.query('SELECT * FROM r3SysReg limit 50', function (err, rows, fields) {
+        if (!err) {
+            console.log(rows[0]);
+            var table = "";
+            table += "<thead><tr>";
+            table += "<th>RowID</th>" + "<th>System</th>" + "<th>Type</th>" + "<th>Class</th>" + "<th>Category</th>" + "<th>Function</th>";
+            table += "</tr></thead>";
+            table += "<tbody>";
+            if (rows.length > 0) {
+                for (var i = 0; i < rows.length; i++) {
+
+                    table += '<tr>';
+                    table += '<td>' + rows[i].R3ID + '</td>';
+                    table += '<td>' + rows[i].System + '</td>';
+                    table += '<td>' + rows[i].Type + '</td>';
+                    table += '<td>' + rows[i].Class + '</td>';
+                    table += '<td>' + rows[i].Category + '</td>';
+                    table += '<td>' + rows[i].Function + '</td>';
+
+                    table += '</tr>';
+                }
+                console.log(table);
+                table += '</tbody>';
+                res.render(path.join(__dirname, '../public', 'r3.html'), {
+                    table: table
+                });
+            }
+            else {
+                //Fail
+                console.log(err.message);
+                res.render(path.join(__dirname, '../public', 'login.html'));
+            }
+        }
+        else {
+            //ERROR
+            console.log(err.message);
+            res.render(path.join(__dirname, '../public', 'login.html'));
+        }
+    });
+
+    }
+    else{
+      res.render(path.join(__dirname, '../public', 'login.html'));
+    }
+
+  }
+  else {
+
+    res.redirect('/login');
+  
+  }
+
+});
+//////////////////////////////////////////////////////////////////////////////////////////////////
+/* ADD REFERENCE TABLE 4.1 DISPLAY PATRICK 29/12/2018*/
+
+app.get("/r41", function (req, res) {
+
+  var username =  req.session.username;
+  var userid = req.session.userid;
+  var roles = req.session.roles;
+  var firstname = req.session.firstname;
+  var lastname = req.session.Lastname;
+
+  if (req.session) {
+
+    if (req.session.roles == "admin"){
+
+      con.query('SELECT * FROM r41FuncRef limit 50', function (err, rows, fields) {
+        if (!err) {
+            console.log(rows[0]);
+            var table = "";
+            table += "<thead><tr>";
+            table += "<th>RowID</th>" + "<th>Program</th>" + "<th>Clinical Unit</th>";
+            table += "</tr></thead>";
+            table += "<tbody>";
+            if (rows.length > 0) {
+                for (var i = 0; i < rows.length; i++) {
+
+                    table += '<tr>';
+                    table += '<td>' + rows[i].R41ID + '</td>';
+                    table += '<td>' + rows[i].Program + '</td>';
+                    table += '<td>' + rows[i].ClinicalUnit + '</td>';
+
+                    table += '</tr>';
+                }
+                console.log(table);
+                table += '</tbody>';
+                res.render(path.join(__dirname, '../public', 'r41.html'), {
+                    table: table
+                });
+            }
+            else {
+                //Fail
+                console.log(err.message);
+                res.render(path.join(__dirname, '../public', 'login.html'));
+            }
+        }
+        else {
+            //ERROR
+            console.log(err.message);
+            res.render(path.join(__dirname, '../public', 'login.html'));
+        }
+    });
+
+    }
+    else{
+      res.render(path.join(__dirname, '../public', 'login.html'));
+    }
+
+  }
+  else {
+
+    res.redirect('/login');
+  
+  }
+
+});
+//////////////////////////////////////////////////////////////////////////////////////////////////
+/* ADD REFERENCE TABLE 4.2 DISPLAY PATRICK 29/12/2018*/
+
+app.get("/r42", function (req, res) {
+
+  var username =  req.session.username;
+  var userid = req.session.userid;
+  var roles = req.session.roles;
+  var firstname = req.session.firstname;
+  var lastname = req.session.Lastname;
+
+  if (req.session) {
+
+    if (req.session.roles == "admin"){
+
+      con.query('SELECT * FROM r42SysClassRef limit 50', function (err, rows, fields) {
+        if (!err) {
+            console.log(rows[0]);
+            var table = "";
+            table += "<thead><tr>";
+            table += "<th>RowID</th>" + "<th>Class</th>" + "<th>Description</th>" + "<th>MTPD</th>" + "<th>RTO</th>" + "<th>RPO</th>";
+            table += "</tr></thead>";
+            table += "<tbody>";
+            if (rows.length > 0) {
+                for (var i = 0; i < rows.length; i++) {
+
+                    table += '<tr>';
+                    table += '<td>' + rows[i].R42ID + '</td>';
+                    table += '<td>' + rows[i].Class + '</td>';
+                    table += '<td>' + rows[i].Description + '</td>';
+                    table += '<td>' + rows[i].MTPD + '</td>';
+                    table += '<td>' + rows[i].RTO + '</td>';
+                    table += '<td>' + rows[i].RPO + '</td>';
+
+                    table += '</tr>';
+                }
+                console.log(table);
+                table += '</tbody>';
+                res.render(path.join(__dirname, '../public', 'r42.html'), {
                     table: table
                 });
             }
