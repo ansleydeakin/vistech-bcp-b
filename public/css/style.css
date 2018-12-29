@@ -884,7 +884,8 @@ support for no js
 =====================================================*/
 .logo-row {
 	position:relative;
-	width:133px;
+  /*width:133px;*/
+  width:300px;
 	z-index:1;
 }
 .header-transporent-bg-black{
@@ -3677,7 +3678,7 @@ header.affix  .logo-2, .header.affix.no-transparent .logo-2 {
 	transition: all .4s ease 0s;
 }
 .logo-img {
-  height: 42px;
+ height: 112px;
 }
 
 header .logo .logo-img {
@@ -3688,7 +3689,8 @@ header.affix .logo .logo-img {
 }
 .logo-2 {
 	display: block;
-	padding:33px 0 25px 0;
+  /*padding:33px 0 25px 0;*/
+  padding:33px 0 25px 0;
 	transition: all .4s ease 0s;
 }
 .header.no-transparent .logo-2 {
