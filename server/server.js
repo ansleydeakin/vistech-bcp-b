@@ -26,7 +26,7 @@ require('./routers/index')(app, server);
 
 require('dotenv').load();
 var encrypt = require('./library/encryption'); //For encryption
-const tokenGenerator = require('./library/token_generator'); //For token generator
+//const tokenGenerator = require('./library/token_generator'); //For token generator
 
 var bodyParser = require('body-parser')
 app.use(bodyParser.urlencoded({
@@ -53,6 +53,8 @@ app.use(session({
   cookie: { maxAge: 3000000 } //50 mins, please increase time to extend session time
 }))
 
+var jwt = require('jsonwebtoken');
+
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 /* ADD MYSQL DB CONNECTION  ANSLEY 15/12/2018 */
@@ -68,6 +70,33 @@ var con = mysql.createConnection({
 con.connect();
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
+
+/* SENDGRID API ANSLEY 30/12/2018*/
+
+const SENDGRID_API_KEY = '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';
+const sgMail = require('@sendgrid/mail');
+sgMail.setApiKey(SENDGRID_API_KEY);
+
+ // using SendGrid's v3 Node.js Library
+  // https://github.com/sendgrid/sendgrid-nodejs
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+/* TEST SENDEMAIL (SENDGRID API) ANSLEY 30/12/2018*/
+  
+  app.get("/sendemail", function (req, res) {
+  var msg = {
+    to: 'lammyz_33@hotmail.com',
+    from: 'noreply@bcpme.com',
+    subject: 'Sending with SendGrid is Fun',
+    text: 'and easy to do anywhere, even with Node.js',
+    html: '<strong>and easy to do anywhere, even with Node.js</strong>',
+  };
+  sgMail.send(msg);
+  console.log(msg);
+  });
+  
+  //////////////////////////////////////////////////////////////////////////////////////////////////
 
 // **********************************Add your code here*******************************************
 
@@ -111,6 +140,7 @@ app.post('/loginsubmit', function (req, res) {
                   req.session.roles = rows[0].Roles;
                   req.session.firstname = rows[0].Firstname;
                   req.session.Lastname = rows[0].Lastname;
+                  req.session.email = rows[0].Email;
 
                   console.log(rows[0]);
                   console.log(rows[0].UserID);
@@ -976,8 +1006,151 @@ app.get("/critmatrix", function (req, res) {
 });
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
-// **********************************************************************************************
+/* ADD RESET USER ANSLEY 30/12/2018 */
 
+app.get("/reset", function (req, res) {
+      res.sendFile(path.join(__dirname, '../public', 'reset.html'));
+});
+
+app.post("/resetsubmit", function (req, res) {
+
+  if (req.body.constructor === Object && Object.keys(req.body).length === 0) {
+    res.sendFile(path.join(__dirname, '../public', 'reset.html'));
+}
+ 
+  var email = req.body.email;
+
+  var newtoken = jwt.sign({
+    data: email
+  }, 'secret', { expiresIn: '1h' });; //token expires in an hour
+
+      con.query('SELECT * from users WHERE email = \"' + email + '\"', function (err, rows, fields) {
+        if (!err) {
+            console.log(rows);
+            if (rows.length > 0) {
+
+              console.log(newtoken);
+
+              var msg = {
+                to: email,
+                from: 'noreply@bcpme.com',
+                subject: 'BCPme - Reset Password',
+                text: 'Please click on the following link to reset your password - ' + 'https://bcpapp.mybluemix.net/changepass?token='+newtoken,
+                html: 'Please click on the following link to reset your password - ' + 'https://bcpapp.mybluemix.net/changepass?token='+newtoken,
+              };
+              sgMail.send(msg);
+              console.log(msg);
+              res.send('Email with instructions has been sent');
+            }
+            else {
+                res.send("Account does not exist");
+                res.end();
+            }
+        }
+        else {
+            //ERROR
+            console.log(err);
+            console.log("Select user error");
+            res.sendFile(path.join(__dirname, '../public', 'reset.html'));
+        }
+    });
+
+});
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+/* ADD CHANGE PASSWORD (RESET PASSWORD) ANSLEY 31/12/2018 */
+
+app.get("/changepass", function (req, res) {
+
+  if (req.query.constructor === Object && Object.keys(req.query).length === 0) {
+    res.sendFile(path.join(__dirname, '../public', 'reset.html'));
+}
+
+  var token = req.query.token;
+  req.session.destroy
+
+  try {
+
+    var decoded = jwt.verify(token, 'secret');
+    
+    console.log(decoded); 
+    console.log(token); 
+    console.log('email address ' + String(decoded.data)); 
+
+    var email = String(decoded.data);
+
+    con.query('SELECT * FROM users WHERE Email = \"' + email + '\"', function (err, rows, fields) {
+
+      if (!err) {    
+     
+            if (rows.length > 0) {                   
+                // Cookie info
+                req.session.username = rows[0].Username;
+                req.session.userid = rows[0].UserID;
+                req.session.roles = rows[0].Roles;
+                req.session.firstname = rows[0].Firstname;
+                req.session.lastname = rows[0].Lastname;
+                req.session.email = rows[0].Email;
+
+                console.log(rows[0]);
+                console.log(rows[0].UserID);
+              
+                res.sendFile(path.join(__dirname, '../public', 'changepass.html'));
+            }
+            else {
+            //ERROR
+            console.log('no rows');
+            res.sendFile(path.join(__dirname, '../public', 'login.html'));
+            }
+      }
+    else {
+      //ERROR
+      console.log('error sql');
+      res.render(path.join(__dirname, '../public', 'login.html'));
+    }
+  });
+
+  } catch(err) {
+    
+    // err
+    res.send('Invalid link - please try again');
+  
+    }
+
+});
+
+
+app.post("/changepasssubmit", function (req, res) {
+
+  if (req.body.constructor === Object && Object.keys(req.body).length === 0) {
+    res.sendFile(path.join(__dirname, '../public', 'reset.html'));
+  }
+
+  var password = encrypt.sha1hash(req.body.password);
+  var email = String(req.session.email);
+
+  if (req.session) {
+
+    con.query('UPDATE users SET password = \"' + password + '\" WHERE email = \"' + email + '\"', function (err, rows, fields) {
+
+      if (!err) {    
+            console.log(rows);
+                      
+              res.send('Password has been changed successfully');
+          
+      }
+      else {
+      //ERROR
+      res.render(path.join(__dirname, '../public', 'login.html'));
+      }
+
+    });
+  }
+
+});
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+// **********************************************************************************************
 /* START THE APP & LISTEN TO THE PORT */
 
 const port = process.env.PORT || localConfig.port;
