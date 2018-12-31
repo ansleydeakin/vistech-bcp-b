@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>R2.2 - MTPD REFERENCE</title>
+    <title>VISTECH-BCP-B</title>
     <meta charset=utf-8>
     <!--[if IE]>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
     <meta name="robots" content="index, follow">
     <meta name="keywords" content="VISTECH-BCP-B">
     <meta name="description" content="VISTECH-BCP-B">
-    <meta name="author" content="P.W.">
+    <meta name="author" content="ANSLEY LAM">
 
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -19,6 +19,8 @@
     <link rel="apple-touch-icon" sizes="114x114" href="images/favicon/apple-touch-icon-114x114.png">
 
     <!-- CSS -->
+    <!-- REVOSLIDER CSS SETTINGS -->
+    <link rel="stylesheet" type="text/css" href="rs-plugin/css/settings.min.css" media="screen"/>
 
     <!--  BOOTSTRAP -->
     <link rel="stylesheet" href="css/bootstrap.min.css">
@@ -35,31 +37,34 @@
 
     <!-- ANIMATE -->
     <link rel='stylesheet' href="css/animate.min.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/sl-1.2.6/datatables.min.css"/>
-	
+
+    <!-- IE Warning CSS -->
+    <!--[if lte IE 8]>
+    <link rel="stylesheet" type="text/css" href="css/ie-warning.css"><![endif]-->
+    <!--[if lte IE 8]>
+    <link rel="stylesheet" type="text/css" href="css/ie8-fix.css"><![endif]-->
+
+    <!-- Magnific popup  in style.css	Owl Carousel Assets in style.css -->
+
     <!-- CSS end -->
 
     <!-- JS begin some js files in bottom of file-->
     <script src="js/modernizr.js"></script> <!-- Modernizr -->
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Modernizr -->
+    <!-- <script src="js/modernizr.js"></script> -->
 
     <!--JQuery -->
     <script src="js/jquery.min.js"></script>
 
     <!-- Upload CSV script-->
     <script src="js/env.js"></script>
-
-    <!-- Enabling & Disabling filter options script-->
-    <script src="js/filtertoggle.js"></script>
-
-    <script type="text/javascript" charset="utf8"
-            src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
-
-    <!-- Datatable filter API & Jquery-->
-    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-
-    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/sl-1.2.6/datatables.min.js"></script>
-
 
 </head>
 <body>
@@ -72,6 +77,40 @@
 <div id="wrap" class="boxed ">
     <div class="grey-bg"> <!-- Grey BG  -->
 
+        <!--[if lte IE 8]>
+        <div id="ie-container">
+            <div id="ie-cont-close">
+                <a href='#'
+                   onclick='javascript&#058;this.parentNode.parentNode.style.display="none"; return false;'><img
+                        src='images/ie-warn/ie-warning-close.jpg' style='border: none;' alt='Close'></a>
+            </div>
+            <div id="ie-cont-content">
+                <div id="ie-cont-warning">
+                    <img src='images/ie-warn/ie-warning.jpg' alt='Warning!'>
+                </div>
+                <div id="ie-cont-text">
+                    <div id="ie-text-bold">
+                        You are using an outdated browser
+                    </div>
+                    <div id="ie-text">
+                        For a better experience using this site, please upgrade to a modern web browser.
+                    </div>
+                </div>
+                <div id="ie-cont-brows">
+                    <a href='http://www.firefox.com' target='_blank'><img src='images/ie-warn/ie-warning-firefox.jpg'
+                                                                          alt='Download Firefox'></a>
+                    <a href='http://www.opera.com/download/' target='_blank'><img
+                            src='images/ie-warn/ie-warning-opera.jpg' alt='Download Opera'></a>
+                    <a href='http://www.apple.com/safari/download/' target='_blank'><img
+                            src='images/ie-warn/ie-warning-safari.jpg' alt='Download Safari'></a>
+                    <a href='http://www.google.com/chrome' target='_blank'><img
+                            src='images/ie-warn/ie-warning-chrome.jpg' alt='Download Google Chrome'></a>
+                </div>
+            </div>
+        </div>
+        <![endif]-->
+
+
         <!-- HEADER side menu -->
         <header id="nav-stick" class="header header-1 header-side-menu" style="position:fixed !important;">
             <div class="header-wrapper">
@@ -81,10 +120,9 @@
                         <!-- LOGO -->
                         <div class="logo-container-2">
                             <div class="logo-2">
-                                 <a href="index.html" class="clearfix">
+                                <a href="index.html" class="clearfix">
                                     <img src="images/logo.png" class="logo-img" alt="Logo">
                                 </a>
-
                             </div>
                         </div>
                     </div>
@@ -104,40 +142,44 @@
                 <div class="row">
 
                     <div class="col-md-8">
-                        <h1 class="page-title">R2.2 - MTPD REFERENCE</h1>
+                        <h1 class="page-title">MESSAGE</h1>
                     </div>
 
                     <div class="col-md-4">
                         <div class="breadcrumbs">
-                            <a href="index.html">HOME</a><span class="slash-divider">/</span><a href="/dashboard">DASHBOARD</a><span class="slash-divider">/</span>
-                            <a href="/admin">ADMIN</a><span class="slash-divider">/</span>
-                            <span class="bread-current">R2.2 - MTPD REFERENCE</span>
+                            <a href="index.html">HOME</a><span class="slash-divider">/</span><span
+                                class="bread-current">MESSAGE</span>
                         </div>
                     </div>
 
                 </div>
             </div>
         </div>
-        <div class="container bs-docs-container p-10 col-lg-10 col-lg-offset-1">
+        <div class="container bs-docs-container p-140-cont">
             <div class="row">
-                <div class="grey-light-bg leave-comment-cont col-lg-12">
+                <div class="grey-light-bg leave-comment-cont">
                     <!-- TITLE -->
-                    <h4 class="blog-page-title mt-50 mb-25">R2.2 - MTPD REFERENCE</h4>
-                    <div class="row">
-                        <div class="col-lg-4">
-						    <div class="form-group col-lg-12">
+                    <h4 class="blog-page-title mt-50 mb-25"><%= title %></h4>
+                    <div class="contact-form-container">
 
-                                      <div class="col-lg-8">
-                                            <table id="table_value" class="display nowrap">
-                                                    <%- table -%>
-                                            </table>
-                                      </div>      
-                            </div>
+                        <form>
+                            <p><%= message %></p>
+
+                        </form>
+
+
+                        <div class="alert alert-success hidden animated fadeIn" id="contactSuccess">
+                            <strong>Success!</strong> Your message has been sent to us.
+                        </div>
+
+                        <div class="alert alert-danger hidden animated shake" id="contactError">
+                            <strong>Error!</strong> There was an error sending your message.
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
         <!-- FOOTER 2 BLACK -->
         <footer id="footer3" class="page-section pt-80 pb-50 footer2-black">
             <div class="container">
@@ -145,7 +187,7 @@
 
                     <div class="col-md-4 col-sm-4 widget">
                         <div class="logo-footer-cont">
-						 <a href="index.html">
+                            <a href="index.html">
                                 <img class="logo-footer" src="images/logo.png" alt="logo">
                             </a>
                         </div>
@@ -156,6 +198,7 @@
                         <h4>NAVIGATE</h4>
                         <ul class="links-list bold a-text-cont">
                             <li><a href="index.html">HOME</a></li>
+                            <li><a href="">DATA REQUEST</a></li>
                             <li><a href="">TERMS OF SERVICE</a></li>
                             <li><a href="">PRIVACY POLICY</a></li>
                             <li><a href="">ABOUT US</a></li>
@@ -190,10 +233,8 @@
         <nav>
             <div class="fs-primary-nav">
                 <ul class="block-center-xy">
-                    <li><a href="/">HOME</a></li>
-                    <li><a href="/admin">ADMIN</a></li>
-                    <li><a href="/logout">LOGOUT</a></li>
-                    <li class="fs-label"><a href=""></a></li>
+                    <li><a href="#">HOME</a></li>
+                    <li class="fs-label"><a href="error.html">ERROR</a></li>
                 </ul>
             </div>
         </nav>
@@ -239,30 +280,6 @@
 
 <!-- FULL SCREEN MENU -->
 <script src="js/fs-menu.js"></script>
-<script>
-
-//DataTable JS
-    $(document).ready(function () {
-
-         ref1table = $('#table_value').DataTable({
-            "autoWidth": true,
-            "scrollX": false,
-            "searching": false,
-            "select": true,
-            "ordering": true,
-            "paging": false,
-            "info": false
-        });
-        
-                 ref1table.row( { selected: true } ).data();
-                 
-                //  $('#table_value tbody').on( 'click', 'tr', function () {
-
-    });
-   // });
-
-    //**/
-</script>
 
 
 <!-- JS end -->

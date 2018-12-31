@@ -172,6 +172,8 @@ app.get("/dashboard", function (req, res) {
   var roles = req.session.roles;
   var firstname = req.session.firstname;
   var lastname = req.session.Lastname;
+
+  var name = firstname + ' ' + lastname
   
   console.log(req.session)
 
@@ -186,7 +188,7 @@ app.get("/dashboard", function (req, res) {
   
 		   console.log("hello " + username);
       
-		   res.render(path.join(__dirname, '../public', 'dashboard.html'),{username:username});	  
+		   res.render(path.join(__dirname, '../public', 'dashboard.html'),{name:name});	  
       
 		});	 
 
@@ -340,7 +342,8 @@ app.post("/newusersubmit", function (req, res) {
             console.log(rows);
             if (rows.length > 0) {
                 //duplicate user
-                res.send("Username or Email already exist");
+                //res.send("Username or Email already exist");
+                res.render(path.join(__dirname, '../public', 'message.html'),{title:'There was an issue with your request', message: 'Username or Email already exist' });	
             }
             else {
                 console.log("Insert user");
@@ -355,7 +358,8 @@ app.post("/newusersubmit", function (req, res) {
                             //ERROR
                             console.log(err.message);
                             console.log("Insert user error");
-                            res.send("There was an issue adding the new user, please try again");
+                            //res.send("There was an issue adding the new user, please try again");
+                            res.render(path.join(__dirname, '../public', 'message.html'),{title:'There was an issue with your request', message: 'There was an issue adding the new user, please try again' });	
                         }
                     });
             }
@@ -1031,19 +1035,26 @@ app.post("/resetsubmit", function (req, res) {
 
               console.log(newtoken);
 
+              var firstname = rows[0].Firstname;
+              var lastname = rows[0].Lastname;
+              var fullname = firstname + ' ' + lastname
+
               var msg = {
                 to: email,
-                from: 'noreply@bcpme.com',
+                from: 'noreply@bcpme.com.au',
                 subject: 'BCPme - Reset Password',
-                text: 'Please click on the following link to reset your password - ' + 'https://bcpapp.mybluemix.net/changepass?token='+newtoken,
-                html: 'Please click on the following link to reset your password - ' + 'https://bcpapp.mybluemix.net/changepass?token='+newtoken,
+                text: 'Hi ' + fullname + ', ' + 'This link will expire in one hour, Please click on the following link to reset your password - ' +  'https://bcpapp.mybluemix.net/changepass?token='+newtoken,
+                html: 'Hi ' + fullname + ', ' + '<br>' + 'This link will expire in one hour, please click on the following link to reset your password - ' + '<br>' + 'https://bcpapp.mybluemix.net/changepass?token=' + newtoken ,
               };
               sgMail.send(msg);
               console.log(msg);
-              res.send('Email with instructions has been sent');
+              //res.send('Email with instructions has been sent');
+              res.render(path.join(__dirname, '../public', 'message.html'),{title:'Success', message: 'Email with instructions has been sent' });
+              
             }
             else {
-                res.send("Account does not exist");
+               //res.send("Account does not exist");
+                res.render(path.join(__dirname, '../public', 'message.html'),{title:'There was an issue with your request', message: 'Account does not exist' });
                 res.end();
             }
         }
@@ -1113,7 +1124,8 @@ app.get("/changepass", function (req, res) {
   } catch(err) {
     
     // err
-    res.send('Invalid link - please try again');
+    //res.send('Invalid link - please try again');
+    res.render(path.join(__dirname, '../public', 'message.html'),{title:'There was an issue with your request', message: 'Link is invalid' });
   
     }
 
@@ -1136,7 +1148,8 @@ app.post("/changepasssubmit", function (req, res) {
       if (!err) {    
             console.log(rows);
                       
-              res.send('Password has been changed successfully');
+              //res.send('Password has been changed successfully');
+              res.render(path.join(__dirname, '../public', 'message.html'),{title:'Success', message: 'Password has been changed successfully' });
           
       }
       else {
