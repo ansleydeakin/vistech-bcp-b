@@ -1,0 +1,123 @@
+<!doctype html>
+<html>
+	<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <title>BCPMe - Home</title>
+
+    <!-- Bootstrap core CSS -->
+	<link href="justincss/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+	<script src="justinjs/bootstrap.min.js"></script>
+	<script src="js/jquery.min.js"></script>
+	
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+
+	<script type='text/javascript'>$( document ).ready(function() {
+		 $('.leftmenutrigger').on('click', function(e) {
+		 $('.side-nav').toggleClass("open");
+		 e.preventDefault();
+		});
+	});</script>
+	
+    <!-- Custom styles for this template -->
+    <link href="justinstyle/navbar.css" rel="stylesheet">
+
+	</head>
+<body>
+
+  <div id="wrapper" class="animate">
+    <nav class="navbar header-top fixed-top navbar-expand-lg navbar-dark bg-company-red">
+      <span class="navbar-toggler-icon leftmenutrigger"></span>
+      <a class="navbar-brand" href="#"><img src="images/BCPMeLogo-W.png" width="145" height="54" alt="BCP Me"/></a>
+		
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText"
+        aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarText">
+        <ul class="navbar-nav animate side-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="#">Home
+              <span class="sr-only">(current)</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">BCP Tracker</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">New BCP Plan</a>
+          </li>
+		  <li class="nav-item">
+            <a class="nav-link" href="#">Logout</a>
+          </li>
+        </ul>
+        <ul class="navbar-nav ml-md-auto d-md-flex p-2">
+          <li class="nav-item">
+	  	  <img src="images/Doctor.png" alt="" width="71" height="70" class="rounded-circle"/> <span class="text-light">Dr. Mary Jones</span>
+		  </li>          
+        </ul>
+      </div>
+    </nav>
+    <div class="container-fluid">	
+		<div class="row p-4 col-12">
+		  <h5 class="p-2">Your Department</h5>
+		</div>		
+		<div class="row p-3">
+			  <div class="col-3">		  
+				<a href="" class="custom-card">			
+				  <div class="card card-block align-items-center">			  	          
+					  <div class="card-body">
+						  <h5 class="card-title">BCP Plan Tracker</h5>
+					  </div>
+					  <div id="colorstrip-green"> </div>
+					  <div style="height: 300px" class="row w-100 bg-dark justify-content-center align-items-center">
+						 <img src="images/tracker.png" width="101" height="98" alt=""/> 
+					  </div>
+				 </div>
+				</a>
+			</div>
+			<div class="col-6">
+				<a href="" class="custom-card">
+				  <div class="card card-block align-items-center">			  	          
+					  <div class="card-body">
+						  <h5 class="card-title">Start New BCP Plan</h5>
+					  </div>
+					  <div id="colorstrip-orange"> </div>
+					  <div style="height: 300px" class="row w-100 bg-dark justify-content-center align-items-center">
+						 <img src="images/start.png" width="101" height="98" alt=""/> 
+					  </div>
+				  </div>
+				</a>
+			</div>
+        	<div class="col-3">
+				<a href="" class="custom-card">
+					<div class="card card-block align-items-center">			  	          
+					  <div class="card-body">
+						  <h5 class="card-title">BCP System Catalog</h5>
+					  </div>
+				    <div id="colorstrip-blue"> </div>
+				  	<div style="height: 300px" class="row w-100 bg-dark justify-content-center align-items-center">
+					 <img src="images/search.png" width="101" height="98" alt=""/> 
+				  	</div>
+			  		</div>
+				</a>
+        	</div>
+      	</div>
+    </div>
+	  
+	<p class="mt-5 mb-3 text-muted text-center">&copy; Vistech 2019</p>
+  </div>
+</body>
+</html>
