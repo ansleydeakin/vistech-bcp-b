@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
-    <title>BCPMe - Home</title>
+    <title>BCPMe - BCP Plan</title>
 
     <!-- Bootstrap core CSS -->
 	<link href="justincss/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
@@ -60,9 +60,6 @@
             <a class="nav-link" href="#">New BCP Plan</a>
           </li>
 		  <li class="nav-item">
-            <a class="nav-link" href="#">BCP System Catalog</a>
-          </li>
-		  <li class="nav-item">
             <a class="nav-link" href="#">Logout</a>
           </li>
         </ul>
@@ -75,51 +72,89 @@
     </nav>
     <div class="container-fluid">	
 		<div class="row p-4 col-12">
-		  <h5 class="p-2">Your Department</h5>
+		  <h5 class="p-2">BCP Plan Creation Timeline</h5>
 		</div>		
-		<div class="row p-3">
-			  <div class="col-3">		  
-				<a href="" class="custom-card">			
-				  <div class="card card-block align-items-center">			  	          
-					  <div class="card-body">
-						  <h5 class="card-title">BCP Plan Tracker</h5>
-					  </div>
-					  <div id="colorstrip-green"> </div>
-					  <div style="height: 300px" class="row w-100 bg-dark justify-content-center align-items-center">
-						 <img src="images/tracker.png" width="101" height="98" alt=""/> 
-					  </div>
-				 </div>
-				</a>
+		
+		<div class="row p-3 mt-5">
+		  <ul class="timeline" id="timeline">
+			  <a href="#"><li class="li complete">
+				<div class="status">
+				  <h5 class="text-center">My Critical Systems</h5>
+				</div>
+			  </li></a>
+			  <a href="#"><li class="li complete">
+				<div class="status">
+				  <h5 class="text-center">My Importance Ratings</h5>
+				</div>
+			  </li></a>
+			  <a href="#"><li class="li inprogress">
+				<div class="status">
+				  <h5 class="text-center">My Continuality Actions</h5>
+				</div>
+			  </li></a>
+			  <li class="li">
+				<div class="status">
+				  <h5 class="text-center">My BCP Plan Summary</h5>
+				</div>
+			  </li>
+			  <li class="li">
+				<div class="status">
+				  <h5 class="text-center">Submit for Approval</h5>
+				</div>
+			  </li>
+		 </ul>   
+		 </div>
+	</div>
+	<div class="container-fluid">		 
+	  <div class="row m-2">
+		<div class="card col card-complete">	
+			<div class="d-flex">			  
+			  <h5 class="mr-auto card-title m-2 pt-2">Systems Identified: 13</h3>
+			  <div class="d-flex align-items-end flex-column">
+				  <div class="p-3">
+					  <span class="card-text p-1">Complete</span>
+					  <span class="dot-complete"></span>
+				  </div>				  
+				  <h6 class="card-subtitle mt-auto p-3">Updated: 4/1/2019</h6>			    			  
+			  </div>
+			  <a href="#" class="card-link grey-edit">Edit</a>
 			</div>
-			<div class="col-6">
-				<a href="" class="custom-card">
-				  <div class="card card-block align-items-center">			  	          
-					  <div class="card-body">
-						  <h5 class="card-title">Start New BCP Plan</h5>
-					  </div>
-					  <div id="colorstrip-orange"> </div>
-					  <div style="height: 300px" class="row w-100 bg-dark justify-content-center align-items-center">
-						 <img src="images/start.png" width="101" height="98" alt=""/> 
-					  </div>
-				  </div>
-				</a>
+		</div>			
+	  </div>
+ 	  <div class="row m-2">
+		<div class="card col card-inprogress">	
+			<div class="d-flex">			  
+			  <h5 class="mr-auto card-title m-2 pt-2">Systems Identified: 10/13</h3>
+			  <div class="d-flex align-items-end flex-column">
+				  <div class="p-3">
+					  <span class="card-text p-1">In progress</span>
+					  <span class="dot-inprogress"></span>
+				  </div>				  
+				  <h6 class="card-subtitle mt-auto p-3">Updated: 4/1/2019</h6>			    			  
+			  </div>
+			  <a href="#" class="card-link grey-edit">Edit</a>
 			</div>
-        	<div class="col-3">
-				<a href="" class="custom-card">
-					<div class="card card-block align-items-center">			  	          
-					  <div class="card-body">
-						  <h5 class="card-title">BCP System Catalog</h5>
-					  </div>
-				    <div id="colorstrip-blue"> </div>
-				  	<div style="height: 300px" class="row w-100 bg-dark justify-content-center align-items-center">
-					 <img src="images/search.png" width="101" height="98" alt=""/> 
-				  	</div>
-			  		</div>
-				</a>
-        	</div>
-      	</div>
-    </div>
-	  
+		</div>			
+	  </div>
+ 	  <div class="row m-2">
+		<div class="card col card-incomplete">	
+			<div class="d-flex">			  
+			  <h5 class="mr-auto card-title m-2 pt-2">Systems Identified: 0</h3>
+			  <div class="d-flex align-items-end flex-column">
+				  <div class="p-3">
+					  <span class="card-text p-1">Incomplete</span>
+					  <span class="dot-incomplete"></span>
+				  </div>				  
+				  <h6 class="card-subtitle mt-auto p-3">Updated: 4/1/2019</h6>			    			  
+			  </div>
+			  <a href="#" class="card-link grey-edit">Edit</a>
+			</div>
+		</div>			
+	  </div>
+	</div>
+	
+	
+  
 	<p class="mt-5 mb-3 text-muted text-center">&copy; Vistech 2019</p>
   </div>
 </body>
