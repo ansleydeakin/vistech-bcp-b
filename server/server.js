@@ -188,7 +188,7 @@ app.get("/dashboard", function (req, res) {
   
 		   console.log("hello " + username);
       
-		   res.render(path.join(__dirname, '../public', 'dashboard.html'),{name:name});	  
+		   res.render(path.join(__dirname, '../public', 'home.html'),{name:name,userid:userid});	  
       
 		});	 
 
@@ -1163,7 +1163,7 @@ app.post("/changepasssubmit", function (req, res) {
 });
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
-/* ADD SYSTEM DEPENDANCE ASSESSMENT ANSLEY 05/01/2019 */
+/* ADD SYSTEM ANSLEY 05/01/2019 */
 
 app.get("/system", function (req, res) {
 
@@ -1225,6 +1225,77 @@ app.get("/system", function (req, res) {
   }
 
 });
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+/* ADD SYSTEMS IMPACT PATH ANSLEY 06/01/2019 */
+
+app.get("/sysimpact", function (req, res) {
+
+  var username =  req.session.username;
+  var userid = req.session.userid;
+  var roles = req.session.roles;
+  var firstname = req.session.firstname;
+  var lastname = req.session.Lastname;
+
+  if (req.session.userid) {
+
+    if (req.session.roles == "admin"){
+
+      con.query('SELECT * FROM OS1SysImpactPaths', function (err, rows, fields) {
+        if (!err) {
+            //console.log(rows[0]);
+            var table = "";
+            table += "<thead><tr>";
+            table += "<th>System ID</th>" + "<th>System</th>" + "<th>Acronym</th>" + "<th>Program</th>" + "<th>ClinicalUnit</th>" + "<th>Function</th>" + "<th>Comment</th>"; //7
+            table += "</tr></thead>";
+            table += "<tbody>";
+            if (rows.length > 0) {
+                for (var i = 0; i < rows.length; i++) {
+
+                    table += '<tr>';
+
+                    table += '<td>' + rows[i].OS1ID + '</td>';
+                    table += '<td>' + rows[i].System + '</td>';
+                    table += '<td>' + rows[i].Acronym + '</td>';
+                    table += '<td>' + rows[i].Program + '</td>';
+                    table += '<td>' + rows[i].ClinicalUnit + '</td>';
+                    table += '<td>' + rows[i].Function + '</td>';
+                    table += '<td>' + rows[i].Comment + '</td>';
+
+                    table += '</tr>';
+                }
+                console.log(table);
+                table += '</tbody>';
+                res.render(path.join(__dirname, '../public', 'sysimpactpaths.html'), {
+                    table: table
+                });
+              }
+              else {
+                  //Fail
+                  console.log(err.message);
+                  res.render(path.join(__dirname, '../public', 'login.html'));
+              }
+          }
+          else {
+              //ERROR
+              console.log(err.message);
+              res.render(path.join(__dirname, '../public', 'login.html'));
+          }
+      });
+  
+      }
+      else{
+        res.render(path.join(__dirname, '../public', 'login.html'));
+      }
+  
+    }
+    else {
+  
+      res.redirect('/login');
+    
+    }
+  
+  });
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // **********************************************************************************************
