@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>NEW USER</title>
+    <title>SYSTEM</title>
     <meta charset=utf-8>
     <!--[if IE]>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
@@ -19,6 +19,7 @@
     <link rel="apple-touch-icon" sizes="114x114" href="images/favicon/apple-touch-icon-114x114.png">
 
     <!-- CSS -->
+
     <!--  BOOTSTRAP -->
     <link rel="stylesheet" href="css/bootstrap.min.css">
 
@@ -34,34 +35,31 @@
 
     <!-- ANIMATE -->
     <link rel='stylesheet' href="css/animate.min.css">
-
-    <!-- IE Warning CSS -->
-    <!--[if lte IE 8]>
-    <link rel="stylesheet" type="text/css" href="css/ie-warning.css"><![endif]-->
-    <!--[if lte IE 8]>
-    <link rel="stylesheet" type="text/css" href="css/ie8-fix.css"><![endif]-->
-
-    <!-- Magnific popup  in style.css	Owl Carousel Assets in style.css -->
-
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/sl-1.2.6/datatables.min.css"/>
+	
     <!-- CSS end -->
 
     <!-- JS begin some js files in bottom of file-->
     <script src="js/modernizr.js"></script> <!-- Modernizr -->
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-    <!-- Modernizr -->
-    <!-- <script src="js/modernizr.js"></script> -->
 
     <!--JQuery -->
     <script src="js/jquery.min.js"></script>
 
     <!-- Upload CSV script-->
     <script src="js/env.js"></script>
+
+    <!-- Enabling & Disabling filter options script-->
+    <script src="js/filtertoggle.js"></script>
+
+    <script type="text/javascript" charset="utf8"
+            src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+
+    <!-- Datatable filter API & Jquery-->
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/sl-1.2.6/datatables.min.js"></script>
+
 
 </head>
 <body>
@@ -74,7 +72,6 @@
 <div id="wrap" class="boxed ">
     <div class="grey-bg"> <!-- Grey BG  -->
 
-
         <!-- HEADER side menu -->
         <header id="nav-stick" class="header header-1 header-side-menu" style="position:fixed !important;">
             <div class="header-wrapper">
@@ -84,7 +81,7 @@
                         <!-- LOGO -->
                         <div class="logo-container-2">
                             <div class="logo-2">
-                                <a href="index.html" class="clearfix">
+                                  <a href="index.html" class="clearfix">
                                     <img src="images/logo.png" class="logo-img" alt="Logo">
                                 </a>
                             </div>
@@ -106,51 +103,80 @@
                 <div class="row">
 
                     <div class="col-md-8">
-                        <h1 class="page-title">NEW USER</h1>
+                        <h1 class="page-title">SYSTEM DEPENDANCE ASSESSMENT</h1>
                     </div>
+
+                    <div class="col-md-4">
+                        <div class="breadcrumbs">
+                            <a href="index.html">HOME</a><span class="slash-divider">/</span><a href="/dashboard">DASHBOARD</a><span class="slash-divider">/</span>
+                            <a href="/bcp">BCP</a><span class="slash-divider">/</span>
+                            <span class="bread-current">SYSTEM DEPENDANCE ASSESSMENT</span>
+                        </div>
                     </div>
 
                 </div>
             </div>
         </div>
-        <div class="container bs-docs-container p-80-cont col-lg-4 col-lg-offset-4">
+
+        <div class="container bs-docs-container p-10 col-lg-10 col-lg-offset-1">
             <div class="row">
-                <div class="grey-light-bg leave-comment-cont">
+                <div class="grey-light-bg leave-comment-cont col-lg-12">
                     <!-- TITLE -->
-                    <h4 class="blog-page-title mt-50 mb-25">INPUT USER DETAILS</h4>
+                    
+                <!--  <h4 class="blog-page-title mt-50 mb-25">SYSTEM</h4> -->
                     <div class="row">
-                        <form method="post" action="/newusersubmit" class="form">
-                            <div class="form-group col-lg-12">
-                                <input type="text" class="w-100" name="username" id="username" placeholder="User Name">
+                        <div class="col-lg-4">
+						    <div class="form-group col-lg-12">
+
+                                      <div class="col-lg-8">
+                                            <table id="table_value" class="display nowrap">
+                                                  <!--  <%- table -%> -->
+                                                  <thead>
+                                                    <tr> 
+                                                        <th>System</th>
+                                                        <th>Acronym</th>
+                                                        <th>Category</th>
+                                                        <th>Program</th>
+                                                        <th>ClinicalUnit</th>
+                                                        <th>Function</th>
+                                                        <th>Comment</th>
+                                                        <th>Activity</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                      </div>   
                             </div>
-                            <div class="form-group col-lg-12">
-                                <input type="password" class="w-100" name="password" id="password"
-                                       placeholder="Password">
-                            </div>
-                            <div class="form-group col-lg-12">
-                                <input type="text" class="w-100" name="firstname" id="firstname"
-                                       placeholder="First Name">
-                            </div>
-                            <div class="form-group col-lg-12">
-                                <input type="text" class="w-100" name="lastname" id="lastname" placeholder="Last name">
-                            </div>
-                            <div class="form-group col-lg-12">
-                                <input type="email" class="w-100" name="email" id="email" placeholder="E-mail">
-                            </div>
-                            <div class="form-group col-lg-12">
-                                    <label for="roles">Role</label>
-                                    <select name="roles" id="roles" class="form-control">
-                                        <option value="admin" selected>admin</option>
-                                        <option value="author">author</option>
-                                        <option value="user">user</option>
-                                    </select>
-                                </div>
-                        </form>
+                        </div>
                     </div>
+                    <div class="row">
+                            <div class="grey-light-bg leave-comment-cont">
+                                <!-- TITLE -->
+                                <div class="contact-form-container row">
+            
+                                    <div class="card col-lg-3">
+            
+                                        <div class="card-body">
+                                                <button id="btnAddRow" class='button button-full-center medium btn-block'>ADD</button>
+                                        </div>
+                                    </div>
+                                    <div class="card col-lg-3">
+    
+                                        <div class="card-body">
+                                                <button id="btnRemoveRow" class='button button-full-center medium btn-block'>REMOVE</button>
+                                        </div>
+                                    </div>
+                                    <div class="card col-lg-3">
+    
+                                            <div class="card-body">
+                                                    <button id="btnSubmit" class='button button-full-center medium btn-block'>SUBMIT</button>
+                                            </div>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
                 </div>
             </div>
         </div>
-
         <!-- FOOTER 2 BLACK -->
         <footer id="footer3" class="page-section pt-80 pb-50 footer2-black">
             <div class="container">
@@ -158,7 +184,7 @@
 
                     <div class="col-md-4 col-sm-4 widget">
                         <div class="logo-footer-cont">
-                          <a href="index.html">
+						 <a href="index.html">
                                 <img class="logo-footer" src="images/logofooter.png" alt="logo">
                             </a>
                         </div>
@@ -169,7 +195,6 @@
                         <h4>NAVIGATE</h4>
                         <ul class="links-list bold a-text-cont">
                             <li><a href="index.html">HOME</a></li>
-                            <li><a href="">DATA REQUEST</a></li>
                             <li><a href="">TERMS OF SERVICE</a></li>
                             <li><a href="">PRIVACY POLICY</a></li>
                             <li><a href="">ABOUT US</a></li>
@@ -203,12 +228,12 @@
         <!-- MENU -->
         <nav>
             <div class="fs-primary-nav">
-                    <ul class="block-center-xy">
-                            <li><a href="index.html">HOME</a></li>
-                            <li><a href="/admin">ADMIN</a></li>
-                            <li><a href="/logout">LOGOUT</a></li>
-                            <li class="fs-label"><a href=""></a></li>
-                        </ul>
+                <ul class="block-center-xy">
+                    <li><a href="/">HOME</a></li>
+                    <li><a href="/admin">ADMIN</a></li>
+                    <li><a href="/logout">LOGOUT</a></li>
+                    <li class="fs-label"><a href=""></a></li>
+                </ul>
             </div>
         </nav>
 
@@ -253,6 +278,55 @@
 
 <!-- FULL SCREEN MENU -->
 <script src="js/fs-menu.js"></script>
+<script>
+
+//DataTable JS
+  
+$(document).ready(function() {
+
+    var t = $('#table_value').DataTable({
+            "autoWidth": true,
+            "scrollX": false,
+            "searching": false,
+            "select": true,
+            "ordering": true,
+            "paging": false,
+            "info": false
+        });
+
+    var counter = 1;
+ 
+    $('#btnAddRow').on( 'click', function () {
+        t.row.add( [
+            '<select size="1" id="row-'+counter+'-system" name="row-'+counter+'-system"><option value="Edinburgh">ARIA</option>',
+            '<input type="text" id="row-'+counter+'-acronym" name="row-'+counter+'-acronym" value="">',
+            '',
+            '<select size="1" id="row-'+counter+'-program" name="row-'+counter+'-program"><option value="Edinburgh">Clinical Services</option>',
+            '<select size="1" id="row-'+counter+'-clinicalunit" name="row-'+counter+'-clinicalunit"><option value="Edinburgh">Access & Resource</option>',
+            '',
+            '<input type="text" id="row-'+counter+'-comment" name="row-'+counter+'-comment" value="">',
+            '<input type="text" id="row-'+counter+'-activity" name="row-'+counter+'-activity" value="">'
+        ] ).draw( false );
+ 
+        counter++;
+    } );
+ 
+    // Automatically add a first row of data
+    $('#btnAddRow').click();
+
+       $('#btnRemoveRow').on( 'click', function () {
+
+            var rows = t
+            .rows( '.selected' )
+            .remove()
+            .draw();
+
+        } );
+} );
+    
+
+    //**/
+</script>
 
 
 <!-- JS end -->
