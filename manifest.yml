@@ -5,6 +5,6 @@ applications:
   name: BCPAPP
   buildpack: sdk-for-nodejs
   command: npm start
-  memory: 2000MB
+  memory: 1900MB
   domain: mybluemix.net
   host: bcpapp
