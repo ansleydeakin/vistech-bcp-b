@@ -10,6 +10,7 @@
 	<link href="justincss/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 	<script src="justinjs/bootstrap.min.js"></script>
 	<script src="js/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
 	
     <style>
       .bd-placeholder-img {
@@ -30,6 +31,8 @@
 		 e.preventDefault();
 		});
 	});</script>
+
+  <script type='text/javascript'>function toggler(divId) {$("#" + divId).toggle();}</script>
 	
     <!-- Custom styles for this template -->
     <link href="justinstyle/navbar.css" rel="stylesheet">
@@ -69,92 +72,117 @@
 		  </li>          
         </ul>
       </div>
-    </nav>
-    <div class="container-fluid">	
-		<div class="row p-4 col-12">
-		  <h5 class="p-2">BCP Plan Creation Timeline</h5>
-		</div>		
+		</nav>
 		
-		<div class="row p-3 mt-5">
-		  <ul class="timeline" id="timeline">
-			  <a href="#"><li class="li complete">
-				<div class="status">
-				  <h5 class="text-center">My Critical Systems</h5>
+		
+    <div class="container-fluid">	
+	
+			<div class="row p-4">
+				<div class="col-6">	
+				<button type="button" class="btn btn-outline-secondary">Cancel</button>
 				</div>
-			  </li></a>
-			  <a href="#"><li class="li complete">
-				<div class="status">
-				  <h5 class="text-center">My Importance Ratings</h5>
+				<div class="col-6">	
+				<button type="button" class="btn btn-dark float-right">Save and Continue</button>
 				</div>
-			  </li></a>
-			  <a href="#"><li class="li inprogress">
-				<div class="status">
-				  <h5 class="text-center">My Continuality Actions</h5>
-				</div>
-			  </li></a>
-			  <li class="li">
-				<div class="status">
-				  <h5 class="text-center">My BCP Plan Summary</h5>
-				</div>
-			  </li>
-			  <li class="li">
-				<div class="status">
-				  <h5 class="text-center">Submit for Approval</h5>
-				</div>
-			  </li>
-		 </ul>   
-		 </div>
-	</div>
-	<div class="container-fluid">		 
-	  <div class="row m-2">
-		<div class="card col card-complete">	
-			<div class="d-flex">			  
-			  <h5 class="mr-auto card-title m-2 pt-2">Systems Identified: 13</h3>
-			  <div class="d-flex align-items-end flex-column">
-				  <div class="p-3">
-					  <span class="card-text p-1">Complete</span>
-					  <span class="dot-complete"></span>
-				  </div>				  
-				  <h6 class="card-subtitle mt-auto p-3">Updated: 4/1/2019</h6>			    			  
-			  </div>
-			  <a href="#" class="card-link h5 grey-edit">Edit ></a>
+				<h5 class="ml-4 mt-4">BCP Plan Creation Timeline</h5>
+				<div class="col-12"><hr></div>
+			</div>		
+			
+			<div class="row p-3 mt-5">
+				<ul class="timeline" id="timeline">
+					<a href="#"><li class="li complete">
+					<div class="status">
+						<h5 class="text-center">My Critical Systems</h5>
+					</div>
+					</li></a>
+					<a href="#"><li class="li complete">
+					<div class="status">
+						<h5 class="text-center">My Importance Ratings</h5>
+					</div>
+					</li></a>
+					<a href="#"><li class="li inprogress">
+					<div class="status">
+						<h5 class="text-center">My Continuality Actions</h5>
+					</div>
+					</li></a>
+					<li class="li">
+					<div class="status">
+						<h5 class="text-center">My BCP Plan Summary</h5>
+					</div>
+					</li>
+					<li class="li">
+					<div class="status">
+						<h5 class="text-center">Submit for Approval</h5>
+					</div>
+					</li>
+			 </ul>   
+			 </div>
+		</div>
+		<div class="container-fluid">		 
+			 <div class="row m-2">
+			<div class="card col card-inprogress">	
+				<div class="d-flex">			  
+					<h5 class="mr-auto card-title m-2 pt-2">Systems Identified: 10/13</h3>
+					<div class="d-flex align-items-end flex-column">
+						<div class="p-3">
+							<span class="card-text p-1">In progress</span>
+							<span class="dot-inprogress"></span>
+						</div>				  
+						<h6 class="card-subtitle mt-auto p-3">Updated: 4/1/2019</h6>			    			  
+					</div>
+					<a data-toggle="collapse" href="#myCard" onclick="toggler('myContent');" class="collapsed card-link grey-edit">Edit
+						<i class="fa fa-chevron-right pull-right"></i>
+					</a>
+				</div>			
+			</div>			
+			</div> 
+			 <div id="myContent" class="row collapse hidden p-4">
+				<div class="col-12">
+				<span>What systems that you undertake in your daily role?</span>
+				 
 			</div>
-		</div>			
-	  </div>
- 	  <div class="row m-2">
-		<div class="card col card-inprogress">	
-			<div class="d-flex">			  
-			  <h5 class="mr-auto card-title m-2 pt-2">Systems Identified: 10/13</h3>
-			  <div class="d-flex align-items-end flex-column">
-				  <div class="p-3">
-					  <span class="card-text p-1">In progress</span>
-					  <span class="dot-inprogress"></span>
-				  </div>				  
-				  <h6 class="card-subtitle mt-auto p-3">Updated: 4/1/2019</h6>			    			  
-			  </div>
-			  <a href="#" class="card-link h5 grey-edit">Edit ></a>
+			<div class="card col mt-3">	
+				<div class="d-flex">			  
+					<h6 class="mr-auto card-title m-2 pt-3">Systems</h6>
+					<a href="#" class="card-link grey-add">Add</a>
+				</div>
+			</div>			
+				<table class="table">
+					<thead>
+					<tr>
+						<th scope="col">System</th>
+						<th scope="col">Program</th>
+						<th scope="col">Clinical Unit</th>
+						<th scope="col">No. of Activities</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr>
+						<td>BossNet</td>
+						<td>Surgical Services</td>
+						<td>All Surgical</td>
+						<td>5</td>
+						<td><a href="#">Edit</a></td>
+						<td><a href="#">Delete</a></td>
+					</tr>
+					</tbody>
+				</table>
+			
 			</div>
-		</div>			
-	  </div>
- 	  <div class="row m-2">
-		<div class="card col card-incomplete">	
-			<div class="d-flex">			  
-			  <h5 class="mr-auto card-title m-2 pt-2">Systems Identified: 0</h3>
-			  <div class="d-flex align-items-end flex-column">
-				  <div class="p-3">
-					  <span class="card-text p-1">Incomplete</span>
-					  <span class="dot-incomplete"></span>
-				  </div>				  
-				  <h6 class="card-subtitle mt-auto p-3">Updated: 4/1/2019</h6>			    			  
-			  </div>
-			  <a href="#" class="card-link h5 grey-edit ">Edit ></a>
+		</div>
+		
+		<div class="container-fluid">	
+				<div class="row p-4">
+				<div class="col-12"><hr></div>
+				<div class="col-6">	
+				<button type="button" class="btn btn-outline-secondary">Cancel</button>
+				</div>
+				<div class="col-6">	
+				<button type="button" class="btn btn-dark float-right">Save and Continue</button>
+				</div>
 			</div>
-		</div>			
-	  </div>
-	<hr class="m-2"> 
-	<input class="btn btn-outline-dark btn-lg m-2" type="button" value="Back">
-	<p class="mt-5 mb-3 text-muted text-center">&copy; Vistech 2019</p>
-	</div>
-  </div>
-</body>
-</html>
+		<p class="mt-5 mb-3 text-muted text-center">&copy; Vistech 2019</p>
+		</div>
+	</body>
+	</html>
+	
