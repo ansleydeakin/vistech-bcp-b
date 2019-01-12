@@ -57,8 +57,8 @@ var jwt = require('jsonwebtoken');
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
-/* ADD MYSQL DB CONNECTION  ANSLEY 15/12/2018 */
-
+/* ADD MYSQL DB CONNECTION  ANSLEY 15/12/2018 * MAIN MySQL CONNECTION/ 
+/*
 var mysql = require('mysql');
 var con = mysql.createConnection({
     host: "sl-us-south-1-portal.47.dblayer.com",
@@ -68,9 +68,22 @@ var con = mysql.createConnection({
     database: "dbBCP"
 });
 con.connect();
-
+/*
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
+/* ADD MYSQL DB CONNECTION (BACKUP) ANSLEY 13/01/2019 * BACKUP MySQL CONNECTION/ 
+/*
+var mysql = require('mysql');
+var con = mysql.createConnection({
+    host: "sl-us-south-1-portal.31.dblayer.com",
+    port: "52296",
+    user: "admin",
+    password: "EKTWRTIPDMTCEDLI",
+    database: "dbBCP"
+});
+con.connect();
+/*
+//////////////////////////////////////////////////////////////////////////////////////////////////
 /* SENDGRID API ANSLEY 30/12/2018*/
 
 const SENDGRID_API_KEY = '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';
