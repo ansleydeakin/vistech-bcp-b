@@ -4,12 +4,11 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
-    <title>BCPMe - My Activity</title>
+    <title>BCPMe - My Importance Ratings</title>
 
     <!-- Bootstrap core CSS -->
 	<link href="justincss/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 	<script src="js/jquery.min.js"></script>
-	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
 	<script src="justinjs/bootstrap.min.js"></script>
 
     <style>
@@ -26,9 +25,9 @@
     </style>
 
 	<script type='text/javascript'>$( document ).ready(function() {
-		$('.leftmenutrigger').on('click', function(e) {
-		   $('.side-nav').toggleClass("open");
-		   e.preventDefault();
+		 $('.leftmenutrigger').on('click', function(e) {
+		 $('.side-nav').toggleClass("open");
+		 e.preventDefault();
 		});
 	});</script>
 	
@@ -36,7 +35,7 @@
 	
 	<script type="text/javascript">
     $(window).on('load',function(){
-        $('#myModal').modal({backdrop: 'static', keyboard: false});
+        $('#myModal').modal('show');
     });
 	</script>
 	
@@ -87,50 +86,52 @@
       
         <!-- Modal Header -->
         <div class="modal-header">
-          <h4 class="modal-title">My Activity</h4>
+          <h4 class="modal-title">My Importance Ratings</h4>
           <button type="button" class="close" >&times;</button>
         </div>
         
         <!-- Modal body -->
         <div class="modal-body">
-          <span><b>All fields marked with * are mandatory</b></span><br>
 		  <div class="mt-2">
-			<span>What functions and activities performed in normal practice are dependent on the system?<br>
-			Activities are at a summary level.  For example, perioperative care, elective day surgery procedures, acute antenatal care, triage and registration, accounts payable</span>
+			<span>For each activity, rate the level of dependency that it has on each of the systems</span>
 		  </div>
 		  <div class="form-group mt-3">
-			  <label for="function">Function*</label>
-			  <select class="form-control" id="function" required>
-				<option hidden >Make a selection</option>
-				<option>BossNet</option>
-				<option>2</option>
-				<option>3</option>
-				<option>4</option>
-			  </select>
+			  <label for="system"><h6>System Name</h6></label>
+			  <input type="text" class="form-control" readonly id="system" value="BossNet">
 		  </div>
 		  <div class="form-group">
-			  <label for="activity">Activity*</label>
-			  <input type="text" class="form-control" required id="activity">
-		  </div>
-		  <div class="form-group">
-			  <label for="dependance">Level of Dependance*</label>
-			  <div class="row">
-				  <div class="col-sm-6">
-					<label class="form-control radio-inline" style="height: 60px"><input type="radio" name="optradio" class="mr-3 mt-3">Critically Dependant</label>
-					<label class="form-control radio-inline" style="height: 60px"><input type="radio" name="optradio" class="mr-2 mt-3">Sometimes Dependant</label>
-					<label class="form-control radio-inline" style="height: 60px"><input type="radio" name="optradio" class="mr-2 mt-3">Minimal Dependance</label>
-				  </div>
-				  <div class="col-sm-6">
-					<label class="form-control radio-inline" style="height: 60px"><input type="radio" name="optradio" class="mr-2 mt-3">Fully Dependant</label>
-					<label class="form-control radio-inline" style="height: 60px"><input type="radio" name="optradio" class="mr-2 mt-3">Low Dependance</label>
-				  </div>
-			  </div>	
-		  </div>
+			  <label for="program"><h6>Program *</h6></label>
+			  <input type="text" class="form-control" readonly id="program" value="Surgical Services">
+		  </div>	  
+		<div class="card col mt-5 bg-light">	
+			<div class="d-flex">			  
+			  <h6 class="mr-auto card-title m-2 pt-2" style="height: 40px">Activities</h6>
+			</div>
+		</div>			
+		  <table class="table">
+			  <thead>
+				<tr>
+				  <th scope="col">Activity</th>
+				  <th scope="col">Impact Rating</th>
+				  <th scope="col">Maximum Tolerable Data Loss</th>
+				  <th scope="col">Maximum Tolerable Period of Disruption</th>
+				</tr>
+			  </thead>
+			  <tbody>
+				<tr>
+				  <td>Accessing patient record</td>
+				  <td>Not Set</td>
+				  <td>Not Set</td>
+				  <td>Not Set</td>
+				  <td><a href="#">Edit</a></td>
+				</tr>
+			  </tbody>
+			</table>
+        </div>
         
         <!-- Modal footer -->
         <div class="mt-5 modal-footer">
 			<div class="col-6">
-			  <button type="button" class="btn btn-outline-secondary">Delete</button>
 			  <button type="button" class="btn btn-outline-secondary">Cancel</button>
 			</div>
 			<div class="col-6">  

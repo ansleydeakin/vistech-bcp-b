@@ -1,0 +1,109 @@
+body {
+  padding: 100px;
+}
+
+.rangeDay {
+  position: relative;
+  width: 600px;
+  height: 5px;
+}
+
+.rangeDay input {
+  width: 100%;
+  position: absolute;
+  top: 2px;
+  height: 0;
+  -webkit-appearance: none;
+}
+.rangeDay input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  margin: -8px 0  0;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 0 !important;
+}
+.rangeDay input::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  margin: -8px 0  0;
+  border-radius: 50%;
+  background: #37adbf;
+  cursor: pointer;
+  border: 0 !important;
+}
+.rangeDay input::-ms-thumb {
+  width: 18px;
+  height: 18px;
+  margin: -8px 0  0;
+  border-radius: 50%;
+  background: #37adbf;
+  cursor: pointer;
+  border: 0 !important;
+}
+.rangeDay input::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 2px;
+  cursor: pointer;
+  background: #b2b2b2;
+}
+.rangeDay input::-moz-range-track {
+  width: 100%;
+  height: 4px;
+  cursor: pointer;
+  background: #b2b2b2;
+}
+.rangeDay input::-ms-track {
+  width: 100%;
+  height: 6px;
+  cursor: pointer;
+  background: #b2b2b2;
+}
+.rangeDay input:focus {
+  background: none;
+  outline: none;
+}
+.rangeDay input::-ms-track {
+  width: 100%;
+  cursor: pointer;
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+
+.rangeDay-labels {
+  margin: 18px -69px 0;
+  padding: 0;
+  list-style: none;
+}
+.rangeDay-labels li {
+  position: relative;
+  float: left;
+  width: 148px;
+  text-align: center;
+  color: #b2b2b2;
+  font-size: 14px;
+  cursor: pointer;
+}
+.rangeDay-labels li::before {
+  position: absolute;
+  top: -25px;
+  right: 0;
+  left: 0;
+  content: "";
+  margin: 0 auto;
+  width: 9px;
+  height: 9px;
+  background: #b2b2b2;
+  border-radius: 50%;
+}
+.rangeDay-labels .active {
+  color: #37adbf;
+}
+.rangeDay-labels .selected::before {
+  background: #37adbf;
+}
+.rangeDay-labels .active.selected::before {
+  display: none;
+}
