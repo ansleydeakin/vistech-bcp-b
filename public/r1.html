@@ -134,6 +134,35 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- CHANGED CODE FOR THE BUTTONS HERE-->
+                    <div class="row">
+                        <div class="grey-light-bg leave-comment-cont">
+                            <!-- TITLE -->
+                            <div class="contact-form-container row">
+        
+                                <div class="card col-lg-3">
+        
+                                    <div class="card-body">
+                                            <button id="btnAddRow" class='button button-full-center medium btn-block'>ADD</button>
+                                    </div>
+                                </div>
+                                <div class="card col-lg-3">
+
+                                    <div class="card-body">
+                                            <button id="btnRemoveRow" class='button button-full-center medium btn-block'>REMOVE</button>
+                                    </div>
+                                </div>
+                                <div class="card col-lg-3">
+
+                                        <div class="card-body">
+                                                <button id="btnSubmit" class='button button-full-center medium btn-block'>SUBMIT</button>
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END CHANGED CODE FOR THE BUTTONS HERE-->
                 </div>
             </div>
         </div>
@@ -253,9 +282,47 @@
             "info": false
         });
         
-                 ref1table.row( { selected: true } ).data();
+        ref1table.row( { selected: true } ).data();
                  
                 //  $('#table_value tbody').on( 'click', 'tr', function () {
+                    var counter = 1;
+ 
+        $('#btnAddRow').on( 'click', function () {
+            var num_rows = ref1table.rows().count() + 1;
+            //this won't always work, once systems start having deleted records, old numbers may pop up
+            ref1table.row.add( [
+                ''+num_rows+'',
+                //'<select size="1" id="row-'+counter+'-ImpactCategory" name="row-'+counter+'-ImpactCategory"><option value="Edinburgh">High</option>',
+                //'<select size="1" id="row-'+counter+'-Rating" name="row-'+counter+'-Rating"><option value="Edinburgh">5</option>',
+                '<input type="text" id="row-'+counter+'-ImpactCategory" name="row-'+counter+'-ImpactCategory" value="">',
+                '<input type="text" id="row-'+counter+'-Rating" name="row-'+counter+'-Rating" value="">',
+                '<input type="text" id="row-'+counter+'-Description" name="row-'+counter+'-Description" value="">',
+            ] ).draw( false );
+
+            counter++;
+        } );
+
+        // Automatically add a first row of data
+        $('#btnAddRow').click();
+
+        $('#btnRemoveRow').on( 'click', function () {
+        
+            if(ref1table.rows().count() >= 2){
+                var rows = ref1table
+                .rows( '.selected' )
+                .remove()
+                .draw();
+            } else {
+                //add an error message prompt
+                alert("You cannot delete this record.");
+            }
+
+        } );
+
+        $('#btnSubmit').on('click', function(){
+
+            
+        });
 
     });
    // });

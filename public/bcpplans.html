@@ -134,6 +134,34 @@
                             </div>
                         </div>
                     </div>
+                    <!-- CHANGED CODE FOR THE BUTTONS HERE-->
+                    <div class="row">
+                        <div class="grey-light-bg leave-comment-cont">
+                            <!-- TITLE -->
+                            <div class="contact-form-container row">
+        
+                                <div class="card col-lg-3">
+        
+                                    <div class="card-body">
+                                            <button id="btnAddRow" class='button button-full-center medium btn-block'>ADD</button>
+                                    </div>
+                                </div>
+                                <div class="card col-lg-3">
+
+                                    <div class="card-body">
+                                            <button id="btnRemoveRow" class='button button-full-center medium btn-block'>REMOVE</button>
+                                    </div>
+                                </div>
+                                <div class="card col-lg-3">
+
+                                        <div class="card-body">
+                                                <button id="btnSubmit" class='button button-full-center medium btn-block'>SUBMIT</button>
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END CHANGED CODE FOR THE BUTTONS HERE-->
                 </div>
             </div>
         </div>
@@ -243,7 +271,7 @@
 //DataTable JS
     $(document).ready(function () {
 
-         ref1table = $('#table_value').DataTable({
+         bcptable = $('#table_value').DataTable({
             "autoWidth": true,
             "scrollX": false,
             "searching": false,
@@ -253,9 +281,47 @@
             "info": false
         });
         
-                 ref1table.row( { selected: true } ).data();
-                 
-                //  $('#table_value tbody').on( 'click', 'tr', function () {
+        bcptable.row( { selected: true } ).data();
+        
+    //  $('#table_value tbody').on( 'click', 'tr', function () {
+        var counter = 1;
+ 
+        $('#btnAddRow').on( 'click', function () {
+            var num_rows = bcptable.rows().count() + 1;
+            //this won't always work, once systems start having deleted records, old numbers may pop up
+            bcptable.row.add( [
+                ''+num_rows+'',
+                '<input type="text" id="row-'+counter+'-Program" name="row-'+counter+'-Program" value="">',
+                '<input type="text" id="row-'+counter+'-System" name="row-'+counter+'-System" value="">',
+                '<input type="text" id="row-'+counter+'-Function" name="row-'+counter+'-Function" value="">',
+                '<input type="text" id="row-'+counter+'-Activity" name="row-'+counter+'-Activity" value="">',
+                '<input type="text" id="row-'+counter+'-ClinicalUnit" name="row-'+counter+'-ClinicalUnit" value="">',
+                '<input type="text" id="row-'+counter+'-ImmediateAction" name="row-'+counter+'-ImmediateAction" value="">',
+                '<input type="text" id="row-'+counter+'-MaintainDuration" name="row-'+counter+'-MaintainDuration" value="">',
+                '<input type="text" id="row-'+counter+'-SustainAction" name="row-'+counter+'-SustainAction" value="">',
+                '<input type="text" id="row-'+counter+'-Resources" name="row-'+counter+'-Resources" value="">',
+                '<select size="1" id="row-'+counter+'-Draft" name="row-'+counter+'-Draft"><option value="Edinburgh">Draft</option>',
+            ] ).draw( false );
+
+            counter++;
+        } );
+
+        // Automatically add a first row of data
+        $('#btnAddRow').click();
+
+        $('#btnRemoveRow').on( 'click', function () {
+
+            if(bcptable.rows().count() >= 2){
+                var rows = bcptable
+                .rows( '.selected' )
+                .remove()
+                .draw();
+            } else {
+                //add an error message prompt
+                alert("You cannot delete this record.");
+            }
+
+        } );
 
     });
    // });

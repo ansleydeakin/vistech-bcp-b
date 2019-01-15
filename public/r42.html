@@ -135,6 +135,34 @@
                             </div>
                         </div>
                     </div>
+                    <!-- CHANGED CODE FOR THE BUTTONS HERE-->
+                    <div class="row">
+                        <div class="grey-light-bg leave-comment-cont">
+                            <!-- TITLE -->
+                            <div class="contact-form-container row">
+        
+                                <div class="card col-lg-3">
+        
+                                    <div class="card-body">
+                                            <button id="btnAddRow" class='button button-full-center medium btn-block'>ADD</button>
+                                    </div>
+                                </div>
+                                <div class="card col-lg-3">
+
+                                    <div class="card-body">
+                                            <button id="btnRemoveRow" class='button button-full-center medium btn-block'>REMOVE</button>
+                                    </div>
+                                </div>
+                                <div class="card col-lg-3">
+
+                                        <div class="card-body">
+                                                <button id="btnSubmit" class='button button-full-center medium btn-block'>SUBMIT</button>
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END CHANGED CODE FOR THE BUTTONS HERE-->
                 </div>
             </div>
         </div>
@@ -244,7 +272,7 @@
 //DataTable JS
     $(document).ready(function () {
 
-         ref1table = $('#table_value').DataTable({
+         ref42table = $('#table_value').DataTable({
             "autoWidth": true,
             "scrollX": false,
             "searching": false,
@@ -254,10 +282,45 @@
             "info": false
         });
         
-                 ref1table.row( { selected: true } ).data();
+        ref42table.row( { selected: true } ).data();
                  
                 //  $('#table_value tbody').on( 'click', 'tr', function () {
+                    var counter = 1;
+ 
+        $('#btnAddRow').on( 'click', function () {
+            var num_rows = ref42table.rows().count() + 1;
+            //this won't always work, once systems start having deleted records, old numbers may pop up
+            ref42table.row.add( [
+                ''+num_rows+'',
+                '<input type="text" id="row-'+counter+'-Class" name="row-'+counter+'-Class" value="">',
+                '<input type="text" id="row-'+counter+'-Description" name="row-'+counter+'-Description" value="">',
+                //'<select size="1" id="row-'+counter+'-MTPD" name="row-'+counter+'-MTPD"><option value="Edinburgh">High</option>',
+                //'<select size="1" id="row-'+counter+'-RTO" name="row-'+counter+'-RTO"><option value="Edinburgh">5</option>',
+                //'<select size="1" id="row-'+counter+'-RPO" name="row-'+counter+'-RPO"><option value="Edinburgh">5</option>',
+                '<input type="text" id="row-'+counter+'-MTPD" name="row-'+counter+'-MTPD" value="">',
+                '<input type="text" id="row-'+counter+'-RTO" name="row-'+counter+'-RTO" value="">',
+                '<input type="text" id="row-'+counter+'-RPO" name="row-'+counter+'-RPO" value="">',
+            ] ).draw( false );
 
+            counter++;
+        } );
+
+        // Automatically add a first row of data
+        $('#btnAddRow').click();
+
+        $('#btnRemoveRow').on( 'click', function () {
+
+            if(ref42table.rows().count() >= 2){
+                var rows = ref42table
+                .rows( '.selected' )
+                .remove()
+                .draw();
+            } else {
+                //add an error message prompt
+                alert("You cannot delete this record.");
+            }
+
+        } );
     });
    // });
 
