@@ -57,7 +57,7 @@ var jwt = require('jsonwebtoken');
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
-/* ADD MYSQL DB CONNECTION  ANSLEY 15/12/2018 MAIN MySQL CONNECTION */ 
+/* ADD MYSQL DB CONNECTION  ANSLEY 15/12/2018 MAIN MySQL CONNECTION */
 
 var mysql = require('mysql');
 var con = mysql.createConnection({
@@ -65,9 +65,12 @@ var con = mysql.createConnection({
     port: "17869",
     user: "admin",
     password: "ZVJKNWUGFGFEXJBK",
-    database: "dbBCP"
+    database: "dbBCP",
+    multipleStatements: true //enable mutiple select statements
 });
 con.connect();
+con.query('SET SESSION sql_mode = ""', function (err, rows, fields) {} //disable sql_mode options
+);
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -141,6 +144,7 @@ app.post('/loginsubmit', function (req, res) {
                   req.session.firstname = rows[0].Firstname;
                   req.session.Lastname = rows[0].Lastname;
                   req.session.email = rows[0].Email;
+                  req.session.department = rows[0].Department;
 
                   console.log(rows[0]);
                   console.log(rows[0].UserID);
@@ -172,6 +176,7 @@ app.get("/dashboard", function (req, res) {
   var roles = req.session.roles;
   var firstname = req.session.firstname;
   var lastname = req.session.Lastname;
+  var department = req.session.department;
 
   var name = firstname + ' ' + lastname
   
@@ -188,7 +193,7 @@ app.get("/dashboard", function (req, res) {
   
 		   console.log("hello " + username);
       
-		   res.render(path.join(__dirname, '../public', 'home.html'),{name:name,userid:userid});	  
+		   res.render(path.join(__dirname, '../public', 'home.html'),{name:name,userid:userid,department:department});	  
       
 		});	 
 
@@ -214,11 +219,12 @@ app.get("/logout", function (req, res) {
 
 app.get("/usermanagement", function (req, res) {
 
-  var username =  req.session.username;
+  var username = req.session.username;
   var userid = req.session.userid;
   var roles = req.session.roles;
   var firstname = req.session.firstname;
   var lastname = req.session.Lastname;
+  var department = req.session.department;
 
   if (req.session) {
 
@@ -229,7 +235,7 @@ app.get("/usermanagement", function (req, res) {
             //console.log(rows[0]);
             var table = "";
             table += "<thead><tr>";
-            table += "<th>UserID</th>" + "<th>Username</th>" + "<th>Password</th>" + "<th>Firstname</th>" + "<th>Lastname</th>" + "<th>Email</th>" + "<th>Role</th>"; //7
+            table += "<th>UserID</th>" + "<th>Username</th>" + "<th>Password</th>" + "<th>Firstname</th>" + "<th>Lastname</th>" + "<th>Email</th>" + "<th>Role</th>" + "<th>Department</th>"; //7
             table += "</tr></thead>";
             table += "<tbody>";
             if (rows.length > 0) {
@@ -247,6 +253,7 @@ app.get("/usermanagement", function (req, res) {
                     table += '<td>' + rows[i].Lastname + '</td>';
                     table += '<td>' + rows[i].Email + '</td>';
                     table += '<td>' + rows[i].Roles + '</td>';
+                    table += '<td>' + rows[i].Department + '</td>';
 
                     table += '</tr>';
                 }
@@ -298,7 +305,37 @@ app.get("/newuser", function (req, res) {
   if (req.session) {
 
     if (req.session.roles == "admin"){
-      res.sendFile(path.join(__dirname, '../public', 'newuser.html'));
+      
+     // res.sendFile(path.join(__dirname, '../public', 'newuser.html'));
+     con.query('SELECT DISTINCT Program FROM r41FuncRef where Program <> "Information Technology"', function (err, rows, fields) {
+      if (!err) {
+        
+          var userdepartment = "";
+     
+          if (rows.length > 0) {
+              for (var i = 0; i < rows.length; i++) {
+                  
+                userdepartment += '<option value= \"' + rows[i].Program + '\">' + rows[i].Program + '</option>';
+                   
+              }
+              console.log(userdepartment);
+          
+              res.render(path.join(__dirname, '../public', 'newuser.html'), {
+                  userdepartment: userdepartment
+              });
+            }
+            else {
+                //Fail
+                console.log(err.message);
+                res.render(path.join(__dirname, '../public', 'login.html'));
+            }
+        }
+        else {
+            //ERROR
+            console.log(err.message);
+            res.render(path.join(__dirname, '../public', 'login.html'));
+        }
+    });
     }
     else {
       res.render(path.join(__dirname, '../public', 'login.html'));
@@ -1165,6 +1202,7 @@ app.post("/changepasssubmit", function (req, res) {
 //////////////////////////////////////////////////////////////////////////////////////////////////
 /* ADD SYSTEM ANSLEY 05/01/2019 */
 
+/*
 app.get("/system", function (req, res) {
 
   var username =  req.session.username;
@@ -1225,7 +1263,7 @@ app.get("/system", function (req, res) {
   }
 
 });
-
+*/
 //////////////////////////////////////////////////////////////////////////////////////////////////
 /* ADD SYSTEMS IMPACT PATH ANSLEY 06/01/2019 */
 
@@ -1296,6 +1334,183 @@ app.get("/sysimpact", function (req, res) {
     }
   
   });
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+/* ADD PLAN CREATION ANSLEY 13/01/2019 */
+
+
+app.get("/plan", function (req, res) {
+
+  var username =  req.session.username;
+  var userid = req.session.userid;
+  var roles = req.session.roles;
+  var firstname = req.session.firstname;
+  var lastname = req.session.Lastname;
+  var department = req.session.department;
+
+  var name = firstname + ' ' + lastname
+
+  if (req.session.userid) {
+
+      con.query('SELECT System, Program, ClinicalUnit, Count(Activity) as NoOfActivity FROM MySystems WHERE UserID= \"' + userid + '\" GROUP BY System', function (err, rows, fields) {
+        if (!err) {
+           
+            var table = "";
+
+            console.log(rows);
+            
+            if (rows.length > 0) {
+                for (var i = 0; i < rows.length; i++) {
+
+                  table += "<tr>";
+
+                  table += '<td>' + rows[i].System + '</td>';
+                  table += '<td>' + rows[i].Program + '</td>';
+                  table += '<td>' + rows[i].ClinicalUnit + '</td>';
+                  table += '<td>' + rows[i].NoOfActivity + '</td>';
+
+                  table += '</tr>';
+
+                }
+                
+                console.log(table);
+
+            
+                res.render(path.join(__dirname, '../public', 'plan.html'), {
+                   name:name, userid:userid, i:i, table:table,date:date
+                });
+            }
+            else {
+                //Fail
+                //console.log(err.message);
+
+                  var system = "";
+                  var i = 0;
+
+                  res.render(path.join(__dirname, '../public', 'plan.html'), {
+                    name:name, userid:userid,i:i,table:table,date:date
+                  });
+            }
+        }
+        else {
+            //ERROR
+            console.log(err.message);
+            res.render(path.join(__dirname, '../public', 'login.html'));
+        }
+    });
+
+  }
+  else {
+
+    res.redirect('/login');
+  
+  }
+
+});
+//////////////////////////////////////////////////////////////////////////////////////////////////
+/* ADD SYSTEM CREATION ANSLEY 14/01/2019 */
+
+
+app.get("/system", function (req, res) {
+
+  var username =  req.session.username;
+  var userid = req.session.userid;
+  var roles = req.session.roles;
+  var firstname = req.session.firstname;
+  var lastname = req.session.Lastname;
+  var department = req.session.department;
+
+  var name = firstname + ' ' + lastname
+
+  if (req.session.userid) {
+
+      con.query('SELECT * FROM r3SysReg; SELECT DISTINCT Program FROM r41FuncRef;', function (err, rows, fields) {
+        if (!err) {
+           
+            var system = "";
+            var program = "";
+
+            var result1 = rows[0];
+            var result2 = rows[1];
+
+            console.log(result1[1]);
+           
+            if (rows.length > 0) {
+                for (var i = 0; i < result1.length; i++) {
+
+                    system += '<option value= \"' + result1[i].System + '\">' + result1[i].System + '</option>';
+
+                }
+                for (var i = 0; i < result2.length; i++) {
+
+                  program += '<option value= \"' + result2[i].Program + '\">' + result2[i].Program + '</option>';
+
+              }
+                console.log(program);
+            
+                res.render(path.join(__dirname, '../public', 'mySystemHome.html'), {
+                    system: system, program:program, name:name, userid:userid
+                });
+            }
+            else {
+                //Fail
+                //console.log(err.message);
+                res.render(path.join(__dirname, '../public', 'home.html'), {
+                  name:name,userid:userid,department:department
+              });
+            }
+        }
+        else {
+            //ERROR
+            console.log(err.message);
+            res.render(path.join(__dirname, '../public', 'home.html'), {
+              name:name,userid:userid,department:department
+          });
+        }
+    });
+
+  }
+  else {
+
+    res.redirect('/login');
+  
+  }
+
+});
+//////////////////////////////////////////////////////////////////////////////////////////////////
+/* FETCH CLINIC UNIT BASED ON PROGRAM ANSLEY 15/01/2019 */
+
+app.get("/unit", function (req, res) {
+
+    var selectedprogram = req.query.selectedprogram;
+    
+    console.log(selectedprogram);
+
+      con.query('SELECT ClinicalUnit FROM r41FuncRef WHERE Program=\"' + selectedprogram + '\"', function (err, rows, fields) {
+
+        if (!err) {
+           
+            var clinicalunit = "";
+           
+            if (rows.length > 0) {
+                for (var i = 0; i < rows.length; i++) {
+
+                  clinicalunit += '<option value=\"' + rows[i].ClinicalUnit + '\">' + rows[i].ClinicalUnit + '</option>';
+
+                }
+                
+                console.log(clinicalunit);
+                res.send(clinicalunit);
+
+            }
+            else {
+              res.end()
+            }
+        }
+
+    });
+
+});
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // **********************************************************************************************
