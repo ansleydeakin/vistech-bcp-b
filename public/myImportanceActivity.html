@@ -1,0 +1,252 @@
+<!doctype html>
+<html>
+	<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <title>BCPMe - My Importance Ratings - Activity</title>
+
+    <!-- Bootstrap core CSS -->
+	<link href="justincss/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+	<script src="js/jquery.min.js"></script>
+	<script src="justinjs/bootstrap.min.js"></script>
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+
+	<script type='text/javascript'>$( document ).ready(function() {
+		$('.leftmenutrigger').on('click', function(e) {
+		   $('.side-nav').toggleClass("open");
+		   e.preventDefault();
+		});
+	});</script>
+	
+	<script type='text/javascript'>function toggler(divId) {$("#" + divId).toggle();}</script>
+	
+	<script type="text/javascript">
+    $(window).on('load',function(){
+        $('#myModal').modal({backdrop: 'static', keyboard: false});
+    });
+	</script>
+	
+    <!-- Custom styles for this template -->
+    <link href="justinstyle/navbar.css" rel="stylesheet">
+	<link href="justinstyle/bcpmeMin.css" rel="stylesheet">
+	<link href="justinstyle/bcpmeHrs.css" rel="stylesheet">
+	<link href="justinstyle/bcpmeDay.css" rel="stylesheet">
+	<link href="justinstyle/bcpmeWek.css" rel="stylesheet">
+
+	</head>
+<body>
+
+ <div id="wrapper" class="animate">
+    <nav class="navbar header-top fixed-top navbar-expand-lg navbar-dark bg-company-red">
+      <span class="navbar-toggler-icon leftmenutrigger"></span>
+      <a class="navbar-brand" href="#"><img src="images/BCPMeLogo-W.png" width="145" height="54" alt="BCP Me"/></a>
+		
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText"
+        aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarText">
+        <ul class="navbar-nav animate side-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="#">Home
+              <span class="sr-only">(current)</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">BCP Tracker</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">New BCP Plan</a>
+          </li>
+		  <li class="nav-item">
+            <a class="nav-link" href="#">Logout</a>
+          </li>
+        </ul>
+        <ul class="navbar-nav ml-md-auto d-md-flex p-2">
+          <li class="nav-item">
+	  	  <img src="images/Doctor.png" alt="" width="71" height="70" class="rounded-circle"/> <span class="text-light">Dr. Mary Jones</span>
+		  </li>          
+        </ul>
+      </div>
+    </nav>
+	
+  <!-- The Modal -->
+  <div class="modal hide fade" id="myModal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">My Importance Ratings: Activity</h4>
+          <button type="button" class="close" >&times;</button>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="modal-body">
+          <span><b>All fields marked with * are mandatory</b></span><br>
+		  <div class="mt-2">
+		  
+		  <span>
+		  Step 1.	Consider how a system disruption could impact the organisation, documenting the key points, impact category and rating 
+		  <ul>
+		    <li>How will a disruption to the activity impact the organisation?</li>
+			<li>What is the impact of this disruption?</li>
+			<li>What is the impact category?</li>
+			<li>What is the impact rating for different periods of disruption?</li>
+		  </ul>
+		  Step 2.	Using the impact ratings determined in step 1 and through discussion, assign a Maximum Tolerable Data Loss (MTPD)  that falls within the timeframe correlating to a level 4 or 5 rating.
+		  <ul>
+			<li>How long can the disruption be tolerated before the impact is realised?</li>
+		  </ul>
+		  Step 3.	Consider how loss of data could impact the organisation and assign a Maximum Tolerable Period of Disruption (MTDL) period from the drop-down list, noting, this will translate to the data backup regime.
+          <ul>
+			<li>How critical is currency of data to the impact category identified and for what period is data loss tolerable</li>
+          </ul>
+	      </span>
+		  </div>
+		  <div class="form-group">
+			  <label for="activity"><h6>Activity</h6></label>
+			  <input type="text" class="form-control" readonly id="activity" value="Accessing patient record">
+		  </div>
+		  <div class="form-group">
+			  <label for="category"><h6>Impact Category *</h6></label>
+			  <div class="row">
+				  <div class="col-sm-6">
+					<label class="form-control radio-inline" style="height: 60px"><input type="radio" name="optradio" class="mr-3 mt-3">People Effects</label>
+					<label class="form-control radio-inline" style="height: 60px"><input type="radio" name="optradio" class="mr-2 mt-3">Reputation</label>
+					<label class="form-control radio-inline" style="height: 60px"><input type="radio" name="optradio" class="mr-2 mt-3">Legal and Compliance</label>
+				  </div>
+				  <div class="col-sm-6">
+					<label class="form-control radio-inline" style="height: 60px"><input type="radio" name="optradio" class="mr-2 mt-3">Financial Impact</label>
+					<label class="form-control radio-inline" style="height: 60px"><input type="radio" name="optradio" class="mr-2 mt-3">Service Outputs</label>
+					<label class="form-control radio-inline" style="height: 60px"><input type="radio" name="optradio" class="mr-2 mt-3">Management Impact</label>
+				  </div>
+			  </div>	
+		  </div>
+		 
+		  <div class="form-group">
+			  <label for="rating"><h6>Impact Rating</h6></label>	
+		  </div>
+		  <div class="form-group ml-3">
+			  <label for="rating-mins">How cirtical is the activity if the system is disrupted between 1 to 60 Minutes? *</label>
+			  <div class="row ml-5 mt-3">		  
+				<div class="rangeMin">
+				  <input id="rangeMin" type="range" min="1" max="5" steps="1" value="1">
+				</div>
+				<ul class="rangeMin-labels">
+				  <li>Negligible</li>
+				  <li>Minor</li>
+				  <li>Moderate</li>
+				  <li>Major</li>
+				  <li>Servere</li>
+				</ul>
+  			  </div>		  
+		  </div>
+		  <div class="form-group ml-3">
+			  <label for="ratingHrs">How cirtical is the activity if the system is disrupted between 1 to 24 Hours? *</label>
+			  <div class="row ml-5 mt-3">		  
+    		    <div class="rangeHrs">
+				  <input id="ratingHrs" type="range" min="1" max="5" steps="1" value="1">
+				</div>
+				<ul class="rangeHrs-labels">
+				  <li>Negligible</li>
+				  <li>Minor</li>
+				  <li>Moderate</li>
+				  <li>Major</li>
+				  <li>Servere</li>
+				</ul>
+  			  </div>			  
+		  </div>	
+		   <div class="form-group ml-3">
+			  <label for="ratingDay">How cirtical is the activity if the system is disrupted between 1 to 7 Days? *</label>
+			  <div class="row ml-5 mt-3">		  
+				<div class="rangeDay">
+				  <input id="ratingDay" type="range" min="1" max="5" steps="1" value="1">
+				</div>
+				<ul class="rangeDay-labels">
+				  <li>Negligible</li>
+				  <li>Minor</li>
+				  <li>Moderate</li>
+				  <li>Major</li>
+				  <li>Servere</li>
+				</ul>
+  			  </div>			  
+		  </div>
+		   <div class="form-group ml-3">
+			  <label for="ratingWek">How cirtical is the activity if the system is disrupted between 1+ Weeks? *</label>
+			  <div class="row ml-5 mt-3">		  
+				<div class="rangeWek">
+				  <input id="ratingWek" type="range" min="1" max="5" steps="1" value="1">
+				</div>
+				<ul class="rangeWek-labels">
+				  <li>Negligible</li>
+				  <li>Minor</li>
+				  <li>Moderate</li>
+				  <li>Major</li>
+				  <li>Servere</li>
+				</ul>
+  			  </div>			  
+		  </div>
+		  <div class="form-group mt-3">
+			  <label for="mtpd"><h6>Maximum Tolerable Data Loss (MTPD) *</h6></label>
+			  <select class="form-control" id="mtpd" required>
+				<option hidden >Make a selection</option>
+				<option>Nil</option>
+				<option>2 Hr</option>
+				<option>4 Hr</option>
+				<option>8 Hr</option>
+				<option>1 Day</option>
+				<option>3 Days</option>
+				<option>1 Week</option>
+				<option>2 Weeks</option>
+				<option>1 Month +</option>
+			  </select>
+		  </div>		  
+		  <div class="form-group">
+			  <label for="mtdl"><h6>Maximum Tolerable Period of Disruption (MTDL) *</h6></label>
+			  <select class="form-control" id="mtdl" required>
+				<option hidden >Make a selection</option>
+				<option>Nil</option>
+				<option>2 Hr</option>
+				<option>4 Hr</option>
+				<option>8 Hr</option>
+				<option>1 Day</option>
+				<option>3 Days</option>
+				<option>1 Week</option>
+				<option>2 Weeks</option>
+				<option>1 Month +</option>
+			  </select>
+		  </div>		  
+        <!-- Modal footer -->
+        <div class="mt-5 modal-footer">
+			<div class="col-6">
+			  <button type="button" class="btn btn-outline-secondary">Cancel</button>
+			</div>
+			<div class="col-6">  
+			  <button type="button" class="btn btn-dark float-right">Save</button>
+			</div>
+		</div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+	<script src="justinjs/bcpmeMin.js"></script>
+	<script src="justinjs/bcpmeHrs.js"></script>
+ 	<script src="justinjs/bcpmeDay.js"></script>
+	<script src="justinjs/bcpmeWek.js"></script>
+</body>
+</html>
