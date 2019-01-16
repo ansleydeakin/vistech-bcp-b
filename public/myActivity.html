@@ -74,7 +74,7 @@
         </ul>
         <ul class="navbar-nav ml-md-auto d-md-flex p-2">
           <li class="nav-item">
-	  	  <img src="images/Doctor.png" alt="" width="71" height="70" class="rounded-circle"/> <span class="text-light">Dr. Mary Jones</span>
+              <img src="images/ProfileImages/<%= userid %>.png" alt="" width="71" height="70" class="rounded-circle"/> <span class="text-light"><%= name %></span>
 		  </li>          
         </ul>
       </div>
@@ -88,7 +88,7 @@
         <!-- Modal Header -->
         <div class="modal-header">
           <h4 class="modal-title">My Activity</h4>
-          <button type="button" class="close" >&times;</button>
+          <button type="button" onclick="window.location.href='/system'" value="Redirect" class="close" >&times;</button>
         </div>
         
         <!-- Modal body -->
@@ -102,10 +102,11 @@
 			  <label for="function">Function*</label>
 			  <select class="form-control" id="function" required>
 				<option hidden >Make a selection</option>
-				<option>BossNet</option>
+			<!--	<option>BossNet</option>
 				<option>2</option>
 				<option>3</option>
-				<option>4</option>
+        <option>4</option> -->
+        <%- functionlist -%>
 			  </select>
 		  </div>
 		  <div class="form-group">
@@ -131,7 +132,7 @@
         <div class="mt-5 modal-footer">
 			<div class="col-6">
 			  <button type="button" class="btn btn-outline-secondary">Delete</button>
-			  <button type="button" class="btn btn-outline-secondary">Cancel</button>
+			  <button type="button" onclick="window.location.href='/plan'" value="Redirect" class="btn btn-outline-secondary">Cancel</button>
 			</div>
 			<div class="col-6">  
 			  <button type="button" class="btn btn-dark float-right">Save</button>

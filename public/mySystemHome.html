@@ -41,16 +41,18 @@
 	</script>
 	
 	<script>
-/*
+
 			function ToggleOnOff(){
-				if ($("#program").val() == ''){
-					document.getElementById('unit').disabled=true;
+				if ($("#system").val() == ''){
+					document.getElementById('description').readonly=true;
+					document.getElementById('comment').readonly=true;
 				}
-				else if ($("#program").val() != ''){
-					document.getElementById('unit').disabled=false;
+				else if ($("#system").val() != ''){
+					document.getElementById('description').readonly=false;
+					document.getElementById('comment').readonly=false;
 				}
 			}
-*/
+
 		var fetchunit=function (){
 	 
 			//ToggleOnOff();
@@ -112,7 +114,7 @@
         </ul>
         <ul class="navbar-nav ml-md-auto d-md-flex p-2">
           <li class="nav-item">
-	  	  <img src="images/Doctor.png" alt="" width="71" height="70" class="rounded-circle"/> <span class="text-light">Dr. Mary Jones</span>
+							<img src="images/ProfileImages/<%= userid %>.png" alt="" width="71" height="70" class="rounded-circle"/> <span class="text-light"><%= name %></span>
 		  </li>          
         </ul>
       </div>
@@ -137,7 +139,7 @@
 		  </div>
 		  <div class="form-group mt-3">
 			  <label for="system">System Name*</label>
-			  <select class="form-control" c id="system">
+			  <select class="form-control" id="system" onclick="ToggleOnOff()">
 				<!--	<option value="" hidden >Make a selection</option>
 				<option>BossNet</option>
 				<option>2</option>
@@ -148,7 +150,7 @@
 		  </div>
 		  <div class="form-group">
 			  <label for="description">System Description</label>
-			  <input type="text" class="form-control" readonly id="description">
+			  <input type="text" class="form-control" id="description">
 		  </div>
 		  <div class="form-group">
 			  <label for="program">Program*</label>
@@ -173,12 +175,12 @@
 		  </div>	
 		  <div class="form-group">
 			  <label for="comment">Comment/Contact</label>
-			  <input type="text" class="form-control" readonly id="comment">
+			  <input type="text" class="form-control" id="comment">
 		  </div>		  
 		<div class="card col mt-5">	
 			<div class="d-flex">			  
 			  <h6 class="mr-auto card-title m-2 pt-2">Activities</h6>
-			  <a href="#" class="card-link grey-add">Add</a>
+			  <a href="/activities" class="card-link grey-add">Add</a>
 			</div>
 		</div>			
 		  <table class="table">
@@ -190,13 +192,14 @@
 				</tr>
 			  </thead>
 			  <tbody>
-				<tr>
+			<!--	<tr>
 				  <td>Consult</td>
 				  <td>Accessing patient record</td>
 				  <td>Full</td>
 				  <td><a href="#">Edit</a></td>
 				  <td><a href="#">Delete</a></td>
-				</tr>
+				</tr> -->
+
 			  </tbody>
 			</table>
         </div>

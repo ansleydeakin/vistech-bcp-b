@@ -1513,6 +1513,64 @@ app.get("/unit", function (req, res) {
 });
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
+/* ADD ACTIVITIES ANSLEY 16/01/2019 */
+
+app.get("/activities", function (req, res) {
+
+  var username =  req.session.username;
+  var userid = req.session.userid;
+  var roles = req.session.roles;
+  var firstname = req.session.firstname;
+  var lastname = req.session.Lastname;
+  var department = req.session.department;
+
+  var name = firstname + ' ' + lastname
+
+  if (req.session.userid) {
+
+      con.query('SELECT DISTINCT Function FROM Function', function (err, rows, fields) {
+        if (!err) {
+           
+            var functionlist = "";
+           
+            if (rows.length > 0) {
+                for (var i = 0; i < rows.length; i++) {
+
+                  functionlist += '<option value= \"' + rows[i].Function + '\">' + rows[i].Function + '</option>';
+
+                }
+            
+                res.render(path.join(__dirname, '../public', 'myActivity.html'), {
+                  functionlist: functionlist, name:name, userid:userid
+                });
+            }
+            else {
+                //Fail
+                //console.log(err.message);
+                res.render(path.join(__dirname, '../public', 'plan.html'), {
+                  name:name,userid:userid,department:department
+              });
+            }
+        }
+        else {
+            //ERROR
+            console.log(err.message);
+            res.render(path.join(__dirname, '../public', 'plan.html'), {
+              name:name,userid:userid,department:department
+          });
+        }
+    });
+
+  }
+  else {
+
+    res.redirect('/login');
+  
+  }
+
+});
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
 // **********************************************************************************************
 /* START THE APP & LISTEN TO THE PORT */
 
