@@ -1657,6 +1657,91 @@ app.get("/myimportanceact", function (req, res) {
 });
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
+/* MY CONTINUITY HOME PATRICK 17/01/2019 */
+
+app.get("/myctyhome", function (req, res) {
+
+  var username =  req.session.username;
+  var userid = req.session.userid;
+  var roles = req.session.roles;
+  var firstname = req.session.firstname;
+  var lastname = req.session.Lastname;
+  var department = req.session.department;
+  var i = 5;
+
+  var name = firstname + ' ' + lastname
+
+  if (req.session.userid) {
+
+    res.render(path.join(__dirname, '../public', 'myContinuityHome.html'),{
+      name:name,userid:userid,department:department, i:i, date:date
+    });
+  }
+  else {
+
+    res.redirect('/login');
+  
+  }
+
+});
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+/* MY CONTINUITY SYSTEMS PATRICK 17/01/2019 */
+
+app.get("/myctysys", function (req, res) {
+
+  var username =  req.session.username;
+  var userid = req.session.userid;
+  var roles = req.session.roles;
+  var firstname = req.session.firstname;
+  var lastname = req.session.Lastname;
+  var department = req.session.department;
+
+  var name = firstname + ' ' + lastname
+
+  if (req.session.userid) {
+
+    res.render(path.join(__dirname, '../public', 'myContinuitySystem.html'),{
+      name:name,userid:userid,department:department, date:date
+    });
+  }
+  else {
+
+    res.redirect('/login');
+  
+  }
+
+});
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+/* MY CONTINUITY ACITIVITIES PATRICK 17/01/2019 */
+
+app.get("/myctyact", function (req, res) {
+
+  var username =  req.session.username;
+  var userid = req.session.userid;
+  var roles = req.session.roles;
+  var firstname = req.session.firstname;
+  var lastname = req.session.Lastname;
+  var department = req.session.department;
+
+  var name = firstname + ' ' + lastname
+
+  if (req.session.userid) {
+
+    res.render(path.join(__dirname, '../public', 'myContinuityActivity.html'),{
+      name:name,userid:userid,department:department, date:date
+    });
+  }
+  else {
+
+    res.redirect('/login');
+  
+  }
+
+});
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
 // **********************************************************************************************
 /* START THE APP & LISTEN TO THE PORT */
 
