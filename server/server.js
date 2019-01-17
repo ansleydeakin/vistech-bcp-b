@@ -1580,12 +1580,15 @@ app.get("/myimportance", function (req, res) {
   var firstname = req.session.firstname;
   var lastname = req.session.Lastname;
   var department = req.session.department;
+  var importanceCount = 5;
 
   var name = firstname + ' ' + lastname
 
   if (req.session.userid) {
 
-    res.render(path.join(__dirname, '../public', 'myimportancehome.html'),{});
+    res.render(path.join(__dirname, '../public', 'myImportanceHome.html'),{
+      name:name,userid:userid,department:department, importanceCount:importanceCount, date:date
+    });
   }
   else {
 
