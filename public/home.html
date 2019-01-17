@@ -40,7 +40,7 @@
   <div id="wrapper" class="animate">
     <nav class="navbar header-top fixed-top navbar-expand-lg navbar-dark bg-company-red">
       <span class="navbar-toggler-icon leftmenutrigger"></span>
-      <a class="navbar-brand" href="#"><img src="images/BCPMeLogo-W.png" width="145" height="54" alt="BCP Me"/></a>
+      <a class="navbar-brand" href="/dashboard"><img src="images/BCPMeLogo-W.png" width="145" height="54" alt="BCP Me"/></a>
 		
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText"
         aria-expanded="false" aria-label="Toggle navigation">
@@ -49,7 +49,7 @@
       <div class="collapse navbar-collapse" id="navbarText">
         <ul class="navbar-nav animate side-nav">
           <li class="nav-item">
-            <a class="nav-link" href="#">Home
+							<a class="nav-link" href="/dashboard">Home
               <span class="sr-only">(current)</span>
             </a>
           </li>
@@ -78,7 +78,7 @@
     </nav>
     <div class="container-fluid">	
 		<div class="row p-4 col-12">
-		  <h5 class="p-2">Your Department</h5>
+		  <h5 class="p-2"><%= department %> Department</h5>
 		</div>		
 		<div class="row p-3">
 			  <div class="col-3">		  
@@ -95,7 +95,7 @@
 				</a>
 			</div>
 			<div class="col-6">
-				<a href="/system" class="custom-card">
+				<a href="/plan" class="custom-card">
 				  <div class="card card-block align-items-center">			  	          
 					  <div class="card-body">
 						  <h5 class="card-title">Start New BCP Plan</h5>

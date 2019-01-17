@@ -138,6 +138,13 @@
                                 <input type="email" class="w-100" name="email" id="email" placeholder="E-mail">
                             </div>
                             <div class="form-group col-lg-12">
+                                <label for="deparment">Department</label>
+                                <select name="department" id="department" class="form-control">
+                                    <option value="Information Technology" selected>Information Technology</option>
+                                    <%- userdepartment -%>
+                                </select>
+                            </div>
+                            <div class="form-group col-lg-12">
                                     <label for="roles">Role</label>
                                     <select name="roles" id="roles" class="form-control">
                                         <option value="admin" selected>admin</option>
@@ -257,7 +264,6 @@
 
 <!-- FULL SCREEN MENU -->
 <script src="js/fs-menu.js"></script>
-
 
 <!-- JS end -->
 
