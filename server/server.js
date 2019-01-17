@@ -1586,7 +1586,7 @@ app.get("/myimportance", function (req, res) {
 
   if (req.session.userid) {
 
-    res.render(path.join(__dirname, '../public', 'myimportancehome.html'),{
+    res.render(path.join(__dirname, '../public', 'myImportanceHome.html'),{
       name:name,userid:userid,department:department, importanceCount:importanceCount, date:date
     });
   }
