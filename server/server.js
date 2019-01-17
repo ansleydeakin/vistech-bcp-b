@@ -1599,6 +1599,64 @@ app.get("/myimportance", function (req, res) {
 });
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
+/* MY IMPORTANCE SYSTEMS PATRICK 17/01/2019 */
+
+app.get("/myimportancesys", function (req, res) {
+
+  var username =  req.session.username;
+  var userid = req.session.userid;
+  var roles = req.session.roles;
+  var firstname = req.session.firstname;
+  var lastname = req.session.Lastname;
+  var department = req.session.department;
+  var importanceCount = 5;
+
+  var name = firstname + ' ' + lastname
+
+  if (req.session.userid) {
+
+    res.render(path.join(__dirname, '../public', 'myImportanceSystem.html'),{
+      name:name,userid:userid,department:department, importanceCount:importanceCount, date:date
+    });
+  }
+  else {
+
+    res.redirect('/login');
+  
+  }
+
+});
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+/* MY IMPORTANCE ACTIVITIES PATRICK 17/01/2019 */
+
+app.get("/myimportanceact", function (req, res) {
+
+  var username =  req.session.username;
+  var userid = req.session.userid;
+  var roles = req.session.roles;
+  var firstname = req.session.firstname;
+  var lastname = req.session.Lastname;
+  var department = req.session.department;
+  var importanceCount = 5;
+
+  var name = firstname + ' ' + lastname
+
+  if (req.session.userid) {
+
+    res.render(path.join(__dirname, '../public', 'myImportanceActivity.html'),{
+      name:name,userid:userid,department:department, importanceCount:importanceCount, date:date
+    });
+  }
+  else {
+
+    res.redirect('/login');
+  
+  }
+
+});
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
 // **********************************************************************************************
 /* START THE APP & LISTEN TO THE PORT */
 

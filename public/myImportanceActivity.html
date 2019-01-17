@@ -61,7 +61,7 @@
       <div class="collapse navbar-collapse" id="navbarText">
         <ul class="navbar-nav animate side-nav">
           <li class="nav-item">
-            <a class="nav-link" href="#">Home
+            <a class="nav-link" href="/dashboard">Home
               <span class="sr-only">(current)</span>
             </a>
           </li>
@@ -69,15 +69,18 @@
             <a class="nav-link" href="#">BCP Tracker</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">New BCP Plan</a>
+            <a class="nav-link" href="/plan">New BCP Plan</a>
+					</li>
+					<li class="nav-item">
+            <a class="nav-link" href="/admin">Admin</a>
           </li>
-		  <li class="nav-item">
-            <a class="nav-link" href="#">Logout</a>
+		  		<li class="nav-item">
+            <a class="nav-link" href="/logout">Logout</a>
           </li>
         </ul>
         <ul class="navbar-nav ml-md-auto d-md-flex p-2">
           <li class="nav-item">
-	  	  <img src="images/Doctor.png" alt="" width="71" height="70" class="rounded-circle"/> <span class="text-light">Dr. Mary Jones</span>
+						<img src="images/ProfileImages/<%= userid %>.png" alt="" width="71" height="70" class="rounded-circle"/> <span class="text-light"><%= name %></span>
 		  </li>          
         </ul>
       </div>
@@ -233,10 +236,10 @@
         <!-- Modal footer -->
         <div class="mt-5 modal-footer">
 			<div class="col-6">
-			  <button type="button" class="btn btn-outline-secondary">Cancel</button>
+			  <button type="button" onclick="window.location.href='/myimportancesys'" value="Redirect"class="btn btn-outline-secondary">Cancel</button>
 			</div>
 			<div class="col-6">  
-			  <button type="button" class="btn btn-dark float-right">Save</button>
+			  <button type="button" onclick="window.location.href='/myimportancesys'" value="Redirect"class="btn btn-dark float-right">Save</button>
 			</div>
 		</div>
         
