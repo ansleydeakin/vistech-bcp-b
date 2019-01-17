@@ -168,7 +168,14 @@ a.custom-card, a.custom-card:hover {
     border-color: #47525E
   }
 
-  .table th { border-top: none; }
+.table th { 
+	border-top: none;
+    text-align: left;
+}
+
+.table td { 	
+    text-align: left;
+}
 
 .hidden {
      display:none;

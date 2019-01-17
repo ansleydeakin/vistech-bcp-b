@@ -4,12 +4,11 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
-    <title>BCPMe - My Critical Systems - Activity</title>		
+    <title>BCPMe - My Continuity Actions - Activity</title>
 
     <!-- Bootstrap core CSS -->
 	<link href="justincss/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 	<script src="js/jquery.min.js"></script>
-	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
 	<script src="justinjs/bootstrap.min.js"></script>
 
     <style>
@@ -42,6 +41,10 @@
 	
     <!-- Custom styles for this template -->
     <link href="justinstyle/navbar.css" rel="stylesheet">
+	<link href="justinstyle/bcpmeMin.css" rel="stylesheet">
+	<link href="justinstyle/bcpmeHrs.css" rel="stylesheet">
+	<link href="justinstyle/bcpmeDay.css" rel="stylesheet">
+	<link href="justinstyle/bcpmeWek.css" rel="stylesheet">
 
 	</head>
 <body>
@@ -87,7 +90,7 @@
       
         <!-- Modal Header -->
         <div class="modal-header">
-          <h4 class="modal-title">My Activity</h4>
+          <h4 class="modal-title">My Continuity Actions: Activity</h4>
           <button type="button" class="close" >&times;</button>
         </div>
         
@@ -95,42 +98,75 @@
         <div class="modal-body">
           <span><b>All fields marked with * are mandatory</b></span><br>
 		  <div class="mt-2">
-			<span>What functions and activities performed in normal practice are dependent on the system?<br>
-			Activities are at a summary level.  For example, perioperative care, elective day surgery procedures, acute antenatal care, triage and registration, accounts payable</span>
+		  <span>			  
+				  Step 1.  Identify the immediate (short-term) strategy aimed at providing a minimum or basic level of service to contain or minimise the impact of the disruption until a more sustainable level of service can be provided.
+			  <ul>
+				<li>What is required to provide this service?</li>
+				<li>How can we provide this immediately (without the system)?</li>
+			  </ul>
+				 Step 2.	Determine how long this strategy can be maintained.</li>
+			  <ul>
+				<li>How long can we continue this before the impact is intolerable?</li>
+			  </ul>
+				Step 3.	Identify the sustainable strategy aimed at providing a higher level of service that can be continued beyond the immediate continuity strategy
+			  <ul>
+				<li>What is required to provide this in addition to the immediate strategy?
+				<li>How do we procure the required resources?</li>
+				<li>What processes do we need to put in place?</li>
+			  </ul>
+				Step 4.	Determine how long this strategy can be maintained.
+			  <ul>
+				<li>How long can we practicably continue this strategy?</li> 
+				<li>How long can we continue this before the impact is intolerable?</li>
+			  </ul>
+	      </span>
 		  </div>
+		  <div class="form-group">
+			  <label for="activity"><h6>Activity</h6></label>
+			  <input type="text" class="form-control" readonly id="activity" value="Accessing patient record">
+		  </div>
+		  <div class="form-group">
+			  <label for="category"><h6>Impact Category *</h6></label>
+			  <input type="text" class="form-control" readonly id="impact" value="5 - Severe">
+		  </div>	
+		 
+		  <div class="form-group">
+			  <label for="rating"><h6>Immediate Continuity Action *</h6></label>	
+			  <textarea class="form-control" rows="5" id="immediate"></textarea>
+		  </div>
+		
+		  <div class="form-group">
+			  <label for="category"><h6>Immediate Maintainable Duration</h6></label>
+			  <input type="text" class="form-control" readonly id="mtpd" value="1 Day">
+		  </div>			  		
+		  <div class="form-group">
+			  <label for="rating"><h6>Sustainable Continuity Action *</h6></label>	
+			  <textarea class="form-control" rows="5" id="sustainable"></textarea>
+		  </div>
+		  <div class="form-group">
+			  <label for="rating"><h6>Sustainable Pre-requisites/Resources *</h6></label>	
+			  <textarea class="form-control" rows="5" id="prerequities"></textarea>
+		  </div>	  
+		
+		
 		  <div class="form-group mt-3">
-			  <label for="function"><h6>Function *</h6></label>
-			  <select class="form-control" id="function" required>
+			  <label for="mtpd"><h6>Sustainable Maintabile Duration *</h6></label>
+			  <select class="form-control" id="sustainduration" required>
 				<option hidden >Make a selection</option>
-				<option>BossNet</option>
-				<option>2</option>
-				<option>3</option>
-				<option>4</option>
+				<option>Nil</option>
+				<option>2 Hr</option>
+				<option>4 Hr</option>
+				<option>8 Hr</option>
+				<option>1 Day</option>
+				<option>3 Days</option>
+				<option>1 Week</option>
+				<option>2 Weeks</option>
+				<option>1 Month +</option>
 			  </select>
-		  </div>
-		  <div class="form-group">
-			  <label for="activity"><h6>Activity *</h6></label>
-			  <input type="text" class="form-control" required id="activity">
-		  </div>
-		  <div class="form-group">
-			  <label for="dependance"><h6>Level of Dependance *</h6></label>
-			  <div class="row">
-				  <div class="col-sm-6">
-					<label class="form-control radio-inline" style="height: 60px"><input type="radio" name="optradio" class="mr-3 mt-3">Critically Dependant</label>
-					<label class="form-control radio-inline" style="height: 60px"><input type="radio" name="optradio" class="mr-2 mt-3">Sometimes Dependant</label>
-					<label class="form-control radio-inline" style="height: 60px"><input type="radio" name="optradio" class="mr-2 mt-3">Minimal Dependance</label>
-				  </div>
-				  <div class="col-sm-6">
-					<label class="form-control radio-inline" style="height: 60px"><input type="radio" name="optradio" class="mr-2 mt-3">Fully Dependant</label>
-					<label class="form-control radio-inline" style="height: 60px"><input type="radio" name="optradio" class="mr-2 mt-3">Low Dependance</label>
-				  </div>
-			  </div>	
-		  </div>
-        
+		  </div>		  	  
         <!-- Modal footer -->
         <div class="mt-5 modal-footer">
 			<div class="col-6">
-			  <button type="button" class="btn btn-outline-secondary">Delete</button>
 			  <button type="button" class="btn btn-outline-secondary">Cancel</button>
 			</div>
 			<div class="col-6">  
@@ -141,8 +177,10 @@
       </div>
     </div>
   </div>
-  
 </div>
- 
+	<script src="justinjs/bcpmeMin.js"></script>
+	<script src="justinjs/bcpmeHrs.js"></script>
+ 	<script src="justinjs/bcpmeDay.js"></script>
+	<script src="justinjs/bcpmeWek.js"></script>
 </body>
 </html>
