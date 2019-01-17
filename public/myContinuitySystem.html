@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
-    <title>BCPMe - My Importance Ratings - System</title>
+    <title>BCPMe - My Continuity Actions - System</title>
 
     <!-- Bootstrap core CSS -->
 	<link href="justincss/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
@@ -57,7 +57,7 @@
       <div class="collapse navbar-collapse" id="navbarText">
         <ul class="navbar-nav animate side-nav">
           <li class="nav-item">
-            <a class="nav-link" href="/dashboard">Home
+            <a class="nav-link" href="#">Home
               <span class="sr-only">(current)</span>
             </a>
           </li>
@@ -65,19 +65,16 @@
             <a class="nav-link" href="#">BCP Tracker</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/plan">New BCP Plan</a>
+            <a class="nav-link" href="#">New BCP Plan</a>
           </li>
-          <li class="nav-item">
-						<a class="nav-link" href="/admin">Admin</a>
-					</li>
-		      <li class="nav-item">
-            <a class="nav-link" href="/logout">Logout</a>
+		  <li class="nav-item">
+            <a class="nav-link" href="#">Logout</a>
           </li>
         </ul>
         <ul class="navbar-nav ml-md-auto d-md-flex p-2">
           <li class="nav-item">
-            <img src="images/ProfileImages/<%= userid %>.png" alt="" width="71" height="70" class="rounded-circle"/> <span class="text-light"><%= name %></span>
-		    </li>          
+	  	  <img src="images/Doctor.png" alt="" width="71" height="70" class="rounded-circle"/> <span class="text-light">Dr. Mary Jones</span>
+		  </li>          
         </ul>
       </div>
     </nav>
@@ -89,14 +86,19 @@
       
         <!-- Modal Header -->
         <div class="modal-header">
-          <h4 class="modal-title">My Importance Ratings</h4>
+          <h4 class="modal-title">My Continuity Actions</h4>
           <button type="button" class="close" >&times;</button>
         </div>
         
         <!-- Modal body -->
         <div class="modal-body">
 		  <div class="mt-2">
-			<span>For each activity, rate the level of dependency that it has on each of the systems</span>
+			<span>For each of the priority activities (with impact ratings of 4 or 5 - 2 weeks or less MTPD), identify immediate and sustainable actions to continue the activity.<br>
+			<ul>			
+				<li>Immediate actions are to provide a basic level of service in the period immediately following a disruption</li>
+				<li>Sustainable actions are to provide a higher level of service that can be sustained for a longer period of time or until the disruption is over</li>
+			</ul>
+			</span>
 		  </div>
 		  <div class="form-group mt-3">
 			  <label for="system"><h6>System Name</h6></label>
@@ -116,17 +118,17 @@
 				<tr>
 				  <th scope="col">Activity</th>
 				  <th scope="col">Impact Rating</th>
-				  <th scope="col">Maximum Tolerable Data Loss</th>
-				  <th scope="col">Maximum Tolerable Period of Disruption</th>
+				  <th scope="col">Immediate Maintainable Action</th>
+				  <th scope="col">Sustainable Maintainable Action</th>
 				</tr>
 			  </thead>
 			  <tbody>
 				<tr>
-				  <td>Accessing patient record</td>
+				  <td>Accessing patient record</td>					
+				  <td>5</td>
 				  <td>Not Set</td>
 				  <td>Not Set</td>
-				  <td>Not Set</td>
-				  <td><a href="/myimportanceact">Edit</a></td>
+				  <td><a href="#">Edit</a></td>
 				</tr>
 			  </tbody>
 			</table>
@@ -135,10 +137,10 @@
         <!-- Modal footer -->
         <div class="mt-5 modal-footer">
 			<div class="col-6">
-			  <button type="button" onclick="window.location.href='/myimportance'" value="Redirect"class="btn btn-outline-secondary">Cancel</button>
+			  <button type="button" class="btn btn-outline-secondary">Cancel</button>
 			</div>
 			<div class="col-6">  
-			  <button type="button" onclick="window.location.href='/myimportance'" value="Redirect"class="btn btn-dark float-right">Save</button>
+			  <button type="button" class="btn btn-dark float-right">Save</button>
 			</div>
 		</div>
         
