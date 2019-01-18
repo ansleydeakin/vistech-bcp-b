@@ -1348,68 +1348,108 @@ app.get("/plan", function (req, res) {
   var lastname = req.session.Lastname;
   var department = req.session.department;
 
-  var name = firstname + ' ' + lastname
+  var name = firstname + ' ' + lastname;
+  var BCPID = "";
+
+  console.log(req.session.MyBCPID) 
 
   if (req.session.userid) {
 
-      con.query('SELECT System, Program, ClinicalUnit, Count(Activity) as NoOfActivity FROM MySystems WHERE UserID= \"' + userid + '\" GROUP BY System', function (err, rows, fields) {
-        if (!err) {
+    con.query('SELECT * FROM MyBCP WHERE userid = \"' + userid + '\" limit 1', function (err, rows, fields) {
+    if (!err && rows.length > 0){
+      if (rows[0].Status == 1) { //MySystem
+
+          req.session.MyBCPID = rows[0].MyBCPID;
+          var BCPID = req.session.MyBCPID;
+          var LastUpdated = rows[0].LastUpdated;
+          console.log(BCPID);
+
+          var ActivityQuery = 'SELECT SYSTABLE.System, SYSTABLE.Program, SYSTABLE.ClinicalUnit, count(Activity) AS NoOfActivity FROM' 
+          + '(SELECT MySystems.System, MySystems.Program, MySystems.ClinicalUnit, SystemActivities.Activity FROM MySystems'
+          + ' INNER JOIN SystemActivities ON MySystems.MySysID = SystemActivities.MySysID'
+          + ' WHERE MySystems.UserID=' + userid +' and MySystems.MyBCPID = ' + BCPID + ') AS SYSTABLE'
+          + ' GROUP BY SYSTABLE.System, SYSTABLE.Program, SYSTABLE.ClinicalUnit'
+          
+          console.log(ActivityQuery)
+
+         // con.query('SELECT System, Program, ClinicalUnit, Count(Activity) as NoOfActivity FROM MySystems WHERE UserID= \"' + userid + '\" and Completed = \"' + '0' + '\" GROUP BY System', function (err, rows, fields) {
+         con.query(ActivityQuery, function (err, rows, fields) { 
+            if (!err) {
            
-            var table = "";
+              var table = "";
 
-            console.log(rows);
+              console.log(rows);
             
-            if (rows.length > 0) {
-                for (var i = 0; i < rows.length; i++) {
+                if (rows.length > 0) {
+                  for (var i = 0; i < rows.length; i++) {
+                    table += "<tr>";
 
-                  table += "<tr>";
+                    table += '<td>' + rows[i].System + '</td>';
+                    table += '<td>' + rows[i].Program + '</td>';
+                    table += '<td>' + rows[i].ClinicalUnit + '</td>';
+                    table += '<td>' + rows[i].NoOfActivity + '</td>';
 
-                  table += '<td>' + rows[i].System + '</td>';
-                  table += '<td>' + rows[i].Program + '</td>';
-                  table += '<td>' + rows[i].ClinicalUnit + '</td>';
-                  table += '<td>' + rows[i].NoOfActivity + '</td>';
-
-                  table += '</tr>';
-
-                }
+                    table += '</tr>';
+                  }
                 
-                console.log(table);
-
-            
-                res.render(path.join(__dirname, '../public', 'plan.html'), {
-                   name:name, userid:userid, i:i, table:table,date:date
-                });
-            }
-            else {
+                        console.log(table);
+        
+                      res.render(path.join(__dirname, '../public', 'plan.html'), {
+                        name:name, userid:userid, i:i, table:table,LastUpdated:LastUpdated
+                      });
+                }
+                else {
                 //Fail
-                //console.log(err.message);
-
                   var system = "";
                   var i = 0;
 
                   res.render(path.join(__dirname, '../public', 'plan.html'), {
-                    name:name, userid:userid,i:i,table:table,date:date
+                    name:name, userid:userid,i:i,table:table,LastUpdated:LastUpdated
                   });
+                }
             }
-        }
-        else {
+            else {
             //ERROR
-            console.log(err.message);
-            res.render(path.join(__dirname, '../public', 'login.html'));
-        }
-    });
+              console.log(err.message);
+              res.render(path.join(__dirname, '../public', 'login.html'));
+            }
+        });
+      }
+      else if (rows[0].Status == 2){ //Importance
+        res.redirect("/myimportance");
+      }
+      else if (rows[0].Status == 3){ //Continuity
+        res.redirect("/myctyhome");
+      }
+      else if (rows[0].Status == 4){ //BCPSummary
+        res.redirect("/");
+      }
+    }
+    else if (!err && rows.length <= 0){
 
+      console.log('Insert new BCP');
+
+      var Query = 'INSERT INTO MyBCP (DateCreated,Status,UserID,LastUpdated) VALUES (  NOW() , 1' + ',' + userid + ', NOW())'
+      console.log(Query);
+
+      con.query(Query,function (err, rows, fields) {
+                    if (!err) {
+                      res.redirect("/plan");
+                      console.log(rows);
+                    }
+      });
+  }
+    });
   }
   else {
 
     res.redirect('/login');
-  
   }
 
 });
-//////////////////////////////////////////////////////////////////////////////////////////////////
-/* ADD SYSTEM CREATION ANSLEY 14/01/2019 */
 
+//////////////////////////////////////////////////////////////////////////////////////////////////
+/* FETCH SYSTEM ANSLEY 14/01/2019 */
 
 app.get("/system", function (req, res) {
 
@@ -1424,7 +1464,7 @@ app.get("/system", function (req, res) {
 
   if (req.session.userid) {
 
-      con.query('SELECT * FROM r3SysReg; SELECT DISTINCT Program FROM r41FuncRef;', function (err, rows, fields) {
+      con.query('SELECT * FROM r3SysReg; SELECT DISTINCT Program FROM r41FuncRef; SELECT ', function (err, rows, fields) {
         if (!err) {
            
             var system = "";
@@ -1477,6 +1517,17 @@ app.get("/system", function (req, res) {
   }
 
 });
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+/* SUBMIT SYSTEM ANSLEY 19/01/2019 */
+
+app.get("/submitsystem", function (req, res) {
+
+
+});
+
+
 //////////////////////////////////////////////////////////////////////////////////////////////////
 /* FETCH CLINIC UNIT BASED ON PROGRAM ANSLEY 15/01/2019 */
 
