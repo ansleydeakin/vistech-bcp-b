@@ -215,3 +215,21 @@ i.fa {
 input[type=radio] {
 transform: scale(1.5);
 }
+
+.plan-track{
+    background-color:#EAEDF0;
+    border-bottom: 1px solid #8492A6;
+	margin-left: -15px;	
+	margin-right: -15px;	
+}
+
+.grey-resume, a.grey-resume:hover{
+	background-color:#343F4B;
+	color:white;
+	text-align: center;
+	padding: 0px;
+	margin-right: 0px;
+	width: 120px;
+	height: 60px; 
+	line-height: 60px;  
+}
