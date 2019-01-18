@@ -1586,11 +1586,25 @@ app.get("/myimportance", function (req, res) {
 
   if (req.session.userid) {
 
-    res.render(path.join(__dirname, '../public', 'myImportanceHome.html'),{
-      name:name,userid:userid,department:department, importanceCount:importanceCount, date:date
-    });
-  }
-  else {
+    con.query('SELECT System, Program, Count(Activity) as NoOfActivity FROM MySystems WHERE UserID= \"' + userid + '\" GROUP BY System', function (err, rows, fields) {
+
+      if (!err) {
+
+        
+        
+        res.render(path.join(__dirname, '../public', 'myImportanceHome.html'),{
+          name:name,userid:userid,department:department, importanceCount:importanceCount, date:date
+        });
+      } else {
+
+        //ERROR
+        console.log(err.message);
+        res.render(path.join(__dirname, '../public', 'login.html'));
+      }
+
+      });
+
+  } else {
 
     res.redirect('/login');
   

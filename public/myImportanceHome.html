@@ -145,9 +145,14 @@
 	  </div> 
  	  <div id="myContent" class="row collapse hidden p-4">
 	    <div class="col-12">
-			<span>For each activity, what is the level of dependency that it has on each of the systems?</span>
-			 
-		</div>		
+				<span>For each activity, what is the level of dependency that it has on each of the systems?</span>
+			</div>
+			<div class="card col mt-3">	
+				<div class="d-flex">			  
+					<h6 class="mr-auto card-title m-2 pt-2">Dependencies</h6>
+					<a href="/myimportancesys" class="card-link grey-add">Add</a>
+				</div>
+			</div>		
 		  <table class="table">
 			  <thead>
 				<tr>
@@ -159,11 +164,15 @@
 			  </thead>
 			  <tbody>
 				<tr>
+
+					<!--
 				  <td>BossNet</td>
 				  <td>Surgical Services</td>
 				  <td>All Surgical</td>
 				  <td>5</td>
-				  <td><a href="/myimportancesys">Edit</a></td>
+					<td><a href="/myimportancesys">Edit</a></td>
+					-->
+					<%- table ->
 				</tr>
 			  </tbody>
 			</table>
