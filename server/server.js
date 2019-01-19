@@ -1199,72 +1199,6 @@ app.post("/changepasssubmit", function (req, res) {
 
 });
 
-//////////////////////////////////////////////////////////////////////////////////////////////////
-/* ADD SYSTEM ANSLEY 05/01/2019 */
-
-/*
-app.get("/system", function (req, res) {
-
-  var username =  req.session.username;
-  var userid = req.session.userid;
-  var roles = req.session.roles;
-  var firstname = req.session.firstname;
-  var lastname = req.session.Lastname;
-
-  if (req.session.userid) {
-
-      con.query('SELECT * FROM OS1SysImpactPaths', function (err, rows, fields) {
-        if (!err) {
-            //console.log(rows[0]);
-            var table = "";
-            table += "<thead><tr>";
-            table += "<th>System ID</th>" + "<th>System</th>" + "<th>Acronym</th>" + "<th>Program</th>" + "<th>ClinicalUnit</th>" + "<th>Function</th>" + "<th>Comment</th>"; //7
-            table += "</tr></thead>";
-            table += "<tbody>";
-            if (rows.length > 0) {
-                for (var i = 0; i < rows.length; i++) {
-
-                    table += '<tr>';
-
-                    table += '<td>' + rows[i].OS1ID + '</td>';
-                    table += '<td>' + rows[i].System + '</td>';
-                    table += '<td>' + rows[i].Acronym + '</td>';
-                    table += '<td>' + rows[i].Program + '</td>';
-                    table += '<td>' + rows[i].ClinicalUnit + '</td>';
-                    table += '<td>' + rows[i].Function + '</td>';
-                    table += '<td>' + rows[i].Comment + '</td>';
-
-                    table += '</tr>';
-                }
-                console.log(table);
-                table += '</tbody>';
-                res.render(path.join(__dirname, '../public', 'system.html'), {
-                    table: table
-                });
-            }
-            else {
-                //Fail
-                //console.log(err.message);
-                res.render(path.join(__dirname, '../public', 'login.html'));
-            }
-        }
-        else {
-            //ERROR
-            console.log(err.message);
-            res.render(path.join(__dirname, '../public', 'login.html'));
-        }
-    });
-
-  }
-  else {
-
-    res.redirect('/login');
-  
-  }
-
-});
-*/
-//////////////////////////////////////////////////////////////////////////////////////////////////
 /* ADD SYSTEMS IMPACT PATH ANSLEY 06/01/2019 */
 
 app.get("/sysimpact", function (req, res) {
@@ -1449,7 +1383,8 @@ app.get("/plan", function (req, res) {
 });
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
-/* FETCH SYSTEM ANSLEY 14/01/2019 */
+/* ADDED FETCH SYSTEM ANSLEY 14/01/2019 */
+/* UPDATED 19/01/2019 */
 
 app.get("/system", function (req, res) {
 
@@ -1459,16 +1394,175 @@ app.get("/system", function (req, res) {
   var firstname = req.session.firstname;
   var lastname = req.session.Lastname;
   var department = req.session.department;
+  var BCPID = req.session.MyBCPID;
 
   var name = firstname + ' ' + lastname
 
+  console.log('/system - start')
+  
   if (req.session.userid) {
 
-      con.query('SELECT * FROM r3SysReg; SELECT DISTINCT Program FROM r41FuncRef; SELECT ', function (err, rows, fields) {
+    var checksysquery = 'SELECT * FROM MySystems WHERE UserID = ' + userid + ' and Completed = 0 and MyBCPID = ' + BCPID + ' limit 1';
+
+    con.query(checksysquery, function (err, rows, fields) {
+
+      if (!err && rows.length > 0){
+
+          req.session.systemid = rows[0].MySysID;
+          var SYSID = req.session.systemid;
+
+          console.log('System ID ' + SYSID);
+    
+          if (SYSID === undefined) { 
+
+            console.log('--------- 1')
+            con.query('SELECT * FROM r3SysReg; SELECT DISTINCT Program FROM r41FuncRef', function (err, rows, fields) {
+              if (!err) {
+                 
+                  var system = "";
+                  var program = "";
+                  var unit = "";
+                  var description = "";
+                  var comment = "";
+                  var table = "";
+      
+                  var result1 = rows[0];
+                  var result2 = rows[1];
+      
+                  console.log(result1[1]);
+                 
+                  if (rows.length > 0) {
+      
+                    system += '<select class="form-control" id="system" name="system">';
+                    system += '<option value="" hidden >Make a selection</option>';
+      
+                    program += '<select class="form-control" id="program" name="program">';
+                    program += '<option value="" hidden >Make a selection</option>';
+      
+                      for (var i = 0; i < result1.length; i++) {
+      
+                          system += '<option value= \"' + result1[i].System + '\">' + result1[i].System + '</option>';
+      
+                      }
+                      for (var i = 0; i < result2.length; i++) {
+      
+                        program += '<option value= \"' + result2[i].Program + '\">' + result2[i].Program + '</option>';
+      
+                      }
+                      console.log(program);
+      
+                      system += '</select>';
+                      program += '</select>';
+      
+                      description = '<input type="text" class="form-control" id="description" name="description">';
+                      comment = '<input type="text" class="form-control" id="comment" name="comment">';
+                  
+                      res.render(path.join(__dirname, '../public', 'mySystemHome.html'), {
+                          system: system, program:program,unit:unit,description:description,comment:comment, table:table, name:name, userid:userid
+                      });
+                  }
+                  else {
+                      //Fail
+                      console.log('failed 1');
+                      res.render(path.join(__dirname, '../public', 'home.html'), {
+                        name:name,userid:userid,department:department
+                    });
+                  }
+              }
+              else {
+                  //ERROR
+                  console.log('failed 1');
+                  res.render(path.join(__dirname, '../public', 'home.html'), {
+                    name:name,userid:userid,department:department
+                });
+              }
+            });
+          }
+
+          else if (SYSID){ 
+
+            console.log('--------- 2')
+            con.query('SELECT * FROM MySystems WHERE MySysID = ' + SYSID + ' limit 1; SELECT * FROM SystemActivities WHERE MySysID= ' + SYSID, function (err, rows, fields) {
+              if (!err) {
+                 
+                  var system = "";
+                  var program = "";
+                  var unit = "";
+                  var description = "";
+                  var comment = "";
+                  var table = "";
+      
+                  var result1 = rows[0];
+                  var result2 = rows[1];
+      
+                  console.log(result1[0]);
+                 
+                  if (result1.length > 0) {
+      
+                            program += '<select class="form-control" readonly id="program" name="program">';
+                            program += '<option value= \"' + result1[0].Program + '\">' + result1[0].Program + '</option>';
+                            program += '</select>';
+      
+                            system += '<select class="form-control" readonly id="system" name="system">';
+                            system += '<option value= \"' + result1[0].System + '\">' + result1[0].System + '</option>';
+                            system += '</select>';
+      
+                            unit += '<select class="form-control" readonly id="unit" name="unit">';
+                            unit += '<option value= \"' + result1[0].ClinicalUnit + '\">' + result1[0].ClinicalUnit + '</option>';
+                            unit += '</select>';
+      
+                            description = '<input type="text" class="form-control" readonly id="description" name="description" value=' + result1[0].Description + '>';
+                            comment = '<input type="text" class="form-control" readonly id="comment" name="comment" value=' + result1[0].Comment + '>';
+      
+                  }
+                  if (result2.length > 0){
+
+                    console.log('--------- Result 2 Activities')
+                    console.log(result2)
+      
+                    for (var i = 0; i < result2.length; i++) {
+      
+                      table += "<tr>";
+                      
+                      table += '<td>' + result2[i].ActFunction + '</td>';
+                      table += '<td>' + result2[i].Activity + '</td>';
+                      table += '<td>' + result2[i].ActivityDep + '</td>';
+                      
+                      table += '</tr>';
+      
+                    }
+      
+                  }
+
+                      res.render(path.join(__dirname, '../public', 'mySystemHome.html'), {
+                        system: system, program:program,unit:unit,description:description,comment:comment,table:table,name:name, userid:userid
+                    });
+                  
+                  }
+                  else {
+                      //Fail
+                      console.log('failed 1');
+                      res.render(path.join(__dirname, '../public', 'home.html'), {
+                        name:name,userid:userid,department:department
+                    });
+                  }
+            });
+          
+          }
+  } 
+  else {
+    if (SYSID === undefined) {
+
+      console.log('--------- 3')
+      con.query('SELECT * FROM r3SysReg; SELECT DISTINCT Program FROM r41FuncRef', function (err, rows, fields) {
         if (!err) {
            
             var system = "";
             var program = "";
+            var unit = "";
+            var description = "";
+            var comment = "";
+            var table = "";
 
             var result1 = rows[0];
             var result2 = rows[1];
@@ -1476,6 +1570,13 @@ app.get("/system", function (req, res) {
             console.log(result1[1]);
            
             if (rows.length > 0) {
+
+              system += '<select class="form-control" id="system" name="system">';
+              system += '<option value="" hidden >Make a selection</option>';
+
+              program += '<select class="form-control" id="program" name="program">';
+              program += '<option value="" hidden >Make a selection</option>';
+
                 for (var i = 0; i < result1.length; i++) {
 
                     system += '<option value= \"' + result1[i].System + '\">' + result1[i].System + '</option>';
@@ -1485,16 +1586,22 @@ app.get("/system", function (req, res) {
 
                   program += '<option value= \"' + result2[i].Program + '\">' + result2[i].Program + '</option>';
 
-              }
+                }
                 console.log(program);
+
+                system += '</select>';
+                program += '</select>';
+
+                description = '<input type="text" class="form-control" id="description" name="description">';
+                comment = '<input type="text" class="form-control" id="comment" name="comment">';
             
                 res.render(path.join(__dirname, '../public', 'mySystemHome.html'), {
-                    system: system, program:program, name:name, userid:userid
+                    system: system, program:program,unit:unit,description:description,comment:comment, table:table, name:name, userid:userid
                 });
             }
             else {
                 //Fail
-                //console.log(err.message);
+                console.log('failed 1');
                 res.render(path.join(__dirname, '../public', 'home.html'), {
                   name:name,userid:userid,department:department
               });
@@ -1502,33 +1609,143 @@ app.get("/system", function (req, res) {
         }
         else {
             //ERROR
-            console.log(err.message);
+            console.log('failed 1');
             res.render(path.join(__dirname, '../public', 'home.html'), {
               name:name,userid:userid,department:department
           });
         }
-    });
+      });
+    }
+
+    else if (SYSID){ 
+      console.log('--------- 4')
+      con.query('SELECT * FROM MySystems WHERE MySysID = ' + SYSID + ' limit 1; SELECT * FROM SystemActivities WHERE MySysID= ' + SYSID, function (err, rows, fields) {
+        if (!err) {
+           
+            var system = "";
+            var program = "";
+            var unit = "";
+            var description = "";
+            var comment = "";
+            var table = "";
+
+            var result1 = rows[0];
+            var result2 = rows[1];
+
+            console.log(result1[1]);
+           
+            if (result1.length > 0) {
+
+                      program += '<select class="form-control" readonly id="program" name="program">';
+                      program += '<option value= \"' + result1[0].Program + '\">' + result1[0].Program + '</option>';
+                      program += '</select>';
+
+                      system += '<select class="form-control" readonly id="system" name="system">';
+                      system += '<option value= \"' + result1[0].System + '\">' + result1[0].System + '</option>';
+                      system += '</select>';
+
+                      unit += '<select class="form-control" readonly id="unit" name="unit">';
+                      unit += '<option value= \"' + result1[0].ClinicalUnit + '\">' + result1[0].ClinicalUnit + '</option>';
+                      unit += '</select>';
+
+                      description = '<input type="text" class="form-control" readonly id="description" name="description" value=' + result1[0].Description + '>';
+                      comment = '<input type="text" class="form-control" readonly id="comment" name="comment" value=' + result1[0].Comment + '>';
+
+            }
+            if (result2.length > 0){
+
+              for (var i = 0; i < result2.length; i++) {
+
+                table += "<tr>";
+
+                table += '<td>' + result2[i].ActFunction + '</td>';
+                table += '<td>' + result2[i].Activity + '</td>';
+                table += '<td>' + result2[i].ActivityDep + '</td>';
+
+                table += '</tr>';
+
+              }
+
+            }
+            console.log('--------- 5')
+                console.log(program);
+            
+                res.render(path.join(__dirname, '../public', 'mySystemHome.html'), {
+                    system: system, program:program,unit:unit,description:description,comment:comment,table:table,name:name, userid:userid
+                });
+            }
+            else {
+                //Fail
+                console.log('failed 1');
+                res.render(path.join(__dirname, '../public', 'home.html'), {
+                  name:name,userid:userid,department:department
+              });
+            }
+      });
+    
+    }
+
 
   }
+  });
+  }  
   else {
-
     res.redirect('/login');
-  
   }
 
 });
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
-/* SUBMIT SYSTEM ANSLEY 19/01/2019 */
+
+/* SUBMIT SYSTEM & REDIRECT TO ACTIVITIES ANSLEY 19/01/2019 */
 
 app.get("/submitsystem", function (req, res) {
 
+  var userid = req.session.userid;
+  var BCPID = req.session.MyBCPID;
+  var SYSID = req.session.systemid;
 
+  var system = req.query.system;
+  var description = req.query.description;
+  var program = req.query.program;
+  var clinicalunit = req.query.unit;
+  var comment = req.query.comment;
+
+  if (req.session.userid){
+
+    console.log(req.session);
+
+    if (SYSID === undefined){
+
+              console.log("Insert MySystems");
+              con.query("INSERT INTO MySystems (System,Description,Program,ClinicalUnit,Comment,Completed, UserID, MyBCPID" +
+                  ") VALUES ('" + system + "','" + description + "','" + program + "','" +
+                  clinicalunit + "','" + comment + "','" + '0' + "','" + userid + "','" + BCPID + "')" ,
+                  function (err, rows, fields) {
+                      if (!err) {
+                        con.query('SELECT * FROM MySystems WHERE UserID = ' + userid +' and MyBCPID = ' + BCPID + ' and Completed = 0 limit 1', function (err, rows, fields) {
+                          if (!err && rows.length > 0){
+                            req.session.systemid = rows[0].MySysID;
+                            console.log('set systemid');
+                          }
+                        });
+                        res.redirect("/activities");
+                      }
+                      else {
+                        res.redirect("/system");                        
+                      }
+              });
+    }  
+    else {
+      res.redirect("/activities");
+    }
+  }  
 });
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
+
 /* FETCH CLINIC UNIT BASED ON PROGRAM ANSLEY 15/01/2019 */
 
 app.get("/unit", function (req, res) {
@@ -1544,12 +1761,18 @@ app.get("/unit", function (req, res) {
             var clinicalunit = "";
            
             if (rows.length > 0) {
+
+              clinicalunit += '<select class="form-control" id="unit" name="unit">';
+              clinicalunit += '<option value="" hidden >Make a selection</option>';
+
                 for (var i = 0; i < rows.length; i++) {
 
                   clinicalunit += '<option value=\"' + rows[i].ClinicalUnit + '\">' + rows[i].ClinicalUnit + '</option>';
 
                 }
                 
+                clinicalunit += '</select>';
+
                 console.log(clinicalunit);
                 res.send(clinicalunit);
 
@@ -1557,11 +1780,12 @@ app.get("/unit", function (req, res) {
             else {
               res.end()
             }
-        }
+      }
 
     });
 
 });
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 /* ADD ACTIVITIES ANSLEY 16/01/2019 */
@@ -1934,6 +2158,96 @@ app.get("/tracker", function (req, res) {
 });
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
+
+/* SUBMIT ACTIVITIES ANSLEY 19/01/2019 */
+
+app.get("/submitactivities", function (req, res) {
+
+  var userid = req.session.userid;
+  var BCPID = req.session.MyBCPID;
+  var SYSID = req.session.systemid;
+
+  var activity = req.query.activity;
+  var functact = req.query.functact;
+  var actdep = req.query.optradio;
+
+  if (req.session.userid){
+
+    if (SYSID){
+
+              console.log("Insert SystemActivities");
+              con.query("INSERT INTO SystemActivities (Activity,ActivityDep,MySysID,ActFunction" +
+                  ") VALUES ('" + activity + "','" + actdep + "','" + SYSID + "','" +
+                  functact + "')" ,
+                  function (err, rows, fields) {
+                      if (!err) {
+                        res.redirect("/system");
+                      }
+                      else {
+                        res.redirect("/activities");                        
+                      }
+              });
+    }  
+    else {
+      con.query('SELECT * FROM MySystems WHERE UserID = ' + userid +' and MyBCPID = ' + BCPID + ' and Completed = 0 limit 1', function (err, rows, fields) {
+        if (!err && rows.length > 0){
+          
+          req.session.systemid = rows[0].MySysID;
+          var SYSID = req.session.systemid;
+
+          console.log('set systemid');
+            con.query("INSERT INTO SystemActivities (Activity,ActivityDep,MySysID,ActFunction" +
+              ") VALUES ('" + activity + "','" + actdep + "','" + SYSID + "','" +
+              functact + "')" ,
+              function (err, rows, fields) {
+                  if (!err) {
+                    res.redirect("/system");
+                  }
+                  else {
+                    res.redirect("/activities");                        
+                  }
+      });
+        }
+      });
+    }
+  } 
+  else {
+    res.redirect('/login');
+  }
+});
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+/* SAVE SYSTEM ANSLEY 20/01/2019 */
+
+app.get("/savesys", function (req, res) {
+
+  var userid = req.session.userid;
+  var BCPID = req.session.MyBCPID;
+  var SYSID = req.session.systemid;
+
+  if (req.session.userid){
+
+    if (SYSID && BCPID){
+
+              con.query("UPDATE MySystems SET Completed = '1' WHERE Completed = 0 and MyBCPID = " + BCPID + " and MySysID = " + SYSID,function (err, rows, fields) {
+                      if (!err) {
+                        req.session.systemid = undefined;
+                        res.end();
+                      }
+                      else {
+                        res.end();                       
+                      }
+              });
+    }  
+    else {
+      res.end();
+    }
+  }  
+
+});
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
 // **********************************************************************************************
 /* START THE APP & LISTEN TO THE PORT */
 

@@ -38,7 +38,32 @@
     $(window).on('load',function(){
         $('#myModal').modal({backdrop: 'static', keyboard: false});
     });
-	</script>
+  </script>
+  
+  <script>
+/*
+  var submitact=function (){
+	
+    var functionact=$('#function').val();
+    var activity=$('#activity').val();
+    var program=$('#program').val();
+
+// these are your GET parameters
+    var data={  
+      functionact:functionact,
+      activity:activity,
+      optradio:optradio
+    }
+
+//this is our ajax call for clincal unit list
+  $.get("/submitactivities", data,function(){});
+}
+ 
+$(document).ready(function(){
+  $('#submitact').bind('click touch',submitsystem)
+});
+*/
+  </script>
 	
     <!-- Custom styles for this template -->
     <link href="justinstyle/navbar.css" rel="stylesheet">
@@ -88,9 +113,11 @@
         <!-- Modal Header -->
         <div class="modal-header">
           <h4 class="modal-title">My Activity</h4>
+
+          <form action="/submitactivities" method="get">
+
           <button type="button" onclick="window.location.href='/system'" value="Redirect" class="close" >&times;</button>
         </div>
-        
         <!-- Modal body -->
         <div class="modal-body">
           <span><b>All fields marked with * are mandatory</b></span><br>
@@ -100,7 +127,7 @@
 		  </div>
 		  <div class="form-group mt-3">
 			  <label for="function">Function*</label>
-			  <select class="form-control" id="function" required>
+			  <select class="form-control" name="functact" id="functact" required>
 				<option hidden >Make a selection</option>
 			<!--	<option>BossNet</option>
 				<option>2</option>
@@ -110,20 +137,24 @@
 			  </select>
 		  </div>
 		  <div class="form-group">
+        
+       
+
 			  <label for="activity">Activity*</label>
-			  <input type="text" class="form-control" required id="activity">
-		  </div>
+			  <input type="text" class="form-control" required name="activity" id="activity">
+      </div>
 		  <div class="form-group">
 			  <label for="dependance">Level of Dependance*</label>
 			  <div class="row">
 				  <div class="col-sm-6">
-					<label class="form-control radio-inline" style="height: 60px"><input type="radio" name="optradio" class="mr-3 mt-3">Critically Dependant</label>
-					<label class="form-control radio-inline" style="height: 60px"><input type="radio" name="optradio" class="mr-2 mt-3">Sometimes Dependant</label>
-					<label class="form-control radio-inline" style="height: 60px"><input type="radio" name="optradio" class="mr-2 mt-3">Minimal Dependance</label>
+					<label class="form-control radio-inline" style="height: 60px"><input type="radio" name="optradio" id="optradio" class="mr-3 mt-3" value="Critically">Critically Dependant</label>
+					<label class="form-control radio-inline" style="height: 60px"><input type="radio" name="optradio" id="optradio" class="mr-2 mt-3" value="Sometimes">Sometimes Dependant</label>
+					<label class="form-control radio-inline" style="height: 60px"><input type="radio" name="optradio" id="optradio" class="mr-2 mt-3" value="Minimal">Minimal Dependance</label>
 				  </div>
 				  <div class="col-sm-6">
-					<label class="form-control radio-inline" style="height: 60px"><input type="radio" name="optradio" class="mr-2 mt-3">Fully Dependant</label>
-					<label class="form-control radio-inline" style="height: 60px"><input type="radio" name="optradio" class="mr-2 mt-3">Low Dependance</label>
+					<label class="form-control radio-inline" style="height: 60px"><input type="radio" name="optradio" id="optradio" class="mr-2 mt-3" value="Fully">Fully Dependant</label>
+          <label class="form-control radio-inline" style="height: 60px"><input type="radio" name="optradio" id="optradio" class="mr-2 mt-3" value="Low">Low Dependance</label>
+          
 				  </div>
 			  </div>	
 		  </div>
@@ -135,10 +166,11 @@
 			  <button type="button" onclick="window.location.href='/plan'" value="Redirect" class="btn btn-outline-secondary">Cancel</button>
 			</div>
 			<div class="col-6">  
-			  <button type="button" class="btn btn-dark float-right">Save</button>
+			  <button type="submit" class="btn btn-dark float-right">Save</button>
 			</div>
 		</div>
-        
+  </form>
+
       </div>
     </div>
   </div>

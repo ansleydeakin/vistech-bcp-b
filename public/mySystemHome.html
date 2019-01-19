@@ -41,7 +41,7 @@
 	</script>
 	
 	<script>
-
+/*
 			function ToggleOnOff(){
 				if ($("#system").val() == ''){
 					document.getElementById('description').readonly=true;
@@ -52,10 +52,9 @@
 					document.getElementById('comment').readonly=false;
 				}
 			}
-
+*/
 		var fetchunit=function (){
-	 
-			//ToggleOnOff();
+	
 	 var selectedprogram=$('#program').val();
 	 
 	 // these are your GET parameters
@@ -63,21 +62,33 @@
 		 selectedprogram:selectedprogram
 	 }
 	 
-	 $("#unit").html('Loading - Please Wait');
-	 
-	 //this is our ajax call
+	 //this is our ajax call for clincal unit list
 	 $.get("/unit", data,function(clinicalunit) {
-			 $("#unit").html(clinicalunit);
-			 console.log('yes it is working')
-			// alert(clinicalunit);
+			 $("#unitlist").html(clinicalunit);
 		 });
 	 }
 	 
 	 $(document).ready(function(){
-	 console.log('is it working')
-	 $('#program').bind('click',fetchunit)
+	 $('#program').bind('change',fetchunit)
 	 });
+
+
+	var savesystem=function (){
+	
+	// these are your GET parameters
+		var data={
+		}
+
+	 //this is our ajax call for clincal unit list
+	 $.get("/savesys", data,function(){
+		 	window.location.href = "/plan";
+	 });
+	}
 	 
+	$(document).ready(function(){
+		$('#save').bind('click touch',savesystem)
+	});
+
  </script>
 
     <!-- Custom styles for this template -->
@@ -124,7 +135,7 @@
   <div class="modal hide fade" id="myModal">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
-      
+
         <!-- Modal Header -->
         <div class="modal-header">
           <h4 class="modal-title">My Critical Systems</h4>
@@ -138,49 +149,57 @@
 			<span>What systems that you undertake in your daily role?</span>
 		  </div>
 		  <div class="form-group mt-3">
+
+					<form action="/submitsystem" method="get">
+
 			  <label for="system">System Name*</label>
-			  <select class="form-control" id="system" onclick="ToggleOnOff()">
-				<!--	<option value="" hidden >Make a selection</option>
+			 <!-- <select class="form-control" id="system" onclick="ToggleOnOff()">
+				<option value="" hidden >Make a selection</option>
 				<option>BossNet</option>
 				<option>2</option>
 				<option>3</option>
 				<option>4</option> -->
-				<%- system -%>
-			  </select>
+			 	<%- system -%>
+			 <!-- </select> -->
 		  </div>
 		  <div class="form-group">
 			  <label for="description">System Description</label>
-			  <input type="text" class="form-control" id="description">
+			 <!-- <input type="text" class="form-control" id="description"> -->
+			 <%- description -%>
 		  </div>
 		  <div class="form-group">
 			  <label for="program">Program*</label>
-			  <select class="form-control" name="program" id="program">
+				<!--  <select class="form-control" name="program" id="program">
 			    <option value="" hidden >Make a selection</option>
-				<!--<option>Surgical Services</option>
+			<option>Surgical Services</option>
 				<option>2</option>
 				<option>3</option>
 				<option>4</option> -->
 				<%- program -%>
-			  </select>
+			 <!-- </select> -->
 		  </div>
 		  <div class="form-group">
 			  <label for="unit">Clinical Unit*</label>
-			  <select class="form-control" name="unit" id="unit">
+			<!--  <select class="form-control" name="unit" id="unit">
 			    <option value="" hidden >Make a selection</option>
-			<!--	<option>All Surgical</option>
+				<option>All Surgical</option>
 				<option>2</option>
 				<option>3</option>
 				<option>4</option> -->
-			  </select>
+				<!-- </select> -->
+				<p id="unitlist"></p>
+				<%- unit -%>
 		  </div>	
 		  <div class="form-group">
 			  <label for="comment">Comment/Contact</label>
-			  <input type="text" class="form-control" id="comment">
+			 <!-- <input type="text" class="form-control" id="comment"> -->
+			 <%- comment -%>
 		  </div>		  
 		<div class="card col mt-5">	
 			<div class="d-flex">			  
 			  <h6 class="mr-auto card-title m-2 pt-2">Activities</h6>
-			  <a href="/activities" class="card-link grey-add">Add</a>
+				<button type="submit" class="card-link grey-add" id="addact">Add</button>
+			  </form>
 			</div>
 		</div>			
 		  <table class="table">
@@ -199,7 +218,7 @@
 				  <td><a href="#">Edit</a></td>
 				  <td><a href="#">Delete</a></td>
 				</tr> -->
-
+				<%- table -%>
 			  </tbody>
 			</table>
         </div>
@@ -211,7 +230,7 @@
 			  <button type="button" onclick="window.location.href='/plan'" value="Redirect" class="btn btn-outline-secondary">Cancel</button>
 			</div>
 			<div class="col-6">  
-			  <button type="button" class="btn btn-dark float-right">Save</button>
+			  <button type="button" id="save" class="btn btn-dark float-right">Save</button>
 			</div>
 		</div>
         
