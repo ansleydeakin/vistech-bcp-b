@@ -1636,17 +1636,74 @@ app.get("/myimportance", function (req, res) {
   var name = firstname + ' ' + lastname
 
   if (req.session.userid) {
+    
+    con.query('SELECT * FROM MyBCP WHERE userid = \"' + userid + '\" limit 1', function (err, rows, fields) {
+      if (!err && rows.length > 0){
+        if (rows[0].Status == 1) { //MySystem
+  
+            req.session.MyBCPID = rows[0].MyBCPID;
+            var BCPID = req.session.MyBCPID;
+            var LastUpdated = rows[0].LastUpdated;
+            console.log(BCPID);
+  
+            var ActivityQuery = 'SELECT SYSTABLE.System, SYSTABLE.Program, SYSTABLE.ClinicalUnit, count(Activity) AS NoOfActivity FROM' 
+            + '(SELECT MySystems.System, MySystems.Program, MySystems.ClinicalUnit, SystemActivities.Activity FROM MySystems'
+            + ' INNER JOIN SystemActivities ON MySystems.MySysID = SystemActivities.MySysID'
+            + ' WHERE MySystems.UserID=' + userid +' and MySystems.MyBCPID = ' + BCPID + ') AS SYSTABLE'
+            + ' GROUP BY SYSTABLE.System, SYSTABLE.Program, SYSTABLE.ClinicalUnit'
+            
+            console.log(ActivityQuery)
 
-    res.render(path.join(__dirname, '../public', 'myImportanceHome.html'),{
-      name:name,userid:userid,department:department, importanceCount:importanceCount, date:date
+         con.query(ActivityQuery, function (err, rows, fields) { 
+          if (!err) {
+         
+            var table = "";
+
+            console.log(rows);
+          
+              if (rows.length > 0) {
+                for (var i = 0; i < rows.length; i++) {
+                  table += "<tr>";
+
+                  table += '<td>' + rows[i].System + '</td>';
+                  table += '<td>' + rows[i].Program + '</td>';
+                  table += '<td>' + rows[i].NoOfActivity + '</td>';
+                  table += '<td>' + '5' + '</td>';
+
+                  table += '</tr>';
+                }
+              
+                      console.log(table);
+      
+                    res.render(path.join(__dirname, '../public', 'myImportanceHome.html'), {
+                      name:name,userid:userid,department:department, importanceCount:importanceCount, date:date, table:table
+                    });
+              }
+              else {
+              //Fail
+                var system = "";
+                var i = 0;
+
+                res.render(path.join(__dirname, '../public', 'myImportanceHome.html'), {
+                  name:name,userid:userid,department:department, importanceCount:importanceCount, date:date, table:table
+                });
+              }
+            }
+            else {
+              //ERROR
+                console.log(err.message);
+                res.render(path.join(__dirname, '../public', 'login.html'));
+              }
+            });
+          }
+        }
+        else {
+
+          res.redirect('/login');
+        
+        }
     });
   }
-  else {
-
-    res.redirect('/login');
-  
-  }
-
 });
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1723,17 +1780,73 @@ app.get("/myctyhome", function (req, res) {
   var name = firstname + ' ' + lastname
 
   if (req.session.userid) {
+    con.query('SELECT * FROM MyBCP WHERE userid = \"' + userid + '\" limit 1', function (err, rows, fields) {
+      if (!err && rows.length > 0){
+        if (rows[0].Status == 1) { //MySystem
+  
+            req.session.MyBCPID = rows[0].MyBCPID;
+            var BCPID = req.session.MyBCPID;
+            var LastUpdated = rows[0].LastUpdated;
+            console.log(BCPID);
+  
+            var ActivityQuery = 'SELECT SYSTABLE.System, SYSTABLE.Program, SYSTABLE.ClinicalUnit, count(Activity) AS NoOfActivity FROM' 
+            + '(SELECT MySystems.System, MySystems.Program, MySystems.ClinicalUnit, SystemActivities.Activity FROM MySystems'
+            + ' INNER JOIN SystemActivities ON MySystems.MySysID = SystemActivities.MySysID'
+            + ' WHERE MySystems.UserID=' + userid +' and MySystems.MyBCPID = ' + BCPID + ') AS SYSTABLE'
+            + ' GROUP BY SYSTABLE.System, SYSTABLE.Program, SYSTABLE.ClinicalUnit'
+            
+            console.log(ActivityQuery)
 
-    res.render(path.join(__dirname, '../public', 'myContinuityHome.html'),{
-      name:name,userid:userid,department:department, i:i, date:date
+         con.query(ActivityQuery, function (err, rows, fields) { 
+          if (!err) {
+         
+            var table = "";
+
+            console.log(rows);
+          
+              if (rows.length > 0) {
+                for (var i = 0; i < rows.length; i++) {
+                  table += "<tr>";
+
+                  table += '<td>' + rows[i].System + '</td>';
+                  table += '<td>' + rows[i].Program + '</td>';
+                  table += '<td>' + rows[i].NoOfActivity + '</td>';
+                  table += '<td>' + '5' + '</td>';
+                  table += '<td>' + '5' + '</td>';
+                  table += '</tr>';
+                }
+              
+                      console.log(table);
+      
+                    res.render(path.join(__dirname, '../public', 'myContinuityHome.html'), {
+                      name:name,userid:userid,department:department, i:i, date:date, table:table
+                    });
+              }
+              else {
+              //Fail
+                var system = "";
+                var i = 0;
+
+                res.render(path.join(__dirname, '../public', 'myContinuityHome.html'), {
+                  name:name,userid:userid,department:department, i:i, date:date, table:table
+                });
+              }
+            }
+            else {
+              //ERROR
+                console.log(err.message);
+                res.render(path.join(__dirname, '../public', 'login.html'));
+              }
+            });
+          }
+        }
+        else {
+
+          res.redirect('/login');
+        
+        }
     });
   }
-  else {
-
-    res.redirect('/login');
-  
-  }
-
 });
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
