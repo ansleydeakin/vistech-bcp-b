@@ -1793,6 +1793,34 @@ app.get("/myctyact", function (req, res) {
 });
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
+/* BCP TRACKER PATRICK 19/01/2019 */
+
+app.get("/tracker", function (req, res) {
+
+  var username =  req.session.username;
+  var userid = req.session.userid;
+  var roles = req.session.roles;
+  var firstname = req.session.firstname;
+  var lastname = req.session.Lastname;
+  var department = req.session.department;
+
+  var name = firstname + ' ' + lastname
+
+  if (req.session.userid) {
+
+    res.render(path.join(__dirname, '../public', 'tracker.html'),{
+      name:name,userid:userid,department:department, date:date
+    });
+  }
+  else {
+
+    res.redirect('/login');
+  
+  }
+
+});
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
 // **********************************************************************************************
 /* START THE APP & LISTEN TO THE PORT */
 
