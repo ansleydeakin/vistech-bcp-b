@@ -1775,6 +1775,7 @@ app.get("/unit", function (req, res) {
 
                 console.log(clinicalunit);
                 res.send(clinicalunit);
+            
 
             }
             else {
@@ -2240,6 +2241,53 @@ app.get("/savesys", function (req, res) {
               });
     }  
     else {
+      res.end();
+    }
+  }  
+
+});
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+/* SAVE MY CRITICAL SYSTEMS & CONTINUE ANSLEY 20/01/2019 */
+
+app.get("/savecritsys", function (req, res) {
+
+  var userid = req.session.userid;
+  var BCPID = req.session.MyBCPID;
+  var SYSID = req.session.systemid;
+
+  if (req.session.userid){
+
+    console.log('------------0--------------' + userid)
+
+    if (BCPID){
+      con.query("SELECT * FROM MySystems WHERE Completed = '0' and MyBCPID = " + BCPID,function (err, rows, fields) {
+        if (rows.length>0) {
+          console.log('------------1--------------' + BCPID)
+          res.render(path.join(__dirname, '../public', 'message.html'), {
+            message1:'There are still incomplete Systems'
+          });
+        }
+        else{
+              con.query("UPDATE MyBCP SET Status = 2, LastUpdated = NOW() WHERE Status = 1 and MyBCPID = " + BCPID + " and UserID = " + userid,function (err, rows, fields) {
+                      if (!err) {
+                        console.log('------------2--------------' + rows)
+                        req.session.systemid = undefined;
+                        res.redirect("/myimportance");
+                      }
+                      else {
+                        console.log('------------3--------------' + err)
+                        res.end();                       
+                      }
+              });
+          }
+        
+        
+      });        
+    }  
+    else {
+      console.log('------------4--------------')
       res.end();
     }
   }  
