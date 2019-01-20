@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
-    <title>BCPMe - BCP Plan Tracker</title>
+    <title>BCPMe - BCP System Catalog</title>
 
     <!-- Bootstrap core CSS -->
 	<link href="justincss/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
@@ -55,7 +55,7 @@
 								</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link" href="/tracker">BCP Tracker</a>
+								<a class="nav-link" href="#">BCP Tracker</a>
 							</li>
 							<li class="nav-item">
 								<a class="nav-link" href="/system">New BCP Plan</a>
@@ -84,40 +84,54 @@
 			<div class="col-12">	
 			<button type="button" onclick="window.location.href='/dashboard'" value="Redirect" class="btn btn-outline-secondary">Cancel</button>
 			</div>				
-			<h5 class="ml-4 mt-4">BCP Plan Tracker</h5>
+			<h5 class="ml-4 mt-4">BCP System Catalog</h5>
 			<div class="col-12"><hr></div>
 		</div>
-		<div class="row ml-2">
-		  <!-- Nav tabs -->
-		  <ul class="nav nav-tabs ml-4 col-10">
-			<li class='nav-item'>
-			  <a class='nav-link active' data-toggle='tab' href='#A1'>Not Submitted</a>
-			</li>
-			<li class='nav-item'>
-			  <a class='nav-link ' data-toggle='tab' href='#A2'>Submitted</a>
-			</li>
-		  </ul>
-		<div class="row ml-2 col-10 d-flex">
+		<div class="row ml-2 ml-4">
+			<div class="card col-11">	
+				<div class="d-flex plan-track">			  
+				  <h6 class="mr-auto card-title m-3 pt-2">Systems</h6>
+				  <a href="#" class="card-link grey-resume">Download</a>
+				</div>	
+			</div>
+		</div>
+		
+		<!-- Nav tabs -->		  
+		<div class="row ml-2 col-11 d-flex">
 			<a data-toggle="collapse" href="#myCard" onclick="toggler('myContent');" class="collapsed ml-auto p-4">Filter<i class="ml-1 fa fa-chevron-right pull-right"></i>
 			</a>
 		</div>
 		<div id="myContent" class="row collapse hidden ml-4 ml-4 col-8">
 			  <span><b>All fields marked with * are mandatory</b></span><br>
+			  <div class="form-group mt-2">
+				  <label for="system">System Name *</label>
+				  <input type="text" class="form-control" id="system">
+			  </div>				
 			  <div class="form-group">
-				  <label for="name">Author Name *</label>
-				  <input type="text" class="form-control" id="name">
+				  <label for="type">Type *</label>
+				  <input type="text" class="form-control" id="type">
 			  </div>				
 			  <div class="form-group mt-3">
-				  <label for="department">Department *</label>
-				  <select class="form-control" id="department">
+				  <label for="category">Category *</label>
+				  <select class="form-control" id="category">
 					<option hidden >Make a selection</option>
-					<option>Aged Care</option>
+					<option>Core</option>
 					<option>2</option>
 					<option>3</option>
 					<option>4</option>
 				  </select>
 			  </div>
-        <!-- Modal footer -->
+			  <div class="form-group mt-3">
+				  <label for="function">Function *</label>
+				  <select class="form-control" id="function">
+					<option hidden >Make a selection</option>
+					<option>Core</option>
+					<option>2</option>
+					<option>3</option>
+					<option>4</option>
+				  </select>
+			  </div>
+			<!-- Modal footer -->
 			<div class="mt-5 modal-footer">
 				<div class="col-6">
 				  <button type="button" class="btn btn-outline-secondary">Clear</button>
@@ -127,76 +141,57 @@
 				</div>			
 			</div>
 			<div class="col-12"><hr></div>
+		</div>					
+		  <div class="col-11">
+			  <table class="ml-3 table">
+				  <thead>
+					<tr>
+					  <th scope="col">System</th>
+					  <th scope="col">Type</th>
+					  <th scope="col">Category</th>
+					  <th scope="col">Function</th>
+					</tr>
+				  </thead>
+				  <tbody>
+					<tr>
+					  <td>Sharepoint</td>					
+					  <td>Document Mgt Systems</td>
+					  <td>Core</td>
+					  <td>Departmental</td>
+					</tr>
+					<tr>
+					  <td>Sharepoint</td>					
+					  <td>Document Mgt Systems</td>
+					  <td>Core</td>
+					  <td>Departmental</td>
+					</tr>
+					<tr>
+					  <td>Sharepoint</td>					
+					  <td>Document Mgt Systems</td>
+					  <td>Core</td>
+					  <td>Departmental</td>
+					</tr>				<tr>
+					  <td>Sharepoint</td>					
+					  <td>Document Mgt Systems</td>
+					  <td>Core</td>
+					  <td>Departmental</td>
+					</tr>				<tr>
+					  <td>Sharepoint</td>					
+					  <td>Document Mgt Systems</td>
+					  <td>Core</td>
+					  <td>Departmental</td>
+					</tr>				<tr>
+					  <td>Sharepoint</td>					
+					  <td>Document Mgt Systems</td>
+					  <td>Core</td>
+					  <td>Departmental</td>
+					</tr>
+				  </tbody>
+				</table>
+		  </div>
 		</div>
-
-	  <!-- Tab panes -->
-	  <div class="tab-content mt-4">
-		<div class='tab-pane container fade in show active' id='A1'>
-			<div class="container-fluid">		 
-				 <div class="row m-2">				 
-					<div class="card col-12">	
-						<div class="d-flex plan-track">			  
-						  <h6 class="mr-auto card-title m-3 pt-2">BCP Plan -  0000005</h6>
-						  <a href="#" class="card-link grey-resume">Resume</a>
-						</div>				
-						<div class="d-flex pt-2">
-							<dl class="row">
-							  <dt class="col-sm-2">Author</dt>
-							  <dd class="col-sm-4">Dr Mary Jones</dd>
-							  <dt class="col-sm-2">Status</dt>
-							  <dd class="col-sm-4">Draft</dd>
-							  <dt class="col-sm-2">Department</dt>
-							  <dd class="col-sm-4">Aged Care</dd>
-							  <dt class="col-sm-2">Created</dt>
-							  <dd class="col-sm-4">2019-01-10 12:12</dd>
-							  <dt class="col-sm-6"></dt>
-							  <dt class="col-sm-2">Last Modified</dt>
-							  <dd class="col-sm-4">2019-01-10 12:12</dd>
-							</dl>					
-						</div>
-						<span class="text-right p-2">
-							<a href="#">Delete</a>
-						</span>	
-					</div>
-				</div>
-			</div>				
-		</div>
-		<div class='tab-pane container fade' id='A2'>
-			<div class="container-fluid">		 
-				 <div class="row m-2">				 
-					<div class="card col-12">	
-						<div class="d-flex plan-track">			  
-						  <h6 class="mr-auto card-title m-3 pt-2">BCP Plan -  0000003</h6>
-						  <a href="#" class="card-link grey-resume">View</a>
-						</div>				
-						<div class="d-flex pt-2">
-							<dl class="row">
-							  <dt class="col-sm-2">Author</dt>
-							  <dd class="col-sm-4">Dr Mary Jones</dd>
-							  <dt class="col-sm-2">Status</dt>
-							  <dd class="col-sm-4">Submitted</dd>
-							  <dt class="col-sm-2">Department</dt>
-							  <dd class="col-sm-4">Aged Care</dd>
-							  <dt class="col-sm-2">Created</dt>
-							  <dd class="col-sm-4">2019-01-10 12:12</dd>
-							  <dt class="col-sm-6"></dt>
-							  <dt class="col-sm-2">Last Modified</dt>
-							  <dd class="col-sm-4">2019-01-15 16:42</dd>
-							</dl>					
-						</div>
-						<span class="text-right p-2">
-							<a href="#">Ammend</a>
-							<a class="ml-2" href="#">Delete</a>
-						</span>
-					</div>
-				</div>
-			</div>
-		</div>
-	  </div>
-	</div>
-	
-		<div class="container-fluid">	
-				<div class="row">
+	      <div class="container-fluid">	
+				<div class="row p-4">
 				<div class="col-12"><hr></div>
 				<div class="col-12">	
 				<button type="button" onclick="window.location.href='/dashboard'" value="Redirect" class="btn btn-outline-secondary">Cancel</button>
