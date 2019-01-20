@@ -38,44 +38,15 @@
     $(window).on('load',function(){
         $('#myModal').modal({backdrop: 'static', keyboard: false});
     });
-	</script>
-	
-	<script>
-/*
-			function ToggleOnOff(){
-				if ($("#system").val() == ''){
-					document.getElementById('description').readonly=true;
-					document.getElementById('comment').readonly=true;
-				}
-				else if ($("#system").val() != ''){
-					document.getElementById('description').readonly=false;
-					document.getElementById('comment').readonly=false;
-				}
-			}
-*/
-		var fetchunit=function (){
-	
-	 var selectedprogram=$('#program').val();
-	 
-	 // these are your GET parameters
-	 var data={
-		 selectedprogram:selectedprogram
-	 }
-	 
-	 //this is our ajax call for clincal unit list
-	 $.get("/unit", data,function(clinicalunit) {
-			 $("#unitlist").html(clinicalunit);
-		 });
-	 }
-	 
-	 $(document).ready(function(){
-	 $('#program').bind('change',fetchunit)
-	 });
+	</script>	
 
-
+<script>
+/////////////////////////////////////////
+	//Save System
 	var savesystem=function (){
 	
 	// these are your GET parameters
+
 		var data={
 		}
 
@@ -84,12 +55,52 @@
 		 	window.location.href = "/plan";
 	 });
 	}
-	 
+
 	$(document).ready(function(){
 		$('#save').bind('click touch',savesystem)
 	});
+/////////////////////////////////////////
+	//Add Act
+	var AddAct=function (){
+	
+	// these are your GET parameters
+		var system=$('#system').val();
+		var description=$('#description').val();
+		var program=$('#program').val();
+		var unit=$('#unit').val();
+		var comment=$('#comment').val();
 
- </script>
+		window.location.href = "/submitsystem?system="+system+"&description="+description+"&program="+program+"&unit="+unit+"&comment="+comment;
+	}
+
+	$(document).ready(function(){
+		$('#addact').bind('click touch',AddAct)
+	});
+/////////////////////////////////////////
+</script>
+
+<script>
+	/////////////////////////////////////////
+		var fetchunit=function (){
+
+			 var selectedprogram=$('#program').val();
+
+			 // these are your GET parameters
+			 var data={
+					 selectedprogram:selectedprogram
+					 }
+
+				//this is our ajax call for clincal unit list
+				$.get("/unit", data,function(clinicalunit) {
+						$('#unitlist').html(clinicalunit);
+					});
+				}
+
+				$(document).ready(function(){
+				$('#program').bind('change',fetchunit)
+				});
+/////////////////////////////////////////	
+</script>
 
     <!-- Custom styles for this template -->
     <link href="justinstyle/navbar.css" rel="stylesheet">
@@ -150,7 +161,7 @@
 		  </div>
 		  <div class="form-group mt-3">
 
-					<form action="/submitsystem" method="get">
+				<!--	<form action="/submitsystem" method="get"> -->
 
 			  <label for="system">System Name*</label>
 			 <!-- <select class="form-control" id="system" onclick="ToggleOnOff()">
@@ -180,15 +191,12 @@
 		  </div>
 		  <div class="form-group">
 			  <label for="unit">Clinical Unit*</label>
-			<!--  <select class="form-control" name="unit" id="unit">
-			    <option value="" hidden >Make a selection</option>
-				<option>All Surgical</option>
-				<option>2</option>
-				<option>3</option>
-				<option>4</option> -->
-				<!-- </select> -->
-				<p id="unitlist"></p>
+		<!--  <select class="form-control" name="unit" id="unit"> -->
 				<%- unit -%>
+
+				<p id="unitlist"></p>
+
+		<!--	</select> -->
 		  </div>	
 		  <div class="form-group">
 			  <label for="comment">Comment/Contact</label>
@@ -198,8 +206,8 @@
 		<div class="card col mt-5">	
 			<div class="d-flex">			  
 			  <h6 class="mr-auto card-title m-2 pt-2">Activities</h6>
-				<button type="submit" class="card-link grey-add" id="addact">Add</button>
-			  </form>
+				<button type="submit" class="card-link grey-add" id="addact">Add</button> -->
+	<!--		</form> -->
 			</div>
 		</div>			
 		  <table class="table">
@@ -226,7 +234,7 @@
         <!-- Modal footer -->
         <div class="mt-5 modal-footer">
 			<div class="col-6">
-			  <button type="button" class="btn btn-outline-secondary">Delete</button>
+			  <button type="button" id="btnDelete" class="btn btn-outline-secondary">Delete</button>
 			  <button type="button" onclick="window.location.href='/plan'" value="Redirect" class="btn btn-outline-secondary">Cancel</button>
 			</div>
 			<div class="col-6">  
@@ -239,6 +247,6 @@
   </div>
   
 </div>
-
 </body>
+
 </html>
