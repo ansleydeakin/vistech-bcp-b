@@ -1855,7 +1855,6 @@ app.get("/myimportance", function (req, res) {
   var firstname = req.session.firstname;
   var lastname = req.session.Lastname;
   var department = req.session.department;
-  var importanceCount = 5;
 
   var name = firstname + ' ' + lastname
 
@@ -1900,7 +1899,7 @@ app.get("/myimportance", function (req, res) {
                       console.log(table);
       
                     res.render(path.join(__dirname, '../public', 'myImportanceHome.html'), {
-                      name:name,userid:userid,department:department, importanceCount:importanceCount, date:date, table:table
+                      name:name,userid:userid,department:department, i:i, date:date, table:table
                     });
               }
               else {
@@ -1909,7 +1908,7 @@ app.get("/myimportance", function (req, res) {
                 var i = 0;
 
                 res.render(path.join(__dirname, '../public', 'myImportanceHome.html'), {
-                  name:name,userid:userid,department:department, importanceCount:importanceCount, date:date, table:table
+                  name:name,userid:userid,department:department, i:i, date:date, table:table
                 });
               }
             }
