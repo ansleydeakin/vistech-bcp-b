@@ -1863,7 +1863,7 @@ app.get("/myimportance", function (req, res) {
     
     con.query('SELECT * FROM MyBCP WHERE userid = \"' + userid + '\" limit 1', function (err, rows, fields) {
       if (!err && rows.length > 0){
-        if (rows[0].Status == 1) { //MySystem
+        if (rows[0].Status == 2) { //MyImportance
   
             req.session.MyBCPID = rows[0].MyBCPID;
             var BCPID = req.session.MyBCPID;
@@ -2006,7 +2006,7 @@ app.get("/myctyhome", function (req, res) {
   if (req.session.userid) {
     con.query('SELECT * FROM MyBCP WHERE userid = \"' + userid + '\" limit 1', function (err, rows, fields) {
       if (!err && rows.length > 0){
-        if (rows[0].Status == 1) { //MySystem
+        if (rows[0].Status == 3) { //MyContinuity
   
             req.session.MyBCPID = rows[0].MyBCPID;
             var BCPID = req.session.MyBCPID;
