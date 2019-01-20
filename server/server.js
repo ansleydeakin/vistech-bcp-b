@@ -1900,7 +1900,7 @@ app.get("/myimportance", function (req, res) {
                       console.log(table);
       
                     res.render(path.join(__dirname, '../public', 'myImportanceHome.html'), {
-                      name:name,userid:userid,department:department, i:i, date:date, table:table
+                      name:name,userid:userid,department:department, i:i, LastUpdated:LastUpdated, table:table
                     });
               }
               else {
@@ -1909,7 +1909,7 @@ app.get("/myimportance", function (req, res) {
                 var i = 0;
 
                 res.render(path.join(__dirname, '../public', 'myImportanceHome.html'), {
-                  name:name,userid:userid,department:department, i:i, date:date, table:table
+                  name:name,userid:userid,department:department, i:i, LastUpdated:LastUpdated, table:table
                 });
               }
             }
@@ -1919,6 +1919,14 @@ app.get("/myimportance", function (req, res) {
                 res.render(path.join(__dirname, '../public', 'login.html'));
               }
             });
+          } else if (rows[0].Status == 2){ //Importance
+            res.redirect("/myimportance");
+          }
+          else if (rows[0].Status == 3){ //Continuity
+            res.redirect("/myctyhome");
+          }
+          else if (rows[0].Status == 4){ //BCPSummary
+            res.redirect("/");
           }
         }
         else {
@@ -2043,7 +2051,7 @@ app.get("/myctyhome", function (req, res) {
                       console.log(table);
       
                     res.render(path.join(__dirname, '../public', 'myContinuityHome.html'), {
-                      name:name,userid:userid,department:department, i:i, date:date, table:table
+                      name:name,userid:userid,department:department, i:i, LastUpdated:LastUpdated, table:table
                     });
               }
               else {
@@ -2052,7 +2060,7 @@ app.get("/myctyhome", function (req, res) {
                 var i = 0;
 
                 res.render(path.join(__dirname, '../public', 'myContinuityHome.html'), {
-                  name:name,userid:userid,department:department, i:i, date:date, table:table
+                  name:name,userid:userid,department:department, i:i, LastUpdated:LastUpdated, table:table
                 });
               }
             }
@@ -2062,6 +2070,14 @@ app.get("/myctyhome", function (req, res) {
                 res.render(path.join(__dirname, '../public', 'login.html'));
               }
             });
+          } else if (rows[0].Status == 2){ //Importance
+            res.redirect("/myimportance");
+          }
+          else if (rows[0].Status == 3){ //Continuity
+            res.redirect("/myctyhome");
+          }
+          else if (rows[0].Status == 4){ //BCPSummary
+            res.redirect("/");
           }
         }
         else {
