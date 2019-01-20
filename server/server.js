@@ -1327,18 +1327,22 @@ app.get("/plan", function (req, res) {
                   }
                 
                         console.log(table);
+                        var progress = '<li id="sysprogress" class="li complete">';
         
                       res.render(path.join(__dirname, '../public', 'plan.html'), {
-                        name:name, userid:userid, i:i, table:table,LastUpdated:LastUpdated
+                        name:name, userid:userid, i:i, table:table,LastUpdated:LastUpdated,progress:progress
                       });
                 }
                 else {
                 //Fail
                   var system = "";
                   var i = 0;
+                  var progress = '<li id="sysprogress" class="li inprogress">';
+
+
 
                   res.render(path.join(__dirname, '../public', 'plan.html'), {
-                    name:name, userid:userid,i:i,table:table,LastUpdated:LastUpdated
+                    name:name, userid:userid,i:i,table:table,LastUpdated:LastUpdated,progress:progress
                   });
                 }
             }
@@ -2310,6 +2314,8 @@ app.get("/savecritsys", function (req, res) {
 });
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
+
+  
 
 // **********************************************************************************************
 /* START THE APP & LISTEN TO THE PORT */
