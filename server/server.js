@@ -2127,18 +2127,10 @@ app.get("/myimportanceact", function (req, res) {
           if (SYSID){ 
 
             console.log('--------- 2')
-            con.query('SELECT * FROM MySystems WHERE MySysID = ' + SYSID + ' limit 1; SELECT * FROM SystemActivities WHERE MySysID= ' + SYSID, function (err, rows, fields) {
+            con.query('SELECT * FROM SystemActivities WHERE MySysID= ' + SYSID, function (err, rows, fields) {
               if (!err) {
                  
-                  var system = "";
-                  var program = "";
-                  var importance = "";
-                  var description = "";
-                  var comment = "";
-                  var table = "";
-      
                   var result1 = rows[0];
-                  var result2 = rows[1];
       
                   console.log(result1[0]);
                  
@@ -2158,10 +2150,10 @@ app.get("/myimportanceact", function (req, res) {
                             comment = '<input type="text" class="form-control" readonly id="comment" name="comment" value=' + result1[0].Comment + '>';
       
                   }
-                  if (result2.length > 0){
+                  if (result1.length > 0){
 
-                    console.log('--------- Result 2 Activities')
-                    console.log(result2)
+                    console.log('--------- Result 1 Activities')
+                    console.log(result1)
       
                     for (var i = 0; i < result2.length; i++) {
       
