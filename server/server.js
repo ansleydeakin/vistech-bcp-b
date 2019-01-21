@@ -2771,7 +2771,7 @@ app.get("/bcpsummary", function (req, res) {
   if (req.session.userid){
 
     
-    con.query("SELECT MyBCPID FROM MyBCP WHERE Status = 4 and UserID=" + userid, function (err, rows, fields) {
+    con.query("SELECT * FROM MyBCP WHERE Status = 4 and UserID=" + userid, function (err, rows, fields) {
       if (!err && rows.length > 0){
 
         req.session.MyBCPID = rows[0].MyBCPID;
@@ -2887,6 +2887,65 @@ app.get("/generatebcppdf", function (req, res) {
     res.redirect("/login"); 
   }
   
+});
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+/* SAVE SAVE BCP SUMMARY ANSLEY 22/01/2019 */
+
+app.get("/savebcpsummary", function (req, res) {
+
+  var userid = req.session.userid;
+  var BCPID = req.session.MyBCPID;
+  var SYSID = req.session.systemid;
+
+  req.session.systemid = undefined;
+  req.session.activityid = undefined;
+
+  if (req.session.userid){
+
+              console.log("UPDATE BCP STATUS");
+
+              con.query('UPDATE MyBCP SET Status = 5, LastUpdated=NOW() WHERE Status= 4 and MyBCPID = ' + BCPID + ' and UserID = ' + userid, function (err, rows, fields) {
+                      if (!err) {
+                        res.redirect("/bcpsummary");
+                      }
+                      else {
+                        res.redirect("/plan");                        
+                      }
+              });
+    
+  }  
+  
+});
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+/* BCP CATALOG ANSLEY 22/01/2019 */
+
+app.get("/catalog", function (req, res) {
+
+  var username =  req.session.username;
+  var userid = req.session.userid;
+  var roles = req.session.roles;
+  var firstname = req.session.firstname;
+  var lastname = req.session.Lastname;
+  var department = req.session.department;
+
+  var name = firstname + ' ' + lastname
+
+  if (req.session.userid) {
+
+    res.render(path.join(__dirname, '../public', 'catalog.html'),{
+      name:name,userid:userid,department:department, date:date
+    });
+  }
+  else {
+
+    res.redirect('/login');
+  
+  }
+
 });
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
