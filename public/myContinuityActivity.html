@@ -94,7 +94,7 @@
         <!-- Modal Header -->
         <div class="modal-header">
           <h4 class="modal-title">My Continuity Actions: Activity</h4>
-          <button type="button" onclick="window.location.href='/myctysys'" value="Redirect"class="close" >&times;</button>
+          <button type="button" onclick="window.location.href='/plan'" value="Redirect"class="close" >&times;</button>
         </div>
         
         <!-- Modal body -->
@@ -125,36 +125,40 @@
 	      </span>
 		  </div>
 		  <div class="form-group">
+					<form action="/savectyact" method="post">
 			  <label for="activity"><h6>Activity</h6></label>
-			  <input type="text" class="form-control" readonly id="activity" value="Accessing patient record">
+			<!--  <input type="text" class="form-control" readonly id="activity" value="Accessing patient record"> -->
+			<%- activity -%>
 		  </div>
 		  <div class="form-group">
 			  <label for="category"><h6>Impact Category *</h6></label>
-			  <input type="text" class="form-control" readonly id="impact" value="5 - Severe">
+			<!--  <input type="text" class="form-control" readonly id="impact" value="5 - Severe"> -->
+			<%- impact -%>
 		  </div>	
 		 
 		  <div class="form-group">
 			  <label for="rating"><h6>Immediate Continuity Action *</h6></label>	
-			  <textarea class="form-control" rows="5" id="immediate"></textarea>
+			  <textarea class="form-control" rows="5" name="immediate" id="immediate"></textarea>
 		  </div>
 		
 		  <div class="form-group">
 			  <label for="category"><h6>Immediate Maintainable Duration</h6></label>
-			  <input type="text" class="form-control" readonly id="mtpd" value="1 Day">
+			 <!-- <input type="text" class="form-control" readonly id="mtpd" value="1 Day"> -->
+			 <%- mtpd -%>
 		  </div>			  		
 		  <div class="form-group">
 			  <label for="rating"><h6>Sustainable Continuity Action *</h6></label>	
-			  <textarea class="form-control" rows="5" id="sustainable"></textarea>
+			  <textarea class="form-control" rows="5" name="sustainable" id="sustainable"></textarea>
 		  </div>
 		  <div class="form-group">
 			  <label for="rating"><h6>Sustainable Pre-requisites/Resources *</h6></label>	
-			  <textarea class="form-control" rows="5" id="prerequities"></textarea>
+			  <textarea class="form-control" rows="5" name="prerequities" id="prerequities"></textarea>
 		  </div>	  
 		
 		
 		  <div class="form-group mt-3">
 			  <label for="mtpd"><h6>Sustainable Maintabile Duration *</h6></label>
-			  <select class="form-control" id="sustainduration" required>
+			  <select class="form-control" name="sustainduration" id="sustainduration" required>
 				<option hidden >Make a selection</option>
 				<option>Nil</option>
 				<option>2 Hr</option>
@@ -170,11 +174,12 @@
         <!-- Modal footer -->
         <div class="mt-5 modal-footer">
 			<div class="col-6">
-			  <button type="button" onclick="window.location.href='/myctysys'" value="Redirect" class="btn btn-outline-secondary">Cancel</button>
+			  <button type="button" onclick="window.location.href='/plan'" value="Redirect" class="btn btn-outline-secondary">Cancel</button>
 			</div>
 			<div class="col-6">  
-			  <button type="button" onclick="window.location.href='/myctysys'" value="Redirect"class="btn btn-dark float-right">Save</button>
+			  <button type="submit" class="btn btn-dark float-right">Save</button>
 			</div>
+		</form>
 		</div>
         
       </div>
