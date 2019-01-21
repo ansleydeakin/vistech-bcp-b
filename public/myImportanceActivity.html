@@ -46,8 +46,11 @@
 		
 		// these are your GET parameters
 			var mtpd=$('#mtpd').val();
+			console.log(mtpd)
 			var mtdl=$('#mtdl').val();
+			console.log(mtdl)
 			var importancerating=$('#rangemin').val();
+			console.log(importancerating)
 	
 			window.location.href = "/submitrating?mtpd="+mtpd+"&mtdl="+mtdl+"&importancerating="+importancerating;
 		}
@@ -167,7 +170,7 @@
 			  <label for="rating-mins">How critical is the activity if the system is disrupted between 1 to 60 Minutes? *</label>
 			  <div class="row ml-5 mt-3">		  
 				<div class="rangeMin">
-				  <input id="rangeMin" type="range" min="1" max="5" steps="1" value="1">
+				  <input name = "importancerating" id="importancerating" type="range" min="1" max="5" steps="1" value="1">
 				</div>
 				<ul class="rangeMin-labels">
 				  <li>Negligible</li>
@@ -225,7 +228,7 @@
 		  </div>
 		  <div class="form-group mt-3">
 			  <label for="mtpd"><h6>Maximum Tolerable Data Loss (MTPD) *</h6></label>
-			  <select class="form-control" id="mtpd" required>
+			  <select class="form-control" id="mtpd" name = "mtpd" required>
 				<option hidden >Make a selection</option>
 				<option value = 'Nil'>Nil</option>
 				<option value = '2Hr'>2 Hr</option>
@@ -240,7 +243,7 @@
 		  </div>		  
 		  <div class="form-group">
 			  <label for="mtdl"><h6>Maximum Tolerable Period of Disruption (MTDL) *</h6></label>
-			  <select class="form-control" id="mtdl" required>
+			  <select class="form-control" id="mtdl" name = "mtdl" required>
 				<option hidden >Make a selection</option>
 				<option value ='Nil'>Nil</option>
 				<option value = 'Nil'>Nil</option>
@@ -260,7 +263,7 @@
 			  <button type="button" onclick="window.location.href='/myimportancesys'" value="Redirect"class="btn btn-outline-secondary">Cancel</button>
 			</div>
 			<div class="col-6">  
-			  <button type="submit" onclick="window.location.href='/submitrating'" value="Redirect"class="btn btn-dark float-right" id='addrate'>Save</button>
+			  <button type="submit" class="btn btn-dark float-right" id='addrate'>Save</button>
 			</div>
 		</div>
         
