@@ -38,6 +38,25 @@
         $('#myModal').modal({backdrop: 'static', keyboard: false});
     });
 	</script>
+
+<script>
+	/////////////////////////////////////////
+		//Add Rate
+		var AddRate=function (){
+		
+		// these are your GET parameters
+			var mtpd=$('#mtpd').val();
+			var mtdl=$('#mtdl').val();
+			var importancerating=$('#rangemin').val();
+	
+			window.location.href = "/submitrating?mtpd="+mtpd+"&mtdl="+mtdl+"&importancerating="+importancerating;
+		}
+	
+		$(document).ready(function(){
+			$('#addrate').bind('click touch',AddRate)
+		});
+	/////////////////////////////////////////
+	</script>
 	
     <!-- Custom styles for this template -->
     <link href="justinstyle/navbar.css" rel="stylesheet">
@@ -122,7 +141,8 @@
 		  </div>
 		  <div class="form-group">
 			  <label for="activity"><h6>Activity</h6></label>
-			  <input type="text" class="form-control" readonly id="activity" value="Accessing patient record">
+				<!-- <input type="text" class="form-control" readonly id="activity" value="Accessing patient record"> -->
+				<%- activity -%>
 		  </div>
 		  <div class="form-group">
 			  <label for="category"><h6>Impact Category *</h6></label>
@@ -147,7 +167,7 @@
 			  <label for="rating-mins">How critical is the activity if the system is disrupted between 1 to 60 Minutes? *</label>
 			  <div class="row ml-5 mt-3">		  
 				<div class="rangeMin">
-				  <input id="rangeMin" type="range" min="1" max="5" steps="1" value="1">
+				  <input class = "form-control" id="rangeMin" type="range" min="1" max="5" steps="1" value="1">
 				</div>
 				<ul class="rangeMin-labels">
 				  <li>Negligible</li>
@@ -239,7 +259,7 @@
 			  <button type="button" onclick="window.location.href='/myimportancesys'" value="Redirect"class="btn btn-outline-secondary">Cancel</button>
 			</div>
 			<div class="col-6">  
-			  <button type="button" onclick="window.location.href='/myimportancesys'" value="Redirect"class="btn btn-dark float-right">Save</button>
+			  <button type="submit" onclick="window.location.href='/submitrating'" value="Redirect"class="btn btn-dark float-right" id='addrate'>Save</button>
 			</div>
 		</div>
         

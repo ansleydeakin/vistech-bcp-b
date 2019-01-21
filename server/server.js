@@ -1880,11 +1880,11 @@ app.get("/myimportance", function (req, res) {
             var LastUpdated = rows[0].LastUpdated;
             console.log(BCPID);
   
-            var ActivityQuery = 'SELECT SYSTABLE.System, SYSTABLE.Program, SYSTABLE.ClinicalUnit, count(Activity) AS NoOfActivity FROM' 
-            + '(SELECT MySystems.System, MySystems.Program, MySystems.ClinicalUnit, SystemActivities.Activity FROM MySystems'
+            var ActivityQuery = 'SELECT SYSTABLE.System, SYSTABLE.Program, SYSTABLE.ImportanceRating, count(Activity) AS NoOfActivity FROM' 
+            + '(SELECT MySystems.System, MySystems.Program, MySystems.ImportanceRating, SystemActivities.Activity FROM MySystems'
             + ' INNER JOIN SystemActivities ON MySystems.MySysID = SystemActivities.MySysID'
             + ' WHERE MySystems.UserID=' + userid +' and MySystems.MyBCPID = ' + BCPID + ') AS SYSTABLE'
-            + ' GROUP BY SYSTABLE.System, SYSTABLE.Program, SYSTABLE.ClinicalUnit'
+            + ' GROUP BY SYSTABLE.System, SYSTABLE.Program, SYSTABLE.ImportanceRating'
             
             console.log(ActivityQuery)
 
@@ -1902,7 +1902,11 @@ app.get("/myimportance", function (req, res) {
                   table += '<td>' + rows[i].System + '</td>';
                   table += '<td>' + rows[i].Program + '</td>';
                   table += '<td>' + rows[i].NoOfActivity + '</td>';
-                  table += '<td>' + '5' + '</td>';
+                  if(rows[i].ImportanceRating == null){
+                    table += '<td> Not Set </td>';
+                  } else {
+                    table += '<td>' + rows[i].ImportanceRating + '</td>';
+                  }
 
                   table += '</tr>';
                 }
@@ -2107,6 +2111,7 @@ app.get("/myimportanceact", function (req, res) {
   var lastname = req.session.Lastname;
   var department = req.session.department;
   var BCPID = req.session.MyBCPID;
+  var SYSID = req.session.systemid;
   var i = 0;
 
   var name = firstname + ' ' + lastname
@@ -2115,77 +2120,17 @@ app.get("/myimportanceact", function (req, res) {
 
     console.log(userid)
     console.log(BCPID)
-    var checksysquery = 'SELECT * FROM MySystems WHERE UserID = ' + userid + ' and MyBCPID = ' + BCPID + ' limit 1';
-
-    con.query(checksysquery, function (err, rows, fields) {
-
-      //running into an error here...
-      if (!err && rows.length > 0){
-
-          req.session.systemid = rows[0].MySysID;
-          var SYSID = req.session.systemid;
-
-          console.log('System ID ' + SYSID);
-          if (SYSID){ 
-
             console.log('--------- 2')
+            //error happens here
             con.query('SELECT * FROM SystemActivities WHERE MySysID= ' + SYSID, function (err, rows, fields) {
               if (!err) {
+      
+                  console.log(rows[0]);
                  
-                  var result1 = rows[0];
-      
-                  console.log(result1[0]);
-                 
-                  if (result1.length > 0) {
-      
-                            program += '<select class="form-control" readonly id="program" name="program">';
-                            program += '<option value= \"' + result1[0].Program + '\">' + result1[0].Program + '</option>';
-                            program += '</select>';
-      
-                            system += '<select class="form-control" readonly id="system" name="system">';
-                            system += '<option value= \"' + result1[0].System + '\">' + result1[0].System + '</option>';
-                            system += '</select>';
+                  var activity = '<input type="text" class="form-control" readonly id="activity" name="activity" value=' + rows[0].Activity + '>';
 
-                            importance = '<input type="text" class="form-control" readonly id="importance" name="importance" value=' + result1[0].ImportanceRating + '>';
-      
-                            description = '<input type="text" class="form-control" readonly id="description" name="description" value=' + result1[0].Description + '>';
-                            comment = '<input type="text" class="form-control" readonly id="comment" name="comment" value=' + result1[0].Comment + '>';
-      
-                  }
-                  if (result1.length > 0){
-
-                    console.log('--------- Result 1 Activities')
-                    console.log(result1)
-      
-                    for (var i = 0; i < result2.length; i++) {
-      
-                      table += "<tr>";
-                      table += '<td>' + result2[i].Activity + '</td>';
-                      if(result2[i].ImportanceRating == null){
-                        table += '<td> Not Set </td>';
-                      } else {
-                        table += '<td>' + result2[i].ImportanceRating + '</td>';
-                      }
-                      if(result2[i].ActivityMTPD == null){
-                        table += '<td> Not Set </td>';
-                      } else {
-                        table += '<td>' + result2[i].ActivityMTPD + '</td>';
-                      }
-                      if(result2[i].ActivityMTDL == null){
-                        table += '<td> Not Set </td>';
-                      } else {
-                        table += '<td>' + result2[i].ActivityMTDL + '</td>';
-                      }
-                      
-                      table += '</tr>';
-      
-                    }
-      
-                  }
-
-                  res.render(path.join(__dirname, '../public', 'myImportanceSystem.html'),{
-                    name:name,userid:userid,department:department, i:i, system:system, program:program, importance:importance, table:table,
-                    comment:comment, description:description
+                  res.render(path.join(__dirname, '../public', 'myImportanceActivity.html'),{
+                    name:name,userid:userid,department:department, i:i, activity:activity 
                   });
                   
                   }
@@ -2198,16 +2143,6 @@ app.get("/myimportanceact", function (req, res) {
                   }
             });
           
-          }
-      } else {
-
-        res.render(path.join(__dirname, '../public', 'home.html'), {
-          name:name,userid:userid,department:department
-       });
-      }
-
-    });
-
   }
   else {
 
@@ -2231,6 +2166,51 @@ app.get("/myimportanceact", function (req, res) {
   }
 
 });*/
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+/* SUBMIT RATING & REDIRECT TO IPORTANCE SYSTEMS PATRICK 21/01/2019 */
+
+app.get("/submitrating", function (req, res) {
+
+  var userid = req.session.userid;
+  var BCPID = req.session.MyBCPID;
+  var SYSID = req.session.systemid;
+
+  var ImportanceRating = req.query.ImportanceRating;
+  var MTPD = req.query.MTPD;
+  var MTDL = req.query.MTDL;
+
+  console.log("SUBMIT RATING HERE")
+  //console.log(SYSID)
+  //sys id is not defined???? so it is causing us errors.
+  if (req.session.userid){
+
+    console.log("submit rating");
+    con.query('SELECT * FROM SystemActivities WHERE MySysID= ' + SYSID, function (err, rows, fields) {
+      if (!err) {
+        var ACTID = rows[0].ACTID
+
+        console.log("Update SystemActivities with rating");
+        console.log(ACTID)
+        console.log(MTPD)
+        console.log(MTDL)
+        console.log(ImportanceRating)
+        con.query("UPDATE SystemActivities SET ImportanceRating = " + ImportanceRating + ", ActivityMTPD = " + MTPD 
+        + ", ActivityMTDL = " + MTDL + " WHERE MySysID = " + SYSID + "and ACTID = " + ACTID,
+            function (err, rows, fields) {
+                if (!err) {
+                  res.redirect("/myimportancesys");
+                }
+                else {
+                  res.redirect("/myimportanceact");                        
+                }
+        });
+      }
+    });
+  }  
+});
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 /* MY CONTINUITY HOME PATRICK 17/01/2019 */
