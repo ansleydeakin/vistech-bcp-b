@@ -55,6 +55,10 @@ app.use(session({
 
 var jwt = require('jsonwebtoken');
 
+//var pdf = require('pdfkit'); //pdfkit to generate pdf file
+var fs = require('fs');
+var pdf = require('html-pdf');
+
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 /* ADD MYSQL DB CONNECTION  ANSLEY 15/12/2018 MAIN MySQL CONNECTION */
@@ -1285,7 +1289,7 @@ app.get("/plan", function (req, res) {
   var name = firstname + ' ' + lastname;
   var BCPID = "";
 
-  console.log(req.session.MyBCPID) 
+  console.log('BCP ID ' + req.session.MyBCPID) 
 
   if (req.session.userid) {
 
@@ -1296,7 +1300,7 @@ app.get("/plan", function (req, res) {
           req.session.MyBCPID = rows[0].MyBCPID;
           var BCPID = req.session.MyBCPID;
           var LastUpdated = rows[0].LastUpdated;
-          console.log(BCPID);
+          console.log('SET BCP ID ' + BCPID);
 
           var ActivityQuery = 'SELECT SYSTABLE.System, SYSTABLE.Program, SYSTABLE.ClinicalUnit, count(Activity) AS NoOfActivity FROM' 
           + '(SELECT MySystems.System, MySystems.Program, MySystems.ClinicalUnit, SystemActivities.Activity FROM MySystems'
@@ -1360,7 +1364,7 @@ app.get("/plan", function (req, res) {
         res.redirect("/myctyhome");
       }
       else if (rows[0].Status == 4){ //BCPSummary
-        res.redirect("/bcptracker");
+        res.redirect("/bcpsummary");
       }
     }
     else if (!err && rows.length <= 0){
@@ -1876,11 +1880,11 @@ app.get("/myimportance", function (req, res) {
             var LastUpdated = rows[0].LastUpdated;
             console.log(BCPID);
   
-            var ActivityQuery = 'SELECT SYSTABLE.System, SYSTABLE.Program, SYSTABLE.ImportanceRating, count(Activity) AS NoOfActivity FROM' 
-            + '(SELECT MySystems.System, MySystems.Program, MySystems.ImportanceRating, SystemActivities.Activity FROM MySystems'
+            var ActivityQuery = 'SELECT SYSTABLE.System, SYSTABLE.Program, SYSTABLE.ClinicalUnit, count(Activity) AS NoOfActivity FROM' 
+            + '(SELECT MySystems.System, MySystems.Program, MySystems.ClinicalUnit, SystemActivities.Activity FROM MySystems'
             + ' INNER JOIN SystemActivities ON MySystems.MySysID = SystemActivities.MySysID'
             + ' WHERE MySystems.UserID=' + userid +' and MySystems.MyBCPID = ' + BCPID + ') AS SYSTABLE'
-            + ' GROUP BY SYSTABLE.System, SYSTABLE.Program, SYSTABLE.ImportanceRating'
+            + ' GROUP BY SYSTABLE.System, SYSTABLE.Program, SYSTABLE.ClinicalUnit'
             
             console.log(ActivityQuery)
 
@@ -1898,11 +1902,7 @@ app.get("/myimportance", function (req, res) {
                   table += '<td>' + rows[i].System + '</td>';
                   table += '<td>' + rows[i].Program + '</td>';
                   table += '<td>' + rows[i].NoOfActivity + '</td>';
-                  if(rows[i].ImportanceRating == null){
-                    table += '<td>' + 'Not Set' + '</td>';
-                  } else {
-                    table += '<td>' + rows[i].ImportanceRating + '</td>';
-                  }
+                  table += '<td>' + '5' + '</td>';
 
                   table += '</tr>';
                 }
@@ -1936,7 +1936,7 @@ app.get("/myimportance", function (req, res) {
             res.redirect("/myctyhome");
           }
           else if (rows[0].Status == 4){ //BCPSummary
-            res.redirect("/");
+            res.redirect("/bcpsummary");
           }
         }
         else {
@@ -2083,7 +2083,9 @@ app.get("/myimportancesys", function (req, res) {
 
 });
 
+
 //////////////////////////////////////////////////////////////////////////////////////////////////
+
 /* MY IMPORTANCE ACTIVITIES PATRICK 17/01/2019 */
 
 app.get("/myimportanceact", function (req, res) {
@@ -2406,7 +2408,7 @@ app.get("/myctyact", function (req, res) {
 */
 //////////////////////////////////////////////////////////////////////////////////////////////////
 /* BCP TRACKER PATRICK 19/01/2019 */
-/*
+
 app.get("/tracker", function (req, res) {
 
   var username =  req.session.username;
@@ -2431,7 +2433,7 @@ app.get("/tracker", function (req, res) {
   }
 
 });
-*/
+
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 /* SUBMIT ACTIVITIES ANSLEY 19/01/2019 */
@@ -2751,7 +2753,7 @@ app.post("/savectyact", function (req, res) {
 });
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
-/* SAVE CONTINUITY ACTIONS & REDIRECT TO BCP TRACKER ANSLEY 21/01/2019 */
+/* SAVE CONTINUITY ACTIONS & REDIRECT TO BCP SUMMARY ANSLEY 21/01/2019 */
 
 app.get("/savecty", function (req, res) {
 
@@ -2768,7 +2770,7 @@ app.get("/savecty", function (req, res) {
 
               con.query('UPDATE MyBCP SET Status = 4, LastUpdated=NOW() WHERE Status= 3 and MyBCPID = ' + BCPID + ' and UserID = ' + userid, function (err, rows, fields) {
                       if (!err) {
-                        res.redirect("/bcptracker");
+                        res.redirect("/bcpsummary");
                       }
                       else {
                         res.redirect("/myctyhome");                        
@@ -2783,7 +2785,7 @@ app.get("/savecty", function (req, res) {
 
 /* BCP TRACKER ANSLEY 21/01/2019 */
 
-app.get("/bcptracker", function (req, res) {
+app.get("/bcpsummary", function (req, res) {
 
   var username =  req.session.username;
   var userid = req.session.userid;
@@ -2793,16 +2795,130 @@ app.get("/bcptracker", function (req, res) {
   var department = req.session.department;
 
   var name = firstname + ' ' + lastname;
-  
+
   if (req.session.userid){
 
-    res.render(path.join(__dirname, '../public', 'tracker.html'),{name:name,userid:userid,department:department});	  
-            
-  }                         
+    
+    con.query("SELECT MyBCPID FROM MyBCP WHERE Status = 4 and UserID=" + userid, function (err, rows, fields) {
+      if (!err && rows.length > 0){
+
+        req.session.MyBCPID = rows[0].MyBCPID;
+        BCPID = req.session.MyBCPID;
+
+        var progress = '<li id="bcpprogress" class="li inprogress">';
+   
+    res.render(path.join(__dirname, '../public','mySummaryHome.html'),{name:name,userid:userid,LastUpdated :rows[0].LastUpdated,progress:progress});
+      }	  
+  });        
+  }   
+                     
             
 });
   
 //////////////////////////////////////////////////////////////////////////////////////////////////
+
+/* GENERATE BCP REPORT ANSLEY 21/01/2019 */
+
+app.get("/generatebcppdf", function (req, res) {
+
+  var userid = req.session.userid;
+  var SYSID = req.session.systemid;
+
+  req.session.systemid = undefined;
+  req.session.activityid = undefined;
+
+  var html = '';
+  
+  if (req.session.userid){
+
+    con.query("SELECT MyBCPID FROM MyBCP WHERE Status = 4 and UserID=" + userid, function (err, rows, fields) {
+      if (!err && rows.length > 0){
+        req.session.MyBCPID = rows[0].MyBCPID;
+        BCPID = req.session.MyBCPID;
+   
+        
+          if (req.session.MyBCPID){
+      
+            
+
+    console.log('--------------1--------------' + userid + ' ' + BCPID);
+
+    Query = 'SELECT SYSTABLE.System, SYSTABLE.ActFunction, SYSTABLE.Activity, SYSTABLE.ClinicalUnit, SYSTABLE.ActivityMTPD,'
+    + ' SYSTABLE.ImportanceRating, SYSTABLE.ImmediateCA, SYSTABLE.SustainableCA, SYSTABLE.Prereq, SYSTABLE.SMD,'
+    + ' SYSTABLE.ActID, SYSTABLE.MySysID, SYSTABLE.Program FROM' 
+    + ' (SELECT MySystems.MySysID, MySystems.System, MySystems.Program, SystemActivities.Activity,SystemActivities.ActFunction,'
+    + ' SystemActivities.ImmediateCA, SystemActivities.SustainableCA, SystemActivities.ImportanceRating, SystemActivities.ActivityMTPD, SystemActivities.ActID,'
+    + ' SystemActivities.Prereq, SystemActivities.SMD, MySystems.ClinicalUnit'
+    + ' FROM MySystems INNER JOIN SystemActivities ON MySystems.MySysID = SystemActivities.MySysID'
+    + ' WHERE MySystems.UserID=' + userid +' and MyBCPID =' + BCPID + ') AS SYSTABLE'
+
+              con.query(Query, function (err, rows, fields) {
+
+                if (!err && rows.length >0){
+
+                  console.log('--------------2--------------');
+
+                    html += '<table border="1">';
+                    html += '<thead><tr>';
+                    html += "<th>System</th>" + "<th>Function</th>" + "<th>Activity</th>" + "<th>Clinical Unit</th>" + "<th>MTPD</th>"
+                    + "<th>Higest Impact</th>" + "<th>Immediate continuity action</th>" + "<th>Maintainable duration</th>"
+                    + "<th>Sustainable continuity action</th>" + "<th>Pre-requisites/Resources</th>" + "<th>Maintainable duration</th>" 
+                    html += "</tr></thead>";
+                    html += "<tbody>";
+
+                  for (var i = 0; i < rows.length; i++) {  
+
+                    html +='<tr>';
+
+                    html += '<td>' + rows[i].System + '</td>';
+                    html += '<td>' + rows[i].ActFunction + '</td>';
+                    html += '<td>' + rows[i].Activity + '</td>';
+                    html += '<td>' + rows[i].ClinicalUnit + '</td>';
+                    html += '<td>' + rows[i].ActivityMTPD + '</td>';
+                    html += '<td>' + rows[i].ImportanceRating + '</td>';
+                    html += '<td>' + rows[i].ImmediateCA + '</td>';
+                    html += '<td>' + rows[i].ActivityMTPD + '</td>';
+                    html += '<td>' + rows[i].SustainableCA + '</td>';
+                    html += '<td>' + rows[i].Prereq + '</td>';
+                    html += '<td>' + rows[i].SMD + '</td>';
+        
+                    html += '</tr>';   
+                  }  
+
+                  html += '</tbody>';
+                  html += '</table>';
+
+                  var options = { format: 'A4', orientation: 'landscape', border: '10mm' };
+
+                  pdf.create(html, options).toFile('./server/pdf/'+BCPID+'.pdf', function(error, result) {
+                    if (err) return console.log(error);
+                    console.log(result); 
+  
+                    res.sendFile(__dirname + '/pdf/'+BCPID+'.pdf');
+              
+                }); 
+              }
+              else{
+                res.redirect("/plan"); 
+                console.log('--------------3--------------');
+              }
+        
+              });
+            }
+          }
+        });
+  }  
+  
+  else {
+
+    console.log('--------------4--------------');
+    res.redirect("/login"); 
+  }
+  
+});
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 // **********************************************************************************************
 /* START THE APP & LISTEN TO THE PORT */
