@@ -2888,7 +2888,7 @@ app.get("/generatebcppdf", function (req, res) {
                   html += '</tbody>';
                   html += '</table>';
 
-                  var options = { format: 'A4', orientation: 'landscape', border: '10mm' };
+                  var options = { format: 'A3', orientation: 'landscape', border: '10mm' };
 
                   pdf.create(html, options).toFile('./server/pdf/'+BCPID+'.pdf', function(error, result) {
                     if (err) return console.log(error);
