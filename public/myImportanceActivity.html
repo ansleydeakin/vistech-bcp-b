@@ -167,7 +167,7 @@
 			  <label for="rating-mins">How critical is the activity if the system is disrupted between 1 to 60 Minutes? *</label>
 			  <div class="row ml-5 mt-3">		  
 				<div class="rangeMin">
-				  <input class = "form-control" id="rangeMin" type="range" min="1" max="5" steps="1" value="1">
+				  <input id="rangeMin" type="range" min="1" max="5" steps="1" value="1">
 				</div>
 				<ul class="rangeMin-labels">
 				  <li>Negligible</li>
@@ -227,31 +227,32 @@
 			  <label for="mtpd"><h6>Maximum Tolerable Data Loss (MTPD) *</h6></label>
 			  <select class="form-control" id="mtpd" required>
 				<option hidden >Make a selection</option>
-				<option>Nil</option>
-				<option>2 Hr</option>
-				<option>4 Hr</option>
-				<option>8 Hr</option>
-				<option>1 Day</option>
-				<option>3 Days</option>
-				<option>1 Week</option>
-				<option>2 Weeks</option>
-				<option>1 Month +</option>
+				<option value = 'Nil'>Nil</option>
+				<option value = '2Hr'>2 Hr</option>
+				<option value = '4Hr'>4 Hr</option>
+				<option value = '8Hr'>8 Hr</option>
+				<option value = '1Day'>1Day</option>
+				<option value = '3Day'>3 Days</option>
+				<option value = '1Wk'>1 Week</option>
+				<option value = '2Wk'>2 Weeks</option>
+				<option value = '1Mnth'>1 Month +</option>
 			  </select>
 		  </div>		  
 		  <div class="form-group">
 			  <label for="mtdl"><h6>Maximum Tolerable Period of Disruption (MTDL) *</h6></label>
 			  <select class="form-control" id="mtdl" required>
 				<option hidden >Make a selection</option>
-				<option>Nil</option>
-				<option>2 Hr</option>
-				<option>4 Hr</option>
-				<option>8 Hr</option>
-				<option>1 Day</option>
-				<option>3 Days</option>
-				<option>1 Week</option>
-				<option>2 Weeks</option>
-				<option>1 Month +</option>
-			  </select>
+				<option value ='Nil'>Nil</option>
+				<option value = 'Nil'>Nil</option>
+				<option value = '2Hr'>2 Hr</option>
+				<option value = '4Hr'>4 Hr</option>
+				<option value = '8Hr'>8 Hr</option>
+				<option value = '1Day'>1Day</option>
+				<option value = '3Day'>3 Days</option>
+				<option value = '1Wk'>1 Week</option>
+				<option value = '2Wk'>2 Weeks</option>
+				<option value = '1Mnth'>1 Month +</option>
+				</select>
 		  </div>		  
         <!-- Modal footer -->
         <div class="mt-5 modal-footer">
