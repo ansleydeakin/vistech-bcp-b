@@ -1874,11 +1874,11 @@ app.get("/myimportance", function (req, res) {
             var LastUpdated = rows[0].LastUpdated;
             console.log(BCPID);
   
-            var ActivityQuery = 'SELECT SYSTABLE.System, SYSTABLE.Program, SYSTABLE.ClinicalUnit, count(Activity) AS NoOfActivity FROM' 
-            + '(SELECT MySystems.System, MySystems.Program, MySystems.ClinicalUnit, SystemActivities.Activity FROM MySystems'
+            var ActivityQuery = 'SELECT SYSTABLE.System, SYSTABLE.Program, SYSTABLE.ImportanceRating, count(Activity) AS NoOfActivity FROM' 
+            + '(SELECT MySystems.System, MySystems.Program, MySystems.ImportanceRating, SystemActivities.Activity FROM MySystems'
             + ' INNER JOIN SystemActivities ON MySystems.MySysID = SystemActivities.MySysID'
             + ' WHERE MySystems.UserID=' + userid +' and MySystems.MyBCPID = ' + BCPID + ') AS SYSTABLE'
-            + ' GROUP BY SYSTABLE.System, SYSTABLE.Program, SYSTABLE.ClinicalUnit'
+            + ' GROUP BY SYSTABLE.System, SYSTABLE.Program, SYSTABLE.ImportanceRating'
             
             console.log(ActivityQuery)
 
@@ -1896,7 +1896,11 @@ app.get("/myimportance", function (req, res) {
                   table += '<td>' + rows[i].System + '</td>';
                   table += '<td>' + rows[i].Program + '</td>';
                   table += '<td>' + rows[i].NoOfActivity + '</td>';
-                  table += '<td>' + '5' + '</td>';
+                  if(rows[i].ImportanceRating == null){
+                    table += '<td>' + 'Not Set' + '</td>';
+                  } else {
+                    table += '<td>' + rows[i].ImportanceRating + '</td>';
+                  }
 
                   table += '</tr>';
                 }
@@ -1953,15 +1957,121 @@ app.get("/myimportancesys", function (req, res) {
   var firstname = req.session.firstname;
   var lastname = req.session.Lastname;
   var department = req.session.department;
-  var importanceCount = 5;
+  var BCPID = req.session.MyBCPID;
+  var i = 0;
 
   var name = firstname + ' ' + lastname
 
   if (req.session.userid) {
 
-    res.render(path.join(__dirname, '../public', 'myImportanceSystem.html'),{
-      name:name,userid:userid,department:department, importanceCount:importanceCount, date:date
+    console.log(userid)
+    console.log(BCPID)
+    var checksysquery = 'SELECT * FROM MySystems WHERE UserID = ' + userid + ' and MyBCPID = ' + BCPID + ' limit 1';
+
+    con.query(checksysquery, function (err, rows, fields) {
+
+      //running into an error here...
+      if (!err && rows.length > 0){
+
+          req.session.systemid = rows[0].MySysID;
+          var SYSID = req.session.systemid;
+
+          console.log('System ID ' + SYSID);
+          if (SYSID){ 
+
+            console.log('--------- 2')
+            con.query('SELECT * FROM MySystems WHERE MySysID = ' + SYSID + ' limit 1; SELECT * FROM SystemActivities WHERE MySysID= ' + SYSID, function (err, rows, fields) {
+              if (!err) {
+                 
+                  var system = "";
+                  var program = "";
+                  var importance = "";
+                  var description = "";
+                  var comment = "";
+                  var table = "";
+      
+                  var result1 = rows[0];
+                  var result2 = rows[1];
+      
+                  console.log(result1[0]);
+                 
+                  if (result1.length > 0) {
+      
+                            program += '<select class="form-control" readonly id="program" name="program">';
+                            program += '<option value= \"' + result1[0].Program + '\">' + result1[0].Program + '</option>';
+                            program += '</select>';
+      
+                            system += '<select class="form-control" readonly id="system" name="system">';
+                            system += '<option value= \"' + result1[0].System + '\">' + result1[0].System + '</option>';
+                            system += '</select>';
+
+                            importance = '<input type="text" class="form-control" readonly id="importance" name="importance" value=' + result1[0].ImportanceRating + '>';
+      
+                            description = '<input type="text" class="form-control" readonly id="description" name="description" value=' + result1[0].Description + '>';
+                            comment = '<input type="text" class="form-control" readonly id="comment" name="comment" value=' + result1[0].Comment + '>';
+      
+                  }
+                  if (result2.length > 0){
+
+                    console.log('--------- Result 2 Activities')
+                    console.log(result2)
+      
+                    for (var i = 0; i < result2.length; i++) {
+      
+                      table += "<tr>";
+                      table += '<td>' + result2[i].Activity + '</td>';
+                      if(result2[i].ImportanceRating == null){
+                        table += '<td> Not Set </td>';
+                      } else {
+                        table += '<td>' + result2[i].ImportanceRating + '</td>';
+                      }
+                      if(result2[i].ActivityMTPD == null){
+                        table += '<td> Not Set </td>';
+                      } else {
+                        table += '<td>' + result2[i].ActivityMTPD + '</td>';
+                      }
+                      if(result2[i].ActivityMTDL == null){
+                        table += '<td> Not Set </td>';
+                      } else {
+                        table += '<td>' + result2[i].ActivityMTDL + '</td>';
+                      }
+                      
+                      table += '</tr>';
+      
+                    }
+      
+                  }
+
+                  res.render(path.join(__dirname, '../public', 'myImportanceSystem.html'),{
+                    name:name,userid:userid,department:department, i:i, system:system, program:program, importance:importance, table:table,
+                    comment:comment, description:description
+                  });
+                  
+                  }
+                  else {
+                      //Fail
+                      console.log('failed 1');
+                      res.render(path.join(__dirname, '../public', 'home.html'), {
+                        name:name,userid:userid,department:department
+                    });
+                  }
+            });
+          
+          }
+      } else {
+
+        res.render(path.join(__dirname, '../public', 'home.html'), {
+          name:name,userid:userid,department:department
+       });
+      }
+
     });
+
+    /*res.render(path.join(__dirname, '../public', 'myImportanceSystem.html'),{
+      name:name,userid:userid,department:department, i:i, system:system, program:program, importance:importance, table:table,
+      comment:comment, description:description
+    });*/
+
   }
   else {
 
@@ -1986,7 +2096,133 @@ app.get("/myimportanceact", function (req, res) {
 
   var name = firstname + ' ' + lastname
 
+  var username =  req.session.username;
+  var userid = req.session.userid;
+  var roles = req.session.roles;
+  var firstname = req.session.firstname;
+  var lastname = req.session.Lastname;
+  var department = req.session.department;
+  var BCPID = req.session.MyBCPID;
+  var i = 0;
+
+  var name = firstname + ' ' + lastname
+
   if (req.session.userid) {
+
+    console.log(userid)
+    console.log(BCPID)
+    var checksysquery = 'SELECT * FROM MySystems WHERE UserID = ' + userid + ' and MyBCPID = ' + BCPID + ' limit 1';
+
+    con.query(checksysquery, function (err, rows, fields) {
+
+      //running into an error here...
+      if (!err && rows.length > 0){
+
+          req.session.systemid = rows[0].MySysID;
+          var SYSID = req.session.systemid;
+
+          console.log('System ID ' + SYSID);
+          if (SYSID){ 
+
+            console.log('--------- 2')
+            con.query('SELECT * FROM MySystems WHERE MySysID = ' + SYSID + ' limit 1; SELECT * FROM SystemActivities WHERE MySysID= ' + SYSID, function (err, rows, fields) {
+              if (!err) {
+                 
+                  var system = "";
+                  var program = "";
+                  var importance = "";
+                  var description = "";
+                  var comment = "";
+                  var table = "";
+      
+                  var result1 = rows[0];
+                  var result2 = rows[1];
+      
+                  console.log(result1[0]);
+                 
+                  if (result1.length > 0) {
+      
+                            program += '<select class="form-control" readonly id="program" name="program">';
+                            program += '<option value= \"' + result1[0].Program + '\">' + result1[0].Program + '</option>';
+                            program += '</select>';
+      
+                            system += '<select class="form-control" readonly id="system" name="system">';
+                            system += '<option value= \"' + result1[0].System + '\">' + result1[0].System + '</option>';
+                            system += '</select>';
+
+                            importance = '<input type="text" class="form-control" readonly id="importance" name="importance" value=' + result1[0].ImportanceRating + '>';
+      
+                            description = '<input type="text" class="form-control" readonly id="description" name="description" value=' + result1[0].Description + '>';
+                            comment = '<input type="text" class="form-control" readonly id="comment" name="comment" value=' + result1[0].Comment + '>';
+      
+                  }
+                  if (result2.length > 0){
+
+                    console.log('--------- Result 2 Activities')
+                    console.log(result2)
+      
+                    for (var i = 0; i < result2.length; i++) {
+      
+                      table += "<tr>";
+                      table += '<td>' + result2[i].Activity + '</td>';
+                      if(result2[i].ImportanceRating == null){
+                        table += '<td> Not Set </td>';
+                      } else {
+                        table += '<td>' + result2[i].ImportanceRating + '</td>';
+                      }
+                      if(result2[i].ActivityMTPD == null){
+                        table += '<td> Not Set </td>';
+                      } else {
+                        table += '<td>' + result2[i].ActivityMTPD + '</td>';
+                      }
+                      if(result2[i].ActivityMTDL == null){
+                        table += '<td> Not Set </td>';
+                      } else {
+                        table += '<td>' + result2[i].ActivityMTDL + '</td>';
+                      }
+                      
+                      table += '</tr>';
+      
+                    }
+      
+                  }
+
+                  res.render(path.join(__dirname, '../public', 'myImportanceSystem.html'),{
+                    name:name,userid:userid,department:department, i:i, system:system, program:program, importance:importance, table:table,
+                    comment:comment, description:description
+                  });
+                  
+                  }
+                  else {
+                      //Fail
+                      console.log('failed 1');
+                      res.render(path.join(__dirname, '../public', 'home.html'), {
+                        name:name,userid:userid,department:department
+                    });
+                  }
+            });
+          
+          }
+      } else {
+
+        res.render(path.join(__dirname, '../public', 'home.html'), {
+          name:name,userid:userid,department:department
+       });
+      }
+
+    });
+
+  }
+  else {
+
+    res.redirect('/login');
+  
+  }
+
+});
+
+
+/*  if (req.session.userid) {
 
     res.render(path.join(__dirname, '../public', 'myImportanceActivity.html'),{
       name:name,userid:userid,department:department, importanceCount:importanceCount, date:date
@@ -1998,7 +2234,7 @@ app.get("/myimportanceact", function (req, res) {
   
   }
 
-});
+});*/
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 /* MY CONTINUITY HOME PATRICK 17/01/2019 */
