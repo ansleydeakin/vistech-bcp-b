@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
-    <title>BCPMe - My Continuity Actions</title>
+    <title>BCPMe - My BCP Summary</title>
 
     <!-- Bootstrap core CSS -->
 	<link href="justincss/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
@@ -116,17 +116,17 @@
 				  <h5 class="text-center">My Importance Ratings</h5>
 				</div>
 			  </li></a>
-			 <!-- <a href="#"><li class="li inprogress"> -->
-				<a href="#"></a><%- progress -%>
+				<a href="#"><li class="li complete">
+				<!-- <a href="#"></a><%- progress -%>  -->
 				<div class="status">
 				  <h5 class="text-center">My Continuity Actions</h5>
 				</div>
 			  </li></a>
-			  <li class="li">
+			  <a href="#"><li class="li inprogress">
 				<div class="status">
 				  <h5 class="text-center">My BCP Plan Summary</h5>
 				</div>
-			  </li>
+			  </li></a>
 			  <li class="li">
 				<div class="status">
 				  <h5 class="text-center">Submit for Approval</h5>
@@ -139,7 +139,7 @@
  	  <div class="row m-2">
 		<div class="card col card-inprogress">	
 			<div class="d-flex">			  
-			  <h5 class="mr-auto card-title m-2 pt-2">Continuity Actions Set: <%= i %></h3>
+			  <h5 class="mr-auto card-title m-2 pt-2">My BCP Plan Review Status</h3>
 			  <div class="d-flex align-items-end flex-column">
 				  <div class="p-3">
 					  <span id="progress" class="card-text p-1">In progress</span>
@@ -147,39 +147,10 @@
 				  </div>				  
 				  <h6 class="card-subtitle mt-auto p-3">Updated: <%= LastUpdated %></h6>			    			  
 			  </div>
-			  <a data-toggle="collapse" href="#myCard" onclick="toggler('myContent');" class="collapsed card-link grey-edit">Edit
-			    <i class="fa fa-chevron-right pull-right"></i>
-			  </a>
+			  <a href="#" class="card-link grey-edit">Review BCP Plan</a>
 			</div>			
 		</div>			
 	  </div> 
- 	  <div id="myContent" class="row collapse hidden p-4">
-	    <div class="col-12">
-			<span>For each activity, rate the level of dependancy that it has on each of the systems?</span>	
-			<div class="card col mt-3">	
-				<div class="d-flex">			  
-					<h6 class="mr-auto card-title m-2 pt-2">Systems</h6>
-					<a href="/addctyactions" class="card-link grey-add">Add</a>
-				</div>
-			</div>		 
-		</div>		
-		  <table class="table">
-			  <thead>
-				<tr>
-				  <th scope="col">System</th>
-				  <th scope="col">Program</th>
-				  <th scope="col">No. of Activities</th>
-				  <th scope="col">Immediate Continuity Actions</th>
-				  <th scope="col">Sustainable Continuity Actions</th>
-				</tr>
-			  </thead>
-			  <tbody>
-					
-					<%- table -%>
-			  </tbody>
-			</table>
-	  
-	  </div>
 	</div>
 	
 	<div class="container-fluid">	
