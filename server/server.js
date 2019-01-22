@@ -1881,7 +1881,7 @@ app.get("/myimportance", function (req, res) {
 
   if (req.session.userid) {
     
-    con.query('SELECT * FROM MyBCP WHERE userid = \"' + userid + '\" Status < 6 limit 1', function (err, rows, fields) {
+    con.query('SELECT * FROM MyBCP WHERE userid = \"' + userid + '\" and Status < 6 limit 1', function (err, rows, fields) {
       if (!err && rows.length > 0){
         if (rows[0].Status == 2) { //MyImportance
   
@@ -1944,9 +1944,6 @@ app.get("/myimportance", function (req, res) {
               }
             });
           }       
-          else if (rows[0].Status == 2){ //Importance
-            res.redirect("/myimportance");
-          }
           else if (rows[0].Status == 3){ //Continuity
             res.redirect("/myctyhome");
           }
@@ -2249,7 +2246,7 @@ app.get("/myctyhome", function (req, res) {
 
   if (req.session.userid) {
 
-    con.query('SELECT * FROM MyBCP WHERE userid = \"' + userid + '\" Status < 6 limit 1', function (err, rows, fields) {
+    con.query('SELECT * FROM MyBCP WHERE userid = \"' + userid + '\" and Status < 6 limit 1', function (err, rows, fields) {
       if (!err && rows.length > 0){
         if (rows[0].Status == 3) { //MyContinuity
   
@@ -2316,9 +2313,6 @@ app.get("/myctyhome", function (req, res) {
           }       
           else if (rows[0].Status == 2){ //Importance
             res.redirect("/myimportance");
-          }
-          else if (rows[0].Status == 3){ //Continuity
-            res.redirect("/myctyhome");
           }
           else if (rows[0].Status == 4){ //BCPSummary
             res.redirect("/bcpsummary");
