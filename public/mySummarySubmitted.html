@@ -4,13 +4,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
-    <title>BCPMe - Submit My BCP Plan</title>
+    <title>BCPMe - My BCP Summary</title>
 
     <!-- Bootstrap core CSS -->
 	<link href="justincss/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-	<script src="js/jquery.min.js"></script>
 	<script src="justinjs/bootstrap.min.js"></script>
-	
+	<script src="js/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
 	
     <style>
       .bd-placeholder-img {
@@ -94,8 +94,11 @@
     <div class="container-fluid">	
 	
 		<div class="row p-4">
-		  <div class="col-12">	
+		  <div class="col-6">	
 			<button type="button" onclick="window.location.href='/dashboard'" value="Redirect" class="btn btn-outline-secondary">Cancel</button>
+		  </div>
+		  <div class="col-6">	
+			<button type="button" onclick="window.location.href='/dashboard'" value="Redirect" class="btn btn-dark float-right">Back to Dashboard</button>
 		  </div>
 		  <h5 class="ml-4 mt-4">BCP Plan Creation Timeline</h5>
 		  <div class="col-12"><hr></div>
@@ -108,13 +111,12 @@
 				  <h5 class="text-center">My Critical Systems</h5>
 				</div>
 			  </li></a>
-			  <a href="/myimportance"><li class="li complete">
+			  <a href="/plan"><li class="li complete">
 				<div class="status">
 				  <h5 class="text-center">My Importance Ratings</h5>
 				</div>
 			  </li></a>
-				<a href="#"><li class="li complete">
-				<!-- <a href="#"></a><%- progress -%>  -->
+				<a href="/plan"><li class="li complete">
 				<div class="status">
 				  <h5 class="text-center">My Continuity Actions</h5>
 				</div>
@@ -124,7 +126,8 @@
 				  <h5 class="text-center">My BCP Plan Summary</h5>
 				</div>
 			  </li></a>
-			  <li class="li inprogress">
+			 <!-- <li class="li"><li class="li complete"> -->
+						<li id="bcpprogress" class="li complete">
 				<div class="status">
 				  <h5 class="text-center">Submit for Approval</h5>
 				</div>
@@ -136,51 +139,27 @@
  	  <div class="row m-2">
 		<div class="card col card-inprogress">	
 			<div class="d-flex">			  
-			  <h5 class="mr-auto card-title m-2 pt-2">My BCP Plan Submit Status</h3>
+			  <h5 class="mr-auto card-title m-2 pt-2">Your BCP Plan is Ready to Submit for Approval</h3>
 			  <div class="d-flex align-items-end flex-column">
 				  <div class="p-3">
-					  <span id="progress" class="card-text p-1">In progress</span>
-					  <span id="dotprogress" class="dot-inprogress"></span>
+					  <span id="progress" class="card-text p-1">Complete</span>
+					  <span id="dotprogress" class="dot-complete"></span>
 				  </div>				  
-				  <h6 class="card-subtitle mt-auto p-3">Updated: <%= LastUpdated %></h6>			    			  
+				  <h6 class="card-subtitle mt-auto p-3">Submit Date: <%= LastUpdated %></h6>			    			  
 			  </div>
-			  <a href="#" data-toggle="modal" data-target="#modalRegister" class="card-link grey-edit">Submit for Approval</a>
 			</div>			
 		</div>			
 	  </div> 
 	</div>
-
-		
- <!-- Modal -->
-  <div class="modal fade" id="modalRegister" role="dialog">
-    <div class="modal-dialog modal-dialog-center">    
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">          
-          <h4 class="modal-title">Submit Confirmation</h4>
-		  <button type="button" class="close" data-dismiss="modal">&times;</button>
-        </div>
-        <div class="modal-body">
-          <p>Your BCP Plan will be submitted for review and approval</p>
-        </div>
-        <div class="modal-footer">
-			<div class="col-6">	
-				<button type="button" onclick="window.location.href='/bcpsubmithome'" value="Redirect" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
-			</div>
-			<div class="col-6">	
-				<button type="button" onclick="window.location.href='/bcpsubmit'" value="Redirect" class="btn btn-dark float-right" data-dismiss="modal">Submit</button>  
-			</div>
-        </div>
-      </div>
-      
-    </div>
-  </div>
 	
 	<div class="container-fluid">	
   		<div class="row p-4">
 		  <div class="col-12"><hr></div>
-		  <div class="col-12">	
+		  <div class="col-6">	
 			<button type="button" onclick="window.location.href='/dashboard'" value="Redirect" class="btn btn-outline-secondary">Cancel</button>
+		  </div>
+		  <div class="col-6">	
+			<button type="button" onclick="window.location.href='/dashboard'" value="Redirect" class="btn btn-dark float-right">Back to Dashboard</button>
 		  </div>
 		</div>
 	<p class="mt-5 mb-3 text-muted text-center">&copy; Vistech 2019</p>

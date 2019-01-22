@@ -1293,13 +1293,16 @@ app.get("/plan", function (req, res) {
 
   if (req.session.userid) {
 
-    con.query('SELECT * FROM MyBCP WHERE userid = \"' + userid + '\" limit 1', function (err, rows, fields) {
+    con.query('SELECT * FROM MyBCP WHERE userid = \"' + userid + '\"  and Status < 6 limit 1', function (err, rows, fields) {
     if (!err && rows.length > 0){
       if (rows[0].Status == 1) { //MySystem
 
           req.session.MyBCPID = rows[0].MyBCPID;
+
           var BCPID = req.session.MyBCPID;
+
           var LastUpdated = rows[0].LastUpdated;
+          
           console.log('SET BCP ID ' + BCPID);
 
           var ActivityQuery = 'SELECT SYSTABLE.System, SYSTABLE.Program, SYSTABLE.ClinicalUnit, count(Activity) AS NoOfActivity FROM' 
@@ -1366,13 +1369,16 @@ app.get("/plan", function (req, res) {
       else if (rows[0].Status == 4){ //BCPSummary
         res.redirect("/bcpsummary");
       }
-      else if (rows[0].Status == 5){ //BCPSummary
-        res.redirect("/bcpsummary");
+      else if (rows[0].Status == 5){ //BCPSubmit
+        res.redirect("/bcpsubmithome");
       }
     }
-    else if (!err && rows.length <= 0){
+    else if (!err && rows.length <= 0 ||rows[0].Status > 5){
 
       console.log('Insert new BCP');
+      req.session.MyBCPID = undefined;
+      req.session.activityid = undefined;
+      req.session.systemid = undefined;
 
       var Query = 'INSERT INTO MyBCP (DateCreated,Status,UserID,LastUpdated) VALUES (  NOW() , 1' + ',' + userid + ', NOW())'
       console.log(Query);
@@ -1408,8 +1414,6 @@ app.get("/system", function (req, res) {
   var BCPID = req.session.MyBCPID;
 
   var name = firstname + ' ' + lastname;
-
-  req.session.systemid = undefined;
 
   console.log('/system - start')
   
@@ -1737,6 +1741,9 @@ app.get("/submitsystem", function (req, res) {
                   clinicalunit + "','" + comment + "','" + '0' + "','" + userid + "','" + BCPID + "')" ,
                   function (err, rows, fields) {
                       if (!err) {
+
+                        console.log(userid +' '+BCPID);
+
                         con.query('SELECT * FROM MySystems WHERE UserID = ' + userid +' and MyBCPID = ' + BCPID + ' and Completed = 0 limit 1', function (err, rows, fields) {
                           if (!err && rows.length > 0){
                             req.session.systemid = rows[0].MySysID;
@@ -2833,6 +2840,11 @@ app.get("/generatebcppdf", function (req, res) {
 
                   console.log('--------------2--------------');
 
+
+                    html += '<h1> BCP Report </h1>';
+                    html += '<b> Date: ' + date;
+                    html += '<br></br>';
+
                     html += '<table border="1">';
                     html += '<thead><tr>';
                     html += "<th>System</th>" + "<th>Function</th>" + "<th>Activity</th>" + "<th>Clinical Unit</th>" + "<th>MTPD</th>"
@@ -2849,8 +2861,37 @@ app.get("/generatebcppdf", function (req, res) {
                     html += '<td>' + rows[i].ActFunction + '</td>';
                     html += '<td>' + rows[i].Activity + '</td>';
                     html += '<td>' + rows[i].ClinicalUnit + '</td>';
-                    html += '<td>' + rows[i].ActivityMTPD + '</td>';
-                    html += '<td>' + rows[i].ImportanceRating + '</td>';
+
+                    if (rows[i].ActivityMTPD.includes("Hr")){
+                      html += '<td>'+'<font color="#FF0000">' + rows[i].ActivityMTPD + '</font>'+'</td>';
+                    }
+                    else if (rows[i].ActivityMTPD.includes("Day")){
+                      html += '<td>'+'<font color="#f29509">' + rows[i].ActivityMTPD + '</font>'+'</td>';
+                    }
+                    else if (rows[i].ActivityMTPD.includes("Week")){
+                      html += '<td>'+'<font color="#ffed28">' + rows[i].ActivityMTPD + '</font>'+'</td>';
+                    }
+                    else if (rows[i].ActivityMTPD.includes("Month")){
+                      html += '<td>'+'<font color="#63cd32">' + rows[i].ActivityMTPD + '</font>'+'</td>';
+                    }
+              
+
+                    if (rows[i].ImportanceRating == 1){
+                      html += '<td bgcolor="#63cd32">' + '1 - Negligible' + '</td>';
+                    }
+                    if (rows[i].ImportanceRating == 2){
+                      html += '<td bgcolor="#ffed28">' + '2 - Minor' + '</td>';
+                    }
+                    if (rows[i].ImportanceRating == 3){
+                      html += '<td bgcolor="#e5c824">' + '3 - Moderate' + '</td>';
+                    }
+                    if (rows[i].ImportanceRating == 4){
+                      html += '<td bgcolor="#f29509">' + '4 - Major' + '</td>';
+                    }
+                    else if (rows[i].ImportanceRating == 5){
+                      html += '<td bgcolor="#FF0000">' + '5 - Severe' + '</td>';
+                    }
+
                     html += '<td>' + rows[i].ImmediateCA + '</td>';
                     html += '<td>' + rows[i].ActivityMTPD + '</td>';
                     html += '<td>' + rows[i].SustainableCA + '</td>';
@@ -2967,18 +3008,86 @@ app.get("/bcpsubmithome", function (req, res) {
 
   if (req.session.userid) {
 
-    res.render(path.join(__dirname, '../public', 'mySummarySubmit.html'),{
-      name:name,userid:userid,department:department, date:date
-    });
-  }
-  else {
+    console.log('------------bcpsubmithome1------------');
 
-    res.redirect('/login');
+    con.query("SELECT * FROM MyBCP WHERE Status = 5 and UserID=" + userid +' limit 1', function (err, rows, fields) {
+      if (!err && rows.length > 0){
+
+        req.session.MyBCPID = rows[0].MyBCPID;
+        BCPID = req.session.MyBCPID;
+
+        console.log('------------bcpsubmithome2------------');
+
+        var progress = '<li id="submitprogress" class="li inprogress">';
+          
+          res.render(path.join(__dirname, '../public', 'mySubmitHome.html'),{
+            name:name,userid:userid,department:department, date:date,LastUpdated:rows[0].LastUpdated, progress:progress
+          });
+       
+        }
+    });
   
-  }
+}
+else {
+  console.log('------------bcpsubmithome3------------');
+  res.redirect('/login');
+}
 
 });
 
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+/* SUBMIT BCP FOR APPROVAL SUMMARY ANSLEY 22/01/2019 */
+
+app.get("/bcpsubmit", function (req, res) {
+
+  var username =  req.session.username;
+  var userid = req.session.userid;
+  var roles = req.session.roles;
+  var firstname = req.session.firstname;
+  var lastname = req.session.Lastname;
+  var department = req.session.department;
+
+  var name = firstname + ' ' + lastname
+
+  var userid = req.session.userid;
+  var BCPID = req.session.MyBCPID;
+  var SYSID = req.session.systemid;
+
+  if (req.session.userid){
+
+              console.log("UPDATE BCP STATUS");
+
+              con.query('UPDATE MyBCP SET Status = 6, LastUpdated=NOW() WHERE Status= 5 and MyBCPID = ' + BCPID + ' and UserID = ' + userid, function (err, rows, fields) {
+                      if (!err) {
+
+                        console.log('------------bcpsubmit1------------');
+
+                        req.session.systemid = undefined;
+                        req.session.activityid = undefined;
+                        con.query("SELECT * FROM MyBCP WHERE UserID=" + userid + ' and MyBCPID =' + BCPID +' limit 1', function (err, rows, fields) {
+                          if (!err & rows.length > 0){
+              
+                            res.render(path.join(__dirname, '../public', 'mySummarySubmitted.html'),{
+                              name:name,userid:userid,department:department, date:date,LastUpdated:rows[0].LastUpdated
+                            });
+                       
+                          }
+                        });
+                      }
+                      else {
+                        console.log('------------bcpsubmit4------------');
+                        res.redirect('/bcpsubmithome');                    
+                      }
+              });
+    
+  }  
+  else {
+    console.log('------------bcpsubmit5------------');
+    res.redirect('/login');
+  }
+  
+});
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // **********************************************************************************************
 /* START THE APP & LISTEN TO THE PORT */
