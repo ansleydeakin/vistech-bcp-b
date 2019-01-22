@@ -1366,6 +1366,9 @@ app.get("/plan", function (req, res) {
       else if (rows[0].Status == 4){ //BCPSummary
         res.redirect("/bcpsummary");
       }
+      else if (rows[0].Status == 5){ //BCPSummary
+        res.redirect("/bcpsummary");
+      }
     }
     else if (!err && rows.length <= 0){
 
@@ -2908,7 +2911,7 @@ app.get("/savebcpsummary", function (req, res) {
 
               con.query('UPDATE MyBCP SET Status = 5, LastUpdated=NOW() WHERE Status= 4 and MyBCPID = ' + BCPID + ' and UserID = ' + userid, function (err, rows, fields) {
                       if (!err) {
-                        res.redirect("/bcpsummary");
+                        res.redirect("/bcpsubmithome");
                       }
                       else {
                         res.redirect("/plan");                        
@@ -2918,7 +2921,6 @@ app.get("/savebcpsummary", function (req, res) {
   }  
   
 });
-
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 /* BCP CATALOG ANSLEY 22/01/2019 */
@@ -2950,7 +2952,34 @@ app.get("/catalog", function (req, res) {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
+/* BCP SUBMIT HOME ANSLEY 22/01/2019 */
 
+app.get("/bcpsubmithome", function (req, res) {
+
+  var username =  req.session.username;
+  var userid = req.session.userid;
+  var roles = req.session.roles;
+  var firstname = req.session.firstname;
+  var lastname = req.session.Lastname;
+  var department = req.session.department;
+
+  var name = firstname + ' ' + lastname
+
+  if (req.session.userid) {
+
+    res.render(path.join(__dirname, '../public', 'mySummarySubmit.html'),{
+      name:name,userid:userid,department:department, date:date
+    });
+  }
+  else {
+
+    res.redirect('/login');
+  
+  }
+
+});
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
 // **********************************************************************************************
 /* START THE APP & LISTEN TO THE PORT */
 
