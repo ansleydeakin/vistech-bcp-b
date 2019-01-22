@@ -1881,7 +1881,7 @@ app.get("/myimportance", function (req, res) {
 
   if (req.session.userid) {
     
-    con.query('SELECT * FROM MyBCP WHERE userid = \"' + userid + '\" limit 1', function (err, rows, fields) {
+    con.query('SELECT * FROM MyBCP WHERE userid = \"' + userid + '\" Status < 6 limit 1', function (err, rows, fields) {
       if (!err && rows.length > 0){
         if (rows[0].Status == 2) { //MyImportance
   
@@ -1943,7 +1943,8 @@ app.get("/myimportance", function (req, res) {
                 res.render(path.join(__dirname, '../public', 'login.html'));
               }
             });
-          } else if (rows[0].Status == 2){ //Importance
+          }       
+          else if (rows[0].Status == 2){ //Importance
             res.redirect("/myimportance");
           }
           else if (rows[0].Status == 3){ //Continuity
@@ -1951,6 +1952,9 @@ app.get("/myimportance", function (req, res) {
           }
           else if (rows[0].Status == 4){ //BCPSummary
             res.redirect("/bcpsummary");
+          }
+          else if (rows[0].Status == 5){ //BCPSubmit
+            res.redirect("/bcpsubmithome");
           }
         }
         else {
@@ -2235,8 +2239,7 @@ app.get("/myctyhome", function (req, res) {
   var firstname = req.session.firstname;
   var lastname = req.session.Lastname;
   var department = req.session.department;
-  var i = 5;
-
+ 
   var name = firstname + ' ' + lastname
 
   var table = "";
@@ -2246,7 +2249,7 @@ app.get("/myctyhome", function (req, res) {
 
   if (req.session.userid) {
 
-    con.query('SELECT * FROM MyBCP WHERE userid = \"' + userid + '\" limit 1', function (err, rows, fields) {
+    con.query('SELECT * FROM MyBCP WHERE userid = \"' + userid + '\" Status < 6 limit 1', function (err, rows, fields) {
       if (!err && rows.length > 0){
         if (rows[0].Status == 3) { //MyContinuity
   
@@ -2310,17 +2313,18 @@ app.get("/myctyhome", function (req, res) {
                 res.render(path.join(__dirname, '../public', 'login.html'));
               }
             });
-          } else if (rows[0].Status == 2){ //Importance
-            console.log('--------------6--------------Importance');
+          }       
+          else if (rows[0].Status == 2){ //Importance
             res.redirect("/myimportance");
           }
           else if (rows[0].Status == 3){ //Continuity
-            console.log('--------------7--------------Continuity');
             res.redirect("/myctyhome");
           }
           else if (rows[0].Status == 4){ //BCPSummary
-            console.log('--------------8--------------BCPSummary');
-            res.redirect("/");
+            res.redirect("/bcpsummary");
+          }
+          else if (rows[0].Status == 5){ //BCPSubmit
+            res.redirect("/bcpsubmithome");
           }
         }
         else {
