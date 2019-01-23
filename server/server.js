@@ -1881,7 +1881,7 @@ app.get("/myimportance", function (req, res) {
 
   if (req.session.userid) {
     
-    con.query('SELECT * FROM MyBCP WHERE userid = \"' + userid + '\" and Status < 6 limit 1', function (err, rows, fields) {
+    con.query('SELECT * FROM MyBCP WHERE userid = \"' + userid + '\" and Status < 6', function (err, rows, fields) {
       if (!err && rows.length > 0){
         if (rows[0].Status == 2) { //MyImportance
   
