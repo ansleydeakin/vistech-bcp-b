@@ -2226,6 +2226,42 @@ app.post("/submitrating", function (req, res) {
 });
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
+
+/* SAVE IMPORTANCE RATING ANSLEY 23/01/2019 */
+
+app.get("/saveimportance", function (req, res) {
+
+  var userid = req.session.userid;
+  var BCPID = req.session.MyBCPID;
+  var SYSID = req.session.systemid;
+
+  req.session.systemid = undefined;
+  req.session.activityid = undefined;
+
+  if (req.session.userid){
+
+              console.log("UPDATE BCP STATUS "+ BCPID);
+              
+
+              con.query('UPDATE MyBCP SET Status = 3, LastUpdated=NOW() WHERE Status= 2 and MyBCPID = ' + BCPID + ' and UserID = ' + userid, function (err, rows, fields) {
+                      if (!err) {
+                        res.redirect("/myctyhome");
+
+                        console.log(rows)
+                      }
+                      else {
+                        res.redirect("/myimportance");                        
+                      }
+              });
+    
+  } 
+  else{
+    res.redirect('/login');
+  }
+  
+});
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
 /* MY CONTINUITY HOME PATRICK 17/01/2019 */
 
 /* UPDATED QUERY BY ANSLEY 21/01/2019 */
@@ -2502,7 +2538,9 @@ app.get("/savesys", function (req, res) {
       res.end();
     }
   }  
-
+  else{
+  res.redirect('/login');
+  }
 });
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2793,8 +2831,10 @@ app.get("/bcpsummary", function (req, res) {
     res.render(path.join(__dirname, '../public','mySummaryHome.html'),{name:name,userid:userid,LastUpdated :rows[0].LastUpdated,progress:progress});
       }	  
   });        
-  }   
-                     
+  }  
+  else{ 
+  res.redirect('/login');
+  }              
             
 });
   
@@ -2961,6 +3001,9 @@ app.get("/savebcpsummary", function (req, res) {
               });
     
   }  
+  else {
+    res.redirect('/login');
+  }
   
 });
 //////////////////////////////////////////////////////////////////////////////////////////////////
