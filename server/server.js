@@ -2188,39 +2188,68 @@ app.get("/submitrating", function (req, res) {
   var userid = req.session.userid;
   var BCPID = req.session.MyBCPID;
   var SYSID = req.session.systemid;
+  var updateFlag = 0;
+  var ACTID = 0;
 
-  var ImportanceRating = req.query.ImportanceRating;
-  var MTPD = req.query.MTPD;
-  var MTDL = req.query.MTDL;
+  var ImportanceRating = req.query.importancerating;
+  var MTPD = req.query.mtdl;
+  var MTDL = req.query.mtdl;
+  ImportanceRating = 5;
 
-  console.log("SUBMIT RATING HERE")
-  //console.log(SYSID)
-  //sys id is not defined???? so it is causing us errors.
+  console.log("SysID =" + SYSID)
+  
   if (req.session.userid){
 
     console.log("submit rating");
     con.query('SELECT * FROM SystemActivities WHERE MySysID= ' + SYSID, function (err, rows, fields) {
       if (!err) {
-        var ACTID = rows[0].ACTID
+        ACTID = rows[0].ActID
 
         console.log("Update SystemActivities with rating");
-        console.log(ACTID)
-        console.log(MTPD)
-        console.log(MTDL)
-        console.log(ImportanceRating)
-        con.query("UPDATE SystemActivities SET ImportanceRating = " + ImportanceRating + ", ActivityMTPD = " + MTPD 
-        + ", ActivityMTDL = " + MTDL + " WHERE MySysID = " + SYSID + "and ACTID = " + ACTID,
-            function (err, rows, fields) {
-                if (!err) {
-                  res.redirect("/myimportancesys");
-                }
-                else {
-                  res.redirect("/myimportanceact");                        
-                }
-        });
+        console.log("ActID =" + ACTID)
+        console.log("MTPD =" + MTPD)
+        console.log("MTDL =" + MTDL)
+        console.log("ImportanceRating =" + ImportanceRating)
       }
-    });
-  }  
+        else {
+          console.log("failed update query")
+          res.redirect("/myimportanceact");                    
+        }
+      });
+    
+    console.log("selected system activities")
+    //update systemactivities
+    if(ACTID){
+      con.query("UPDATE SystemActivities SET ImportanceRating = " + ImportanceRating + ", ActivityMTPD = " + MTPD 
+        + ", ActivityMTDL = " + MTDL + " WHERE MySysID = " + SYSID + "and ActID = " + ACTID,
+            function (err, rows, fields) {
+            console.log("Enter update query")
+              if (!err) {
+                updateFlag = 1;
+              } else {
+                console.log("failed update query")
+                res.redirect("/myimportanceact");  
+              }
+      });
+
+      //update system importance rating
+      if(updateFlag == 1){
+        con.query("UPDATE MySystems SET ImportanceRating = " + ImportanceRating, function(err, rows,fields){
+          console.log("update system query")
+          if(!err){
+            
+            res.redirect("/myimportancesys");
+          } else{
+            console.log("Update to MySystems failed.");
+            res.redirect("/myimportanceact");  
+          }
+        }); 
+      }
+
+    }  
+  } else {
+    res.redirect('/login');
+  }
 });
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
