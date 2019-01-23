@@ -41,6 +41,7 @@
 
 <script>
 	/////////////////////////////////////////
+	/*
 		//Add Rate
 		var AddRate=function (){
 		
@@ -58,6 +59,7 @@
 		$(document).ready(function(){
 			$('#addrate').bind('click touch',AddRate)
 		});
+		*/
 	/////////////////////////////////////////
 	</script>
 	
@@ -141,7 +143,10 @@
 			<li>How critical is currency of data to the impact category identified and for what period is data loss tolerable</li>
           </ul>
 	      </span>
-		  </div>
+			</div>
+			
+			<form action="/submitrating" method="POST">
+				<%- activityid -%>
 		  <div class="form-group">
 			  <label for="activity"><h6>Activity</h6></label>
 				<!-- <input type="text" class="form-control" readonly id="activity" value="Accessing patient record"> -->
@@ -263,7 +268,8 @@
 			  <button type="button" onclick="window.location.href='/myimportancesys'" value="Redirect"class="btn btn-outline-secondary">Cancel</button>
 			</div>
 			<div class="col-6">  
-			  <button type="submit" class="btn btn-dark float-right" id='addrate'>Save</button>
+				<button type="submit" class="btn btn-dark float-right" id='addrate'>Save</button>
+			</form>
 			</div>
 		</div>
         

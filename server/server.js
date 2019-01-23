@@ -2139,9 +2139,10 @@ app.get("/myimportanceact", function (req, res) {
                   console.log(rows[0]);
                  
                   var activity = '<input type="text" class="form-control" readonly id="activity" name="activity" value=' + rows[0].Activity + '>';
+                  var activityid = '<input class="form-control" type="hidden" readonly id="activityid" name="activityid" value=' + rows[0].ActID + '>';
 
                   res.render(path.join(__dirname, '../public', 'myImportanceActivity.html'),{
-                    name:name,userid:userid,department:department, i:i, activity:activity 
+                    name:name,userid:userid,department:department, i:i, activity:activity ,activityid:activityid
                   });
                   
                   }
@@ -2183,73 +2184,45 @@ app.get("/myimportanceact", function (req, res) {
 
 /* SUBMIT RATING & REDIRECT TO IPORTANCE SYSTEMS PATRICK 21/01/2019 */
 
-app.get("/submitrating", function (req, res) {
+app.post("/submitrating", function (req, res) {
 
   var userid = req.session.userid;
   var BCPID = req.session.MyBCPID;
   var SYSID = req.session.systemid;
-  var updateFlag = 0;
-  var ACTID = 0;
 
-  var ImportanceRating = req.query.importancerating;
-  var MTPD = req.query.mtdl;
-  var MTDL = req.query.mtdl;
-  ImportanceRating = 5;
+  var ImportanceRating = req.body.importancerating;
+  var MTPD = req.body.mtpd;
+  var MTDL = req.body.mtdl;
+  var activityid = req.body.activityid;
 
-  console.log("SysID =" + SYSID)
-  
+  console.log("SUBMIT RATING HERE")
+  //console.log(SYSID)
+  //sys id is not defined???? so it is causing us errors.
   if (req.session.userid){
 
     console.log("submit rating");
-    con.query('SELECT * FROM SystemActivities WHERE MySysID= ' + SYSID, function (err, rows, fields) {
-      if (!err) {
-        ACTID = rows[0].ActID
+
+      impquery = 'UPDATE SystemActivities SET ImportanceRating = ' + ImportanceRating + ', ActivityMTPD = \"' + MTPD 
+      + '\", ActivityMTDL = \"'  + MTDL + '\" WHERE MySysID = ' + SYSID + ' and ACTID = ' + activityid;
 
         console.log("Update SystemActivities with rating");
-        console.log("ActID =" + ACTID)
-        console.log("MTPD =" + MTPD)
-        console.log("MTDL =" + MTDL)
-        console.log("ImportanceRating =" + ImportanceRating)
-      }
-        else {
-          console.log("failed update query")
-          res.redirect("/myimportanceact");                    
-        }
-      });
-    
-    console.log("selected system activities")
-    //update systemactivities
-    if(ACTID){
-      con.query("UPDATE SystemActivities SET ImportanceRating = " + ImportanceRating + ", ActivityMTPD = " + MTPD 
-        + ", ActivityMTDL = " + MTDL + " WHERE MySysID = " + SYSID + "and ActID = " + ACTID,
+
+        con.query(impquery,
             function (err, rows, fields) {
-            console.log("Enter update query")
-              if (!err) {
-                updateFlag = 1;
-              } else {
-                console.log("failed update query")
-                res.redirect("/myimportanceact");  
-              }
-      });
+                if (!err) {
+                  res.redirect("/myimportancesys");
 
-      //update system importance rating
-      if(updateFlag == 1){
-        con.query("UPDATE MySystems SET ImportanceRating = " + ImportanceRating, function(err, rows,fields){
-          console.log("update system query")
-          if(!err){
-            
-            res.redirect("/myimportancesys");
-          } else{
-            console.log("Update to MySystems failed.");
-            res.redirect("/myimportanceact");  
-          }
-        }); 
-      }
-
-    }  
-  } else {
-    res.redirect('/login');
-  }
+                  console.log('test1 ' + impquery)
+                }
+                else {
+                  res.redirect("/myimportanceact");    
+                  
+                  console.log('test2 ' + impquery)
+                }
+        });
+      
+    
+  }  
 });
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2676,6 +2649,7 @@ app.get("/editcty", function (req, res) {
   var mtpd = "";
 
   var ACTID = req.query.ACTID;
+
   var systemid = req.query.systemid;
 
   if (req.session.userid){
