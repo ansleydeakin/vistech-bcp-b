@@ -2846,7 +2846,16 @@ app.get("/generatebcppdf", function (req, res) {
 
                   console.log('--------------2--------------');
 
-
+		    html += '<html>';	
+		    html += '<head>';
+		    
+		    html += '<style>';
+		    html += 'table thead tr th{width:120px;}';
+		    html += '</style>';
+			
+		    html += '</head>';
+		    html += '<body>';
+			
                     html += '<h1> BCP Report </h1>';
                     html += '<b> Date: ' + date;
                     html += '<br></br>';
@@ -2909,6 +2918,8 @@ app.get("/generatebcppdf", function (req, res) {
 
                   html += '</tbody>';
                   html += '</table>';
+	          html += '</body>';
+                  html += '</html>';
 
                   var options = { format: 'A3', orientation: 'landscape', border: '10mm' };
 
