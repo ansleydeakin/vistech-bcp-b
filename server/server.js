@@ -372,6 +372,7 @@ app.post("/newusersubmit", function (req, res) {
   var newlastname = req.body.lastname;
   var newemail = req.body.email;
   var newroles = req.body.roles;
+  var department = req.body.department;
 
 
   if (req.session) { 
@@ -389,8 +390,8 @@ app.post("/newusersubmit", function (req, res) {
             else {
                 console.log("Insert user");
                 con.query("INSERT INTO users (username,password,firstname,lastname," +
-                    "email,roles) VALUES ('" + newusername + "','" + newpassword + "','" + newfirstname + "','" +
-                    newlastname + "','" + newemail + "','" + newroles + "')",
+                    "email,roles,department) VALUES ('" + newusername + "','" + newpassword + "','" + newfirstname + "','" +
+                    newlastname + "','" + newemail + "','" + newroles + "','" + department + "')",
                     function (err, rows, fields) {
                         if (!err) {
                           res.redirect("/usermanagement");
