@@ -2849,10 +2849,6 @@ app.get("/generatebcppdf", function (req, res) {
 		    html += '<html>';	
 		    html += '<head>';
 		    
-		    html += '<style>';
-		    html += 'table thead tr th{width:120px;}';
-		    html += '</style>';
-			
 		    html += '</head>';
 		    html += '<body>';
 			
@@ -2860,7 +2856,7 @@ app.get("/generatebcppdf", function (req, res) {
                     html += '<b> Date: ' + date;
                     html += '<br></br>';
 
-                    html += '<table border="1">';
+                    html += '<table border="1" style="table-layout: fixed; width: 100%">';
                     html += '<thead><tr>';
                     html += "<th>System</th>" + "<th>Function</th>" + "<th>Activity</th>" + "<th>Clinical Unit</th>" + "<th>MTPD</th>"
                     + "<th>Higest Impact</th>" + "<th>Immediate continuity action</th>" + "<th>Maintainable duration</th>"
@@ -2872,46 +2868,46 @@ app.get("/generatebcppdf", function (req, res) {
 
                     html +='<tr>';
 
-                    html += '<td>' + rows[i].System + '</td>';
-                    html += '<td>' + rows[i].ActFunction + '</td>';
-                    html += '<td>' + rows[i].Activity + '</td>';
-                    html += '<td>' + rows[i].ClinicalUnit + '</td>';
+                    html += '<td style="word-wrap: break-word">' + rows[i].System + '</td>';
+                    html += '<td style="word-wrap: break-word">' + rows[i].ActFunction + '</td>';
+                    html += '<td style="word-wrap: break-word">' + rows[i].Activity + '</td>';
+                    html += '<td style="word-wrap: break-word">' + rows[i].ClinicalUnit + '</td>';
 
                     if (rows[i].ActivityMTPD.includes("Hr")){
-                      html += '<td>'+'<font color="#FF0000">' + rows[i].ActivityMTPD + '</font>'+'</td>';
+                      html += '<td style="word-wrap: break-word">'+'<font color="#FF0000">' + rows[i].ActivityMTPD + '</font>'+'</td>';
                     }
                     else if (rows[i].ActivityMTPD.includes("Day")){
-                      html += '<td>'+'<font color="#f29509">' + rows[i].ActivityMTPD + '</font>'+'</td>';
+                      html += '<td style="word-wrap: break-word">'+'<font color="#f29509">' + rows[i].ActivityMTPD + '</font>'+'</td>';
                     }
                     else if (rows[i].ActivityMTPD.includes("Week")){
-                      html += '<td>'+'<font color="#ffed28">' + rows[i].ActivityMTPD + '</font>'+'</td>';
+                      html += '<td style="word-wrap: break-word">'+'<font color="#ffed28">' + rows[i].ActivityMTPD + '</font>'+'</td>';
                     }
                     else if (rows[i].ActivityMTPD.includes("Month")){
-                      html += '<td>'+'<font color="#63cd32">' + rows[i].ActivityMTPD + '</font>'+'</td>';
+                      html += '<td style="word-wrap: break-word">'+'<font color="#63cd32">' + rows[i].ActivityMTPD + '</font>'+'</td>';
                     }
               
 
                     if (rows[i].ImportanceRating == 1){
-                      html += '<td bgcolor="#63cd32">' + '1 - Negligible' + '</td>';
+                      html += '<td style="word-wrap: break-word" bgcolor="#63cd32">' + '1 - Negligible' + '</td>';
                     }
                     if (rows[i].ImportanceRating == 2){
-                      html += '<td bgcolor="#ffed28">' + '2 - Minor' + '</td>';
+                      html += '<td style="word-wrap: break-word" bgcolor="#ffed28">' + '2 - Minor' + '</td>';
                     }
                     if (rows[i].ImportanceRating == 3){
-                      html += '<td bgcolor="#e5c824">' + '3 - Moderate' + '</td>';
+                      html += '<td style="word-wrap: break-word" bgcolor="#e5c824">' + '3 - Moderate' + '</td>';
                     }
                     if (rows[i].ImportanceRating == 4){
-                      html += '<td bgcolor="#f29509">' + '4 - Major' + '</td>';
+                      html += '<td style="word-wrap: break-word" bgcolor="#f29509">' + '4 - Major' + '</td>';
                     }
                     else if (rows[i].ImportanceRating == 5){
-                      html += '<td bgcolor="#FF0000">' + '5 - Severe' + '</td>';
+                      html += '<td style="word-wrap: break-word" bgcolor="#FF0000">' + '5 - Severe' + '</td>';
                     }
 
-                    html += '<td>' + rows[i].ImmediateCA + '</td>';
-                    html += '<td>' + rows[i].ActivityMTPD + '</td>';
-                    html += '<td>' + rows[i].SustainableCA + '</td>';
-                    html += '<td>' + rows[i].Prereq + '</td>';
-                    html += '<td>' + rows[i].SMD + '</td>';
+                    html += '<td style="word-wrap: break-word">' + rows[i].ImmediateCA + '</td>';
+                    html += '<td style="word-wrap: break-word">' + rows[i].ActivityMTPD + '</td>';
+                    html += '<td style="word-wrap: break-word">' + rows[i].SustainableCA + '</td>';
+                    html += '<td style="word-wrap: break-word">' + rows[i].Prereq + '</td>';
+                    html += '<td style="word-wrap: break-word">' + rows[i].SMD + '</td>';
         
                     html += '</tr>';   
                   }  
