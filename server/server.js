@@ -2858,9 +2858,9 @@ app.get("/generatebcppdf", function (req, res) {
 
                     html += '<table border="1" style="table-layout: fixed; width: 100%">';
                     html += '<thead><tr>';
-                    html += "<th>System</th>" + "<th>Function</th>" + "<th>Activity</th>" + "<th>Clinical Unit</th>" + "<th>MTPD</th>"
-                    + "<th>Higest Impact</th>" + "<th>Immediate continuity action</th>" + "<th>Maintainable duration</th>"
-                    + "<th>Sustainable continuity action</th>" + "<th>Pre-requisites/Resources</th>" + "<th>Maintainable duration</th>" 
+                    html += "<th style='word-wrap: break-word'>System</th>" + "<th style='word-wrap: break-word'>Function</th>" + "<th style='word-wrap: break-word'>Activity</th>" + "<th style='word-wrap: break-word'>Clinical Unit</th>" + "<th style='word-wrap: break-word'>MTPD</th>"
+                    + "<th style='word-wrap: break-word'>Higest Impact</th>" + "<th style='word-wrap: break-word'>Immediate continuity action</th>" + "<th style='word-wrap: break-word'>Maintainable duration</th>"
+                    + "<th style='word-wrap: break-word'>Sustainable continuity action</th>" + "<th style='word-wrap: break-word'>Pre-requisites/Resources</th>" + "<th style='word-wrap: break-word'>Maintainable duration</th>" 
                     html += "</tr></thead>";
                     html += "<tbody>";
 
