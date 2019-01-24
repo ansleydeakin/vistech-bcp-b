@@ -1488,7 +1488,7 @@ app.get("/system", function (req, res) {
               }
               else {
                   //ERROR
-                  console.log('failed 1');
+                  console.log('failed 2');
                   res.render(path.join(__dirname, '../public', 'home.html'), {
                     name:name,userid:userid,department:department
                 });
@@ -1890,17 +1890,17 @@ app.get("/myimportance", function (req, res) {
             var LastUpdated = rows[0].LastUpdated;
             console.log(BCPID);
   
-            var ActivityQuery = 'SELECT SYSTABLE.System, SYSTABLE.Program, SYSTABLE.ImportanceRating, count(Activity) AS NoOfActivity FROM' 
-            + '(SELECT MySystems.System, MySystems.Program, MySystems.ImportanceRating, SystemActivities.Activity FROM MySystems'
+            var importanceQuery = 'SELECT SYSTABLE.MySysID, SYSTABLE.System, SYSTABLE.Program, SYSTABLE.ImportanceRating, count(Activity) AS NoOfActivity FROM' 
+            + '(SELECT MySystems.MySysID, MySystems.System, MySystems.Program, SystemActivities.ImportanceRating, SystemActivities.Activity FROM MySystems'
             + ' INNER JOIN SystemActivities ON MySystems.MySysID = SystemActivities.MySysID'
             + ' WHERE MySystems.UserID=' + userid +' and MySystems.MyBCPID = ' + BCPID + ') AS SYSTABLE'
-            + ' GROUP BY SYSTABLE.System, SYSTABLE.Program, SYSTABLE.ImportanceRating'
+            + ' GROUP BY SYSTABLE.MySysID, SYSTABLE.System, SYSTABLE.Program, SYSTABLE.ImportanceRating'
             
-            console.log(ActivityQuery)
+            console.log(importanceQuery)
 
-         con.query(ActivityQuery, function (err, rows, fields) { 
+         con.query(importanceQuery, function (err, rows, fields) { 
           if (!err) {
-         
+
             var table = "";
 
             console.log(rows);
@@ -1914,17 +1914,19 @@ app.get("/myimportance", function (req, res) {
                   table += '<td>' + rows[i].NoOfActivity + '</td>';
                   if(rows[i].ImportanceRating == null){
                     table += '<td> Not Set </td>';
+                    var progress = '<li id="impprogress" class="li inprogress">';
                   } else {
                     table += '<td>' + rows[i].ImportanceRating + '</td>';
+                    var progress = '<li id="impprogress" class="li complete">';
                   }
-
+                  table += '<td><a href=\"' + '/myimportancesys?systemid=' + rows[i].MySysID + '\">Edit</a></td>'
                   table += '</tr>';
                 }
               
                       console.log(table);
       
                     res.render(path.join(__dirname, '../public', 'myImportanceHome.html'), {
-                      name:name,userid:userid,department:department, i:i, LastUpdated:LastUpdated, table:table
+                      name:name,userid:userid,department:department, i:i, LastUpdated:LastUpdated, table:table, progress:progress
                     });
               }
               else {
@@ -1933,7 +1935,7 @@ app.get("/myimportance", function (req, res) {
                 var i = 0;
 
                 res.render(path.join(__dirname, '../public', 'myImportanceHome.html'), {
-                  name:name,userid:userid,department:department, i:i, LastUpdated:LastUpdated, table:table
+                  name:name,userid:userid,department:department, i:i, LastUpdated:LastUpdated, table:table, progress:progress
                 });
               }
             }
@@ -1979,25 +1981,11 @@ app.get("/myimportancesys", function (req, res) {
 
   var name = firstname + ' ' + lastname
 
+  var SYSID = req.query.systemid;
+
   if (req.session.userid) {
 
-    console.log(userid)
-    console.log(BCPID)
-    var checksysquery = 'SELECT * FROM MySystems WHERE UserID = ' + userid + ' and MyBCPID = ' + BCPID + ' limit 1';
-
-    con.query(checksysquery, function (err, rows, fields) {
-
-      //running into an error here...
-      if (!err && rows.length > 0){
-
-          req.session.systemid = rows[0].MySysID;
-          var SYSID = req.session.systemid;
-
-          console.log('System ID ' + SYSID);
-          if (SYSID){ 
-
-            console.log('--------- 2')
-            con.query('SELECT * FROM MySystems WHERE MySysID = ' + SYSID + ' limit 1; SELECT * FROM SystemActivities WHERE MySysID= ' + SYSID, function (err, rows, fields) {
+            con.query('SELECT * FROM MySystems WHERE MySysID = ' + SYSID + ' limit 1; SELECT *, (SELECT MAX(ImportanceRating) from dbBCP.SystemActivities) as GreatestIR FROM SystemActivities WHERE MySysID= ' + SYSID, function (err, rows, fields) {
               if (!err) {
                  
                   var system = "";
@@ -2010,7 +1998,8 @@ app.get("/myimportancesys", function (req, res) {
                   var result1 = rows[0];
                   var result2 = rows[1];
       
-                  console.log(result1[0]);
+                  req.session.systemid = SYSID;
+                  console.log(result1.ImportanceRating);
                  
                   if (result1.length > 0) {
       
@@ -2022,9 +2011,10 @@ app.get("/myimportancesys", function (req, res) {
                             system += '<option value= \"' + result1[0].System + '\">' + result1[0].System + '</option>';
                             system += '</select>';
 
-                            importance = '<input type="text" class="form-control" readonly id="importance" name="importance" value=' + result1[0].ImportanceRating + '>';
+                            importance = '<input type="text" class="form-control" readonly id="importance" name="importance" value=' + result2[0].GreatestIR + '>';
       
                             description = '<input type="text" class="form-control" readonly id="description" name="description" value=' + result1[0].Description + '>';
+
                             comment = '<input type="text" class="form-control" readonly id="comment" name="comment" value=' + result1[0].Comment + '>';
       
                   }
@@ -2052,7 +2042,7 @@ app.get("/myimportancesys", function (req, res) {
                       } else {
                         table += '<td>' + result2[i].ActivityMTDL + '</td>';
                       }
-                      
+                      table += '<td><a href=\"' + '/myimportanceact?activityid=' + result2[i].ActID + '\">Edit</a></td>'
                       table += '</tr>';
       
                     }
@@ -2075,21 +2065,6 @@ app.get("/myimportancesys", function (req, res) {
             });
           
           }
-      } else {
-
-        res.render(path.join(__dirname, '../public', 'home.html'), {
-          name:name,userid:userid,department:department
-       });
-      }
-
-    });
-
-    /*res.render(path.join(__dirname, '../public', 'myImportanceSystem.html'),{
-      name:name,userid:userid,department:department, i:i, system:system, program:program, importance:importance, table:table,
-      comment:comment, description:description
-    });*/
-
-  }
   else {
 
     res.redirect('/login');
@@ -2125,15 +2100,18 @@ app.get("/myimportanceact", function (req, res) {
   var SYSID = req.session.systemid;
   var i = 0;
 
-  var name = firstname + ' ' + lastname
+  var name = firstname + ' ' + lastname;
 
+  var ACTID = req.query.activityid;
+  
   if (req.session.userid) {
 
     console.log(userid)
     console.log(BCPID)
-            console.log('--------- 2')
+
+            console.log('--------- 1')
             //error happens here
-            con.query('SELECT * FROM SystemActivities WHERE MySysID= ' + SYSID, function (err, rows, fields) {
+            con.query('SELECT * FROM SystemActivities where ActID=' + ACTID +' limit 1', function (err, rows, fields) {
               if (!err) {
       
                   console.log(rows[0]);
@@ -2190,39 +2168,56 @@ app.post("/submitrating", function (req, res) {
   var BCPID = req.session.MyBCPID;
   var SYSID = req.session.systemid;
 
-  var ImportanceRating = req.body.importancerating;
+  var ImportanceRating = req.body.importancerating; //mins
+  var HourRating = req.body.ratingHrs;
+  var DayRating = req.body.ratingDay;
+  var WeekRating = req.body.ratingWek;
+
+  console.log('1 - ' + ImportanceRating + ' 2 - ' + DayRating + ' 3 - '+ DayRating + ' 4 - '+WeekRating );
+  var greatestrating = Math.max(ImportanceRating, HourRating,DayRating,WeekRating)
+
   var MTPD = req.body.mtpd;
   var MTDL = req.body.mtdl;
   var activityid = req.body.activityid;
 
+
   console.log("SUBMIT RATING HERE")
-  //console.log(SYSID)
-  //sys id is not defined???? so it is causing us errors.
+ 
   if (req.session.userid){
+
+    if (MTPD !== null||MTDL!== null||greatestrating!==null){
 
     console.log("submit rating");
 
-      impquery = 'UPDATE SystemActivities SET ImportanceRating = ' + ImportanceRating + ', ActivityMTPD = \"' + MTPD 
-      + '\", ActivityMTDL = \"'  + MTDL + '\" WHERE MySysID = ' + SYSID + ' and ACTID = ' + activityid;
+      impquery = 'UPDATE SystemActivities SET ImportanceRating = ' + greatestrating + ', ActivityMTPD = \"' + MTPD 
+      + '\", ActivityMTDL = \"'  + MTDL + '\" WHERE ActID = ' + activityid;
+
+    
 
         console.log("Update SystemActivities with rating");
 
         con.query(impquery,
             function (err, rows, fields) {
                 if (!err) {
-                  res.redirect("/myimportancesys");
+                  res.redirect("/myimportancesys?systemid=" + SYSID);
 
                   console.log('test1 ' + impquery)
                 }
                 else {
-                  res.redirect("/myimportanceact");    
+                  res.redirect("/myimportancesys?activityid="+activityid);  
                   
                   console.log('test2 ' + impquery)
                 }
         });
-      
+      }
+      else{
+        res.redirect("/myimportance?activityid="+activityid);
+      }
     
   }  
+  else{
+    res.redirect("/login");   
+  }
 });
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2238,22 +2233,38 @@ app.get("/saveimportance", function (req, res) {
   req.session.systemid = undefined;
   req.session.activityid = undefined;
 
+  query = 'SELECT * FROM'
+  + ' (SELECT MySystems.System, MySystems.Program, SystemActivities.ImportanceRating,'
+  +  ' SystemActivities.Activity, MySystems.MySysID, SystemActivities.ActivityMTPD, SystemActivities.ActivityMTDL FROM MySystems'
+  + ' INNER JOIN SystemActivities ON MySystems.MySysID = SystemActivities.MySysID'
+  + ' WHERE MySystems.UserID=' + userid + ' and MySystems.MyBCPID ='+ BCPID + ' ) AS SYSTABLE'
+  + ' WHERE ActivityMTPD is null or ActivityMTDL is null or ImportanceRating is null';
+
   if (req.session.userid){
 
-              console.log("UPDATE BCP STATUS "+ BCPID);
-              
-
-              con.query('UPDATE MyBCP SET Status = 3, LastUpdated=NOW() WHERE Status= 2 and MyBCPID = ' + BCPID + ' and UserID = ' + userid, function (err, rows, fields) {
-                      if (!err) {
-                        res.redirect("/myctyhome");
-
-                        console.log(rows)
-                      }
-                      else {
-                        res.redirect("/myimportance");                        
-                      }
-              });
+  con.query(query, function (err, rows, fields) {
     
+    if (!err){
+
+      if(rows.length > 0){
+      res.redirect("/myimportance");
+      }
+      else{
+        con.query('UPDATE MyBCP SET Status = 3, LastUpdated=NOW() WHERE Status= 2 and MyBCPID = ' + BCPID + ' and UserID = ' + userid, function (err, rows, fields) {
+          if (!err) {
+            res.redirect("/myctyhome");
+
+            console.log(rows)
+          }
+          else {
+            res.redirect("/myimportance");                        
+          }
+        });
+
+      }
+    }
+  });
+              
   } 
   else{
     res.redirect('/login');
@@ -2295,11 +2306,11 @@ app.get("/myctyhome", function (req, res) {
 
             console.log(BCPID);
   
-            var ContinuityQuery = 'SELECT SYSTABLE.System, SYSTABLE.Program, count(Activity) AS NoOfActivity, count(ImmediateCA) AS ImmediateCA, count(SustainableCA) AS SustainableCA'
-            + ' FROM (SELECT MySystems.System, MySystems.Program, SystemActivities.Activity, SystemActivities.ImmediateCA, SystemActivities.SustainableCA FROM MySystems'
+            var ContinuityQuery = 'SELECT SYSTABLE.MySysID, SYSTABLE.System, SYSTABLE.Program, count(Activity) AS NoOfActivity, count(ImmediateCA) AS ImmediateCA, count(SustainableCA) AS SustainableCA'
+            + ' FROM (SELECT MySystems.MySysID, MySystems.System, MySystems.Program, SystemActivities.Activity, SystemActivities.ImmediateCA, SystemActivities.SustainableCA FROM MySystems'
             + ' INNER JOIN SystemActivities ON MySystems.MySysID = SystemActivities.MySysID'
             + ' WHERE MySystems.UserID=' + userid +' and MySystems.MyBCPID = ' + BCPID + ') AS SYSTABLE'
-            + ' GROUP BY SYSTABLE.System, SYSTABLE.Program'
+            + ' GROUP BY SYSTABLE.MySysID, SYSTABLE.System, SYSTABLE.Program'
             
             console.log('--------------1--------------' + ContinuityQuery)
 
@@ -2309,6 +2320,7 @@ app.get("/myctyhome", function (req, res) {
             console.log('--------------2--------------' + rows);
           
               if (rows.length > 0) {
+          
                 for (var i = 0; i < rows.length; i++) {
                   table += "<tr>";
 
@@ -2317,12 +2329,21 @@ app.get("/myctyhome", function (req, res) {
                   table += '<td>' + rows[i].NoOfActivity + '</td>';
                   table += '<td>' + rows[i].ImmediateCA + '</td>';
                   table += '<td>' + rows[i].SustainableCA + '</td>';
+                  table += '<td><a href=\"' + '/addctyactions?systemid=' + rows[i].MySysID + '\">Edit</a></td>'
                   table += '</tr>';
+
+                  
+                if (rows[i].ImmediateCA < rows[i].NoOfActivity || rows[i].SustainableCA < rows[i].NoOfActivity){
+                  progress = '<li id="ctyprogress" class="li inprogress">';
+               }
+               else 
+               {
+                  progress = '<li id="ctyprogress" class="li complete">';
+               }
                 }
+
               
                       console.log('--------------3--------------' + table);
-
-                      var progress = '<li id="ctyprogress" class="li complete">';
       
                     res.render(path.join(__dirname, '../public', 'myContinuityHome.html'), {
                       name:name,userid:userid,department:department, i:i, LastUpdated:LastUpdated, table:table, progress:progress
@@ -2332,8 +2353,7 @@ app.get("/myctyhome", function (req, res) {
               //Fail
                 var system = "";
                 var i = 0;
-                var progress = '<li id="ctyprogress" class="li inprogress">';
-
+                
                 console.log('--------------4--------------');
 
                 res.render(path.join(__dirname, '../public', 'myContinuityHome.html'), {
@@ -2370,7 +2390,7 @@ app.get("/myctyhome", function (req, res) {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 /* MY CONTINUITY SYSTEMS PATRICK 17/01/2019 */
-
+/*
 app.get("/myctysys", function (req, res) {
 
   var username =  req.session.username;
@@ -2395,63 +2415,7 @@ app.get("/myctysys", function (req, res) {
   }
 
 });
-
-//////////////////////////////////////////////////////////////////////////////////////////////////
-/* MY CONTINUITY ACITIVITIES PATRICK 17/01/2019 */
-/*
-app.get("/myctyact", function (req, res) {
-
-  var username =  req.session.username;
-  var userid = req.session.userid;
-  var roles = req.session.roles;
-  var firstname = req.session.firstname;
-  var lastname = req.session.Lastname;
-  var department = req.session.department;
-
-  var name = firstname + ' ' + lastname
-
-  if (req.session.userid) {
-
-    res.render(path.join(__dirname, '../public', 'myContinuityActivity.html'),{
-      name:name,userid:userid,department:department, date:date
-    });
-  }
-  else {
-
-    res.redirect('/login');
-  
-  }
-
-});
 */
-//////////////////////////////////////////////////////////////////////////////////////////////////
-/* BCP TRACKER PATRICK 19/01/2019 */
-
-app.get("/tracker", function (req, res) {
-
-  var username =  req.session.username;
-  var userid = req.session.userid;
-  var roles = req.session.roles;
-  var firstname = req.session.firstname;
-  var lastname = req.session.Lastname;
-  var department = req.session.department;
-
-  var name = firstname + ' ' + lastname
-
-  if (req.session.userid) {
-
-    res.render(path.join(__dirname, '../public', 'tracker.html'),{
-      name:name,userid:userid,department:department, date:date
-    });
-  }
-  else {
-
-    res.redirect('/login');
-  
-  }
-
-});
-
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 /* SUBMIT ACTIVITIES ANSLEY 19/01/2019 */
@@ -2606,7 +2570,7 @@ app.get("/addctyactions", function (req, res) {
   var name = firstname + ' ' + lastname;
 
   var BCPID = req.session.MyBCPID;
-  var SYSID = req.session.systemid;
+  var SYSID = req.query.systemid;
 
   var system="";
   var program = "";
@@ -2614,15 +2578,15 @@ app.get("/addctyactions", function (req, res) {
 
   if (req.session.userid){
     
-              console.log("----------1----------SELECT System Activities");
+              console.log("----------1----------" + ctyQuery);
 
-              var ctyQuery = 'SELECT SYSTABLE.MySysID, SYSTABLE.System, SYSTABLE.Program, SYSTABLE.Activity, SYSTABLE.ImmediateCA, SYSTABLE.SustainableCA,'
+              var ctyQuery = 'SELECT SYSTABLE.MySysID, SYSTABLE.System, SYSTABLE.Program, SYSTABLE.Activity, SYSTABLE.ImmediateCA, SYSTABLE.SustainableCA, SYSTABLE.Prereq,'
               + ' SYSTABLE.ImportanceRating, SYSTABLE.ActivityMTPD, SYSTABLE.ActID'
-              + ' FROM (SELECT MySystems.MySysID, MySystems.System, MySystems.Program, SystemActivities.Activity,' 
+              + ' FROM (SELECT MySystems.MySysID, MySystems.System, MySystems.Program, SystemActivities.Activity, SystemActivities.Prereq,' 
               + ' SystemActivities.ImmediateCA, SystemActivities.SustainableCA, SystemActivities.ImportanceRating, SystemActivities.ActivityMTPD, SystemActivities.ActID'
               + ' FROM MySystems INNER JOIN SystemActivities ON MySystems.MySysID = SystemActivities.MySysID'
-              + ' WHERE MySystems.UserID=' + userid +' and MySystems.MySysID =(SELECT MySysID FROM MySystems WHERE MyBCPID ='+BCPID+' limit 1)) AS SYSTABLE';
-        
+              + ' WHERE MySystems.UserID=' + userid +' and MySystems.MySysID =' +SYSID+ ' ) AS SYSTABLE';
+
               con.query(ctyQuery,function (err, rows, fields) {
 
                 console.log(rows);
@@ -3132,6 +3096,34 @@ app.get("/bcpsubmit", function (req, res) {
   }
   
 });
+//////////////////////////////////////////////////////////////////////////////////////////////////
+/* BCP TRACKER PATRICK 19/01/2019 */
+
+app.get("/tracker", function (req, res) {
+
+  var username =  req.session.username;
+  var userid = req.session.userid;
+  var roles = req.session.roles;
+  var firstname = req.session.firstname;
+  var lastname = req.session.Lastname;
+  var department = req.session.department;
+
+  var name = firstname + ' ' + lastname
+
+  if (req.session.userid) {
+
+    res.render(path.join(__dirname, '../public', 'tracker.html'),{
+      name:name,userid:userid,department:department, date:date
+    });
+  }
+  else {
+
+    res.redirect('/login');
+  
+  }
+
+});
+
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // **********************************************************************************************
 /* START THE APP & LISTEN TO THE PORT */
