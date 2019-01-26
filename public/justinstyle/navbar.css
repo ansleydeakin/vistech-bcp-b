@@ -133,8 +133,8 @@ a.custom-card, a.custom-card:hover {
   }
 
   .grey-edit, a.grey-edit:hover{
-    background-color:#969FAA;
-    color:white;
+    background-color:#EAEDF0;
+    color:#47525E;
     text-align: center;
     padding: 0px;
     margin-right: -15px;
