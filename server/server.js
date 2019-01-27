@@ -2339,8 +2339,16 @@ app.get("/myctyhome", function (req, res) {
                   table += '<td>' + rows[i].System + '</td>';
                   table += '<td>' + rows[i].Program + '</td>';
                   table += '<td>' + rows[i].NoOfActivity + '</td>';
-                  table += '<td>' + rows[i].ImmediateCA + '</td>';
-                  table += '<td>' + rows[i].SustainableCA + '</td>';
+                  if(rows[i].ImmediateCA == null){
+                    table += '<td> Not Set </td>';
+                  } else {
+                    table += '<td>' + rows[i].ImmediateCA + '</td>';
+                  }
+                  if(rows[i].SustainableCA == null){
+                    table += '<td> Not Set </td>';
+                  } else {
+                    table += '<td>' + rows[i].ImmediateCA + '</td>';
+                  }
                   table += '<td><a href=\"' + '/addctyactions?systemid=' + rows[i].MySysID + '\">Edit</a></td>'
                   table += '</tr>';
 
@@ -2616,9 +2624,21 @@ app.get("/addctyactions", function (req, res) {
 
                               table += "<tr>";
                               table += '<td>' + rows[i].Activity + '</td>';
-                              table += '<td>' + rows[i].ImportanceRating + '</td>';
-                              table += '<td>' + rows[i].ImmediateCA + '</td>';
-                              table += '<td>' + rows[i].SustainableCA + '</td>';
+                              if(rows[i].ImportanceRating == null){
+                                table += '<td> Not Set </td>';
+                              } else {
+                                table += '<td>' + rows[i].ImportanceRating + '</td>';
+                              }
+                              if(rows[i].ImmediateCA == null){
+                                table += '<td> Not Set </td>';
+                              } else {
+                                table += '<td>' + rows[i].ImmediateCA + '</td>';
+                              }
+                              if(rows[i].SustainableCA == null){
+                                table += '<td> Not Set </td>';
+                              } else {
+                                table += '<td>' + rows[i].SustainableCA + '</td>';
+                              }
                               table += '<td><a href=\"' + '/editcty?ACTID=' + rows[i].ActID +'&systemid=' + rows[i].MySysID + '\">Edit</a></td>'
                               table += '</tr>';     
                              
