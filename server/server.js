@@ -1306,8 +1306,8 @@ app.get("/plan", function (req, res) {
           
           console.log('SET BCP ID ' + BCPID);
 
-          var ActivityQuery = 'SELECT SYSTABLE.System, SYSTABLE.Program, SYSTABLE.ClinicalUnit, count(Activity) AS NoOfActivity FROM' 
-          + '(SELECT MySystems.System, MySystems.Program, MySystems.ClinicalUnit, SystemActivities.Activity FROM MySystems'
+          var ActivityQuery = 'SELECT SYSTABLE.System, SYSTABLE.Program, SYSTABLE.ClinicalUnit, count(Activity) AS NoOfActivity, MySysID FROM' 
+          + '(SELECT MySystems.System, MySystems.Program, MySystems.ClinicalUnit, SystemActivities.Activity, MySystems.MySysID FROM MySystems'
           + ' INNER JOIN SystemActivities ON MySystems.MySysID = SystemActivities.MySysID'
           + ' WHERE MySystems.UserID=' + userid +' and MySystems.MyBCPID = ' + BCPID + ') AS SYSTABLE'
           + ' GROUP BY SYSTABLE.System, SYSTABLE.Program, SYSTABLE.ClinicalUnit'
@@ -1330,6 +1330,7 @@ app.get("/plan", function (req, res) {
                     table += '<td>' + rows[i].Program + '</td>';
                     table += '<td>' + rows[i].ClinicalUnit + '</td>';
                     table += '<td>' + rows[i].NoOfActivity + '</td>';
+                    table += '<td> <a href="/system?mysystemid='+ rows[i].MySysID +'"> Edit </a></td>';
 
                     table += '</tr>';
                   }
@@ -1416,6 +1417,8 @@ app.get("/system", function (req, res) {
 
   var name = firstname + ' ' + lastname;
 
+  var SYSID = req.query.mysystemid;
+
   console.log('/system - start')
   
   if (req.session.userid) {
@@ -1423,11 +1426,11 @@ app.get("/system", function (req, res) {
     var checksysquery = 'SELECT * FROM MySystems WHERE UserID = ' + userid + ' and Completed = 0 and MyBCPID = ' + BCPID + ' limit 1';
 
     con.query(checksysquery, function (err, rows, fields) {
+      console.log(SYSID);
 
       if (!err && rows.length > 0){
 
           req.session.systemid = rows[0].MySysID;
-          var SYSID = req.session.systemid;
 
           console.log('System ID ' + SYSID);
     
@@ -1545,6 +1548,7 @@ app.get("/system", function (req, res) {
                       table += '<td>' + result2[i].ActFunction + '</td>';
                       table += '<td>' + result2[i].Activity + '</td>';
                       table += '<td>' + result2[i].ActivityDep + '</td>';
+                      table += '<td> <a href="/activities?activity='+ result2[i].Activity + '&function='+ result2[i].ActFunction + '"> Edit </a> </td>';
                       
                       table += '</tr>';
       
@@ -1679,6 +1683,7 @@ app.get("/system", function (req, res) {
                 table += '<td>' + result2[i].ActFunction + '</td>';
                 table += '<td>' + result2[i].Activity + '</td>';
                 table += '<td>' + result2[i].ActivityDep + '</td>';
+                table += '<td> <a href="/activities?activity='+ result2[i].Activity + '&function='+ result2[i].ActFunction + '"> Edit </a> </td>';
 
                 table += '</tr>';
 
@@ -1822,6 +1827,8 @@ app.get("/activities", function (req, res) {
   var department = req.session.department;
 
   var name = firstname + ' ' + lastname
+  var activity = req.query.activity;
+  var funct = req.query.function;
 
   if (req.session.userid) {
 
@@ -1832,13 +1839,17 @@ app.get("/activities", function (req, res) {
            
             if (rows.length > 0) {
                 for (var i = 0; i < rows.length; i++) {
-
-                  functionlist += '<option value= \"' + rows[i].Function + '\">' + rows[i].Function + '</option>';
-
+                  
+                  if(funct && (i == 0)){
+                    functionlist += '<option hidden value= \"' + funct + '\">' + funct + '</option>';
+                  } else {
+                    functionlist += '<option hidden >Make a selection</option>'
+                    functionlist += '<option value= \"' + rows[i].Function + '\">' + rows[i].Function + '</option>';
+                  }
                 }
             
                 res.render(path.join(__dirname, '../public', 'myActivity.html'), {
-                  functionlist: functionlist, name:name, userid:userid
+                  functionlist: functionlist, name:name, userid:userid, activity:activity
                 });
             }
             else {
@@ -2432,7 +2443,8 @@ app.get("/submitactivities", function (req, res) {
   var actdep = req.query.optradio;
 
   if (req.session.userid){
-
+    console.log("INSERTING ACTIVITY");
+    console.log(SYSID)
     if (SYSID){
 
               console.log("Insert SystemActivities");
@@ -2449,6 +2461,7 @@ app.get("/submitactivities", function (req, res) {
               });
     }  
     else {
+      console.log("INSERTING ACTIVITY 2");
       con.query('SELECT * FROM MySystems WHERE UserID = ' + userid +' and MyBCPID = ' + BCPID + ' and Completed = 0 limit 1', function (err, rows, fields) {
         if (!err && rows.length > 0){
           
