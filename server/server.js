@@ -2548,7 +2548,7 @@ app.get("/savecritsys", function (req, res) {
         if (rows.length>0) {
           console.log('------------1--------------' + BCPID)
           res.render(path.join(__dirname, '../public', 'message.html'), {
-            message1:'There are still incomplete Systems'
+            title:'Incomplete Systems',message:'There are still incomplete Systems', message2:'Please return and complete'
           });
         }
         else{
