@@ -1203,6 +1203,7 @@ app.post("/changepasssubmit", function (req, res) {
   }
 
 });
+//////////////////////////////////////////////////////////////////////////////////////////////////
 
 /* ADD SYSTEMS IMPACT PATH ANSLEY 06/01/2019 */
 
@@ -1382,7 +1383,7 @@ app.get("/plan", function (req, res) {
       req.session.activityid = undefined;
       req.session.systemid = undefined;
 
-      var Query = 'INSERT INTO MyBCP (DateCreated,Status,UserID,LastUpdated) VALUES (  NOW() , 1' + ',' + userid + ', NOW())'
+      var Query = 'INSERT INTO MyBCP (DateCreated,Status,UserID,LastUpdated) VALUES (NOW(), 1' + ',' + userid + ', NOW())'
       console.log(Query);
 
       con.query(Query,function (err, rows, fields) {
@@ -1417,7 +1418,8 @@ app.get("/system", function (req, res) {
 
   var name = firstname + ' ' + lastname;
 
-  var SYSID = req.query.mysystemid;
+  var getSYSID = req.query.mysystemid;
+  var SYSID = req.session.systemid;
 
   console.log('/system - start')
   
@@ -1428,79 +1430,13 @@ app.get("/system", function (req, res) {
     con.query(checksysquery, function (err, rows, fields) {
       console.log(SYSID);
 
-      if (!err && rows.length > 0){
+      if (!err){
 
-          req.session.systemid = rows[0].MySysID;
+        //req.session.systemid = rows[0].MySysID;
 
-          console.log('System ID ' + SYSID);
+        //console.log('System ID ' + SYSID);
     
-          if (SYSID === undefined) { 
-
-            console.log('--------- 1')
-            con.query('SELECT * FROM r3SysReg; SELECT DISTINCT Program FROM r41FuncRef', function (err, rows, fields) {
-              if (!err) {
-                 
-                  var system = "";
-                  var program = "";
-                  var unit = "";
-                  var description = "";
-                  var comment = "";
-                  var table = "";
-      
-                  var result1 = rows[0];
-                  var result2 = rows[1];
-      
-                  console.log(result1[1]);
-                 
-                  if (rows.length > 0) {
-      
-                    system += '<select class="form-control" id="system" name="system">';
-                    system += '<option value="" hidden >Make a selection</option>';
-      
-                    program += '<select class="form-control" id="program" name="program">';
-                    program += '<option value="" hidden >Make a selection</option>';
-      
-                      for (var i = 0; i < result1.length; i++) {
-      
-                          system += '<option value= \"' + result1[i].System + '\">' + result1[i].System + '</option>';
-      
-                      }
-                      for (var i = 0; i < result2.length; i++) {
-      
-                        program += '<option value= \"' + result2[i].Program + '\">' + result2[i].Program + '</option>';
-      
-                      }
-                      console.log(program);
-      
-                      system += '</select>';
-                      program += '</select>';
-      
-                      description = '<input type="text" class="form-control" id="description" name="description">';
-                      comment = '<input type="text" class="form-control" id="comment" name="comment">';
-                  
-                      res.render(path.join(__dirname, '../public', 'mySystemHome.html'), {
-                          system: system, program:program,unit:unit,description:description,comment:comment, table:table, name:name, userid:userid
-                      });
-                  }
-                  else {
-                      //Fail
-                      console.log('failed 1');
-                      res.render(path.join(__dirname, '../public', 'home.html'), {
-                        name:name,userid:userid,department:department
-                    });
-                  }
-              }
-              else {
-                  //ERROR
-                  console.log('failed 2');
-                  res.render(path.join(__dirname, '../public', 'home.html'), {
-                    name:name,userid:userid,department:department
-                });
-              }
-            });
-          }
-
-          else if (SYSID){ 
+        if (getSYSID||SYSID){ 
 
             console.log('--------- 2')
             con.query('SELECT * FROM MySystems WHERE MySysID = ' + SYSID + ' limit 1; SELECT * FROM SystemActivities WHERE MySysID= ' + SYSID, function (err, rows, fields) {
@@ -1571,144 +1507,75 @@ app.get("/system", function (req, res) {
             });
           
           }
+          else { 
+
+            console.log('--------- 1')
+            con.query('SELECT * FROM r3SysReg; SELECT DISTINCT Program FROM r41FuncRef', function (err, rows, fields) {
+              if (!err) {
+                 
+                  var system = "";
+                  var program = "";
+                  var unit = "";
+                  var description = "";
+                  var comment = "";
+                  var table = "";
+      
+                  var result1 = rows[0];
+                  var result2 = rows[1];
+      
+                  console.log(result1[1]);
+                 
+                  if (rows.length > 0) {
+      
+                    system += '<select class="form-control" id="system" name="system">';
+                    system += '<option value="" hidden >Make a selection</option>';
+      
+                    program += '<select class="form-control" id="program" name="program">';
+                    program += '<option value="" hidden >Make a selection</option>';
+      
+                      for (var i = 0; i < result1.length; i++) {
+      
+                          system += '<option value= \"' + result1[i].System + '\">' + result1[i].System + '</option>';
+      
+                      }
+                      for (var i = 0; i < result2.length; i++) {
+      
+                        program += '<option value= \"' + result2[i].Program + '\">' + result2[i].Program + '</option>';
+      
+                      }
+                      console.log(program);
+      
+                      system += '</select>';
+                      program += '</select>';
+      
+                      description = '<input type="text" class="form-control" id="description" name="description">';
+                      comment = '<input type="text" class="form-control" id="comment" name="comment">';
+                  
+                      res.render(path.join(__dirname, '../public', 'mySystemHome.html'), {
+                          system: system, program:program,unit:unit,description:description,comment:comment, table:table, name:name, userid:userid
+                      });
+                      
+                  }
+                  else {
+                      //Fail
+                      console.log('failed 1');
+                      res.render(path.join(__dirname, '../public', 'home.html'), {
+                        name:name,userid:userid,department:department
+                    });
+                  }
+              }
+              else {
+                  //ERROR
+                  console.log('failed 2');
+                  res.render(path.join(__dirname, '../public', 'home.html'), {
+                    name:name,userid:userid,department:department
+                });
+              }
+            });
+          }
   } 
   else {
-    if (SYSID === undefined) {
-
-      console.log('--------- 3')
-      con.query('SELECT * FROM r3SysReg; SELECT DISTINCT Program FROM r41FuncRef', function (err, rows, fields) {
-        if (!err) {
-           
-            var system = "";
-            var program = "";
-            var unit = "";
-            var description = "";
-            var comment = "";
-            var table = "";
-
-            var result1 = rows[0];
-            var result2 = rows[1];
-
-            console.log(result1[1]);
-           
-            if (rows.length > 0) {
-
-              system += '<select class="form-control" id="system" name="system">';
-              system += '<option value="" hidden >Make a selection</option>';
-
-              program += '<select class="form-control" id="program" name="program">';
-              program += '<option value="" hidden >Make a selection</option>';
-
-                for (var i = 0; i < result1.length; i++) {
-
-                    system += '<option value= \"' + result1[i].System + '\">' + result1[i].System + '</option>';
-
-                }
-                for (var i = 0; i < result2.length; i++) {
-
-                  program += '<option value= \"' + result2[i].Program + '\">' + result2[i].Program + '</option>';
-
-                }
-                console.log(program);
-
-                system += '</select>';
-                program += '</select>';
-
-                description = '<input type="text" class="form-control" id="description" name="description">';
-                comment = '<input type="text" class="form-control" id="comment" name="comment">';
-            
-                res.render(path.join(__dirname, '../public', 'mySystemHome.html'), {
-                    system: system, program:program,unit:unit,description:description,comment:comment, table:table, name:name, userid:userid
-                });
-            }
-            else {
-                //Fail
-                console.log('failed 1');
-                res.render(path.join(__dirname, '../public', 'home.html'), {
-                  name:name,userid:userid,department:department
-              });
-            }
-        }
-        else {
-            //ERROR
-            console.log('failed 1');
-            res.render(path.join(__dirname, '../public', 'home.html'), {
-              name:name,userid:userid,department:department
-          });
-        }
-      });
-    }
-
-    else if (SYSID){ 
-      console.log('--------- 4')
-      con.query('SELECT * FROM MySystems WHERE MySysID = ' + SYSID + ' limit 1; SELECT * FROM SystemActivities WHERE MySysID= ' + SYSID, function (err, rows, fields) {
-        if (!err) {
-           
-            var system = "";
-            var program = "";
-            var unit = "";
-            var description = "";
-            var comment = "";
-            var table = "";
-
-            var result1 = rows[0];
-            var result2 = rows[1];
-
-            console.log(result1[1]);
-           
-            if (result1.length > 0) {
-
-                      program += '<select class="form-control" readonly id="program" name="program">';
-                      program += '<option value= \"' + result1[0].Program + '\">' + result1[0].Program + '</option>';
-                      program += '</select>';
-
-                      system += '<select class="form-control" readonly id="system" name="system">';
-                      system += '<option value= \"' + result1[0].System + '\">' + result1[0].System + '</option>';
-                      system += '</select>';
-
-                      unit += '<select class="form-control" readonly id="unit" name="unit">';
-                      unit += '<option value= \"' + result1[0].ClinicalUnit + '\">' + result1[0].ClinicalUnit + '</option>';
-                      unit += '</select>';
-
-                      description = '<input type="text" class="form-control" readonly id="description" name="description" value=' + result1[0].Description + '>';
-                      comment = '<input type="text" class="form-control" readonly id="comment" name="comment" value=' + result1[0].Comment + '>';
-
-            }
-            if (result2.length > 0){
-
-              for (var i = 0; i < result2.length; i++) {
-
-                table += "<tr>";
-
-                table += '<td>' + result2[i].ActFunction + '</td>';
-                table += '<td>' + result2[i].Activity + '</td>';
-                table += '<td>' + result2[i].ActivityDep + '</td>';
-                table += '<td> <a href="/activities?activity='+ result2[i].Activity + '&function='+ result2[i].ActFunction + '"> Edit </a> </td>';
-
-                table += '</tr>';
-
-              }
-
-            }
-            console.log('--------- 5')
-                console.log(program);
-            
-                res.render(path.join(__dirname, '../public', 'mySystemHome.html'), {
-                    system: system, program:program,unit:unit,description:description,comment:comment,table:table,name:name, userid:userid
-                });
-            }
-            else {
-                //Fail
-                console.log('failed 1');
-                res.render(path.join(__dirname, '../public', 'home.html'), {
-                  name:name,userid:userid,department:department
-              });
-            }
-      });
-    
-    }
-
-
+    res.redirect('/login');
   }
   });
   }  
@@ -1748,7 +1615,7 @@ app.get("/submitsystem", function (req, res) {
                   function (err, rows, fields) {
                       if (!err) {
 
-                        console.log(userid +' '+BCPID);
+                        console.log('UserID is:'+userid +' and BCPID is:' +BCPID);
 
                         con.query('SELECT * FROM MySystems WHERE UserID = ' + userid +' and MyBCPID = ' + BCPID + ' and Completed = 0 limit 1', function (err, rows, fields) {
                           if (!err && rows.length > 0){
@@ -1759,7 +1626,8 @@ app.get("/submitsystem", function (req, res) {
                         res.redirect("/activities");
                       }
                       else {
-                        res.redirect("/system");                        
+                        res.redirect("/system");     
+                        console.log(err)                   
                       }
               });
     }  
