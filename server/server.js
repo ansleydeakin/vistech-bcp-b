@@ -1757,7 +1757,7 @@ app.get("/myimportance", function (req, res) {
   var lastname = req.session.Lastname;
   var department = req.session.department;
 
-  var name = firstname + ' ' + lastname
+  var name = firstname + ' ' + lastname;
 
   if (req.session.userid) {
     
@@ -1801,21 +1801,33 @@ app.get("/myimportance", function (req, res) {
                   }
                   table += '<td><a href=\"' + '/myimportancesys?systemid=' + rows[i].MySysID + '\">Edit</a></td>'
                   table += '</tr>';
+
+                 count = 0;
+
+                  if (rows[i].ImportanceRating !== null || ""){
+                    count++;
+                  }
+                  
+                  var noAct = rows[i].NoOfActivity;
+
                 }
-              
+                    
+
                       console.log(table);
       
                     res.render(path.join(__dirname, '../public', 'myImportanceHome.html'), {
-                      name:name,userid:userid,department:department, i:i, LastUpdated:LastUpdated, table:table, progress:progress
+                      name:name,userid:userid,department:department, i:i, LastUpdated:LastUpdated, table:table, progress:progress, count:count,noAct:noAct
                     });
               }
               else {
               //Fail
                 var system = "";
                 var i = 0;
+                var count = 0;
+                var noAct = 0;
 
                 res.render(path.join(__dirname, '../public', 'myImportanceHome.html'), {
-                  name:name,userid:userid,department:department, i:i, LastUpdated:LastUpdated, table:table, progress:progress
+                  name:name,userid:userid,department:department, i:i, LastUpdated:LastUpdated, table:table, progress:progress, count:count, noAct:noAct
                 });
               }
             }
@@ -1858,7 +1870,7 @@ app.get("/myimportancesys", function (req, res) {
   var department = req.session.department;
   var BCPID = req.session.MyBCPID;
   var i = 0;
-
+  
   var name = firstname + ' ' + lastname
 
   var SYSID = req.query.systemid;
@@ -1924,14 +1936,20 @@ app.get("/myimportancesys", function (req, res) {
                       }
                       table += '<td><a href=\"' + '/myimportanceact?activityid=' + result2[i].ActID + '\">Edit</a></td>'
                       table += '</tr>';
-      
+
+                      count = 0;
+
+                      if (result2[i].ImportanceRating !== null || ""){
+                        count++;
+                      }
+
                     }
       
                   }
 
                   res.render(path.join(__dirname, '../public', 'myImportanceSystem.html'),{
                     name:name,userid:userid,department:department, i:i, system:system, program:program, importance:importance, table:table,
-                    comment:comment, description:description
+                    comment:comment, description:description, count:count
                   });
                   
                   }
@@ -2170,6 +2188,8 @@ app.get("/myctyhome", function (req, res) {
 
   var table = "";
 
+  var noAct = 0;
+
   req.session.activityid = undefined;
   req.session.MyBCPID = undefined;
 
@@ -2207,12 +2227,12 @@ app.get("/myctyhome", function (req, res) {
                   table += '<td>' + rows[i].System + '</td>';
                   table += '<td>' + rows[i].Program + '</td>';
                   table += '<td>' + rows[i].NoOfActivity + '</td>';
-                  if(rows[i].ImmediateCA == null){
+                  if(rows[i].ImmediateCA !== rows[i].NoOfActivity){
                     table += '<td> Not Set </td>';
                   } else {
                     table += '<td>' + rows[i].ImmediateCA + '</td>';
                   }
-                  if(rows[i].SustainableCA == null){
+                  if(rows[i].SustainableCA !== rows[i].NoOfActivity){
                     table += '<td> Not Set </td>';
                   } else {
                     table += '<td>' + rows[i].ImmediateCA + '</td>';
@@ -2228,13 +2248,20 @@ app.get("/myctyhome", function (req, res) {
                {
                   progress = '<li id="ctyprogress" class="li complete">';
                }
+
+               count = 0;
+               noAct = rows[i].NoOfActivity;
+
+               if (rows[i].ImmediateCA == rows[i].NoOfActivity && rows[i].SustainableCA == rows[i].NoOfActivity){
+                 count++;
+               }
                 }
 
               
                       console.log('--------------3--------------' + table);
       
                     res.render(path.join(__dirname, '../public', 'myContinuityHome.html'), {
-                      name:name,userid:userid,department:department, i:i, LastUpdated:LastUpdated, table:table, progress:progress
+                      name:name,userid:userid,department:department, i:i, LastUpdated:LastUpdated, table:table, progress:progress, count:count, noAct:noAct
                     });
               }
               else {
@@ -2245,7 +2272,7 @@ app.get("/myctyhome", function (req, res) {
                 console.log('--------------4--------------');
 
                 res.render(path.join(__dirname, '../public', 'myContinuityHome.html'), {
-                  name:name,userid:userid,department:department, i:i, LastUpdated:LastUpdated, table:table, progress:progress
+                  name:name,userid:userid,department:department, i:i, LastUpdated:LastUpdated, table:table, progress:progress, count: count, noAct:noAct
                 });
               }
             }
