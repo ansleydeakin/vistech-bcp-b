@@ -39,7 +39,11 @@
 	if ( $("#sysprogress").hasClass("li complete")) {
 		$("#progress").html("Complete")
 		$("#dotprogress").addClass("dot-complete").removeClass("dot-inprogress")
+		$('#btnSaveCritSys').attr('enabled','enabled');
 	} 
+	else{
+		$('#btnSaveCritSys').attr('disabled','disabled');
+	}
 	
 });</script>
 
@@ -197,7 +201,7 @@
 				<button type="button" onclick="window.location.href='/dashboard'" value="Redirect" class="btn btn-outline-secondary">Cancel</button>
 				</div>
 				<div class="col-6">	
-				<button type="button" onclick="window.location.href='/savecritsys'" value="Redirect"class="btn btn-dark float-right">Save and Continue</button>
+				<button id="btnSaveCritSys" type="button" onclick="window.location.href='/savecritsys'" value="Redirect"class="btn btn-dark float-right">Save and Continue</button>
 				</div>
 			</div>
 		<p class="mt-5 mb-3 text-muted text-center">&copy; Vistech 2019</p>
