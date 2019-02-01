@@ -1468,8 +1468,8 @@ app.get("/system", function (req, res) {
                             unit += '<option value= \"' + result1[0].ClinicalUnit + '\">' + result1[0].ClinicalUnit + '</option>';
                             unit += '</select>';
       
-                            description = '<input type="text" class="form-control" readonly id="description" name="description" value=' + result1[0].Description + '>';
-                            comment = '<input type="text" class="form-control" readonly id="comment" name="comment" value=' + result1[0].Comment + '>';
+                            description = '<input type="text" class="form-control" readonly id="description" name="description" value=' + 'System Description' + '>';
+                            comment = '<input type="text" class="form-control" readonly id="comment" name="comment" value=' + 'Contact-Ansley' + '>';
       
                   }
                   if (result2.length > 0){
@@ -1548,8 +1548,8 @@ app.get("/system", function (req, res) {
                       system += '</select>';
                       program += '</select>';
       
-                      description = '<input type="text" class="form-control" id="description" name="description">';
-                      comment = '<input type="text" class="form-control" id="comment" name="comment">';
+                      description = '<input type="text" class="form-control" readonly id="description" name="description">';
+                      comment = '<input type="text" class="form-control" readonly id="comment" name="comment">';
                   
                       res.render(path.join(__dirname, '../public', 'mySystemHome.html'), {
                           system: system, program:program,unit:unit,description:description,comment:comment, table:table, name:name, userid:userid
@@ -1756,7 +1756,7 @@ app.get("/myimportance", function (req, res) {
   var firstname = req.session.firstname;
   var lastname = req.session.Lastname;
   var department = req.session.department;
-
+  var count = 0;
   var name = firstname + ' ' + lastname;
 
   if (req.session.userid) {
@@ -1770,13 +1770,18 @@ app.get("/myimportance", function (req, res) {
             var LastUpdated = rows[0].LastUpdated;
             console.log(BCPID);
   
-            var importanceQuery = 'SELECT SYSTABLE.MySysID, SYSTABLE.System, SYSTABLE.Program, SYSTABLE.ImportanceRating, count(Activity) AS NoOfActivity FROM' 
-            + '(SELECT MySystems.MySysID, MySystems.System, MySystems.Program, SystemActivities.ImportanceRating, SystemActivities.Activity FROM MySystems'
+            var importanceQuery = 'SELECT SYSTABLE.MySysID, SYSTABLE.System, SYSTABLE.Program, count(Activity) AS NoOfActivity, SYSTABLE.ImportanceRating,'
+            + ' (select count(MySysID) from MySystems where MyBCPID='+BCPID+') as NoOfSystems,'
+            + ' (select count(distinct(SystemActivities.MySYSID)) from SystemActivities'
+            + ' INNER JOIN MySystems ON SystemActivities.MySysID = MySystems.MySysID'
+            + ' WHERE SystemActivities.ImportanceRating is NOT NULL and MySystems.MyBCPID = '+BCPID+') as ImpCount'
+            + ' FROM' 
+            + ' (SELECT MySystems.MySysID, MySystems.System, MySystems.Program, SystemActivities.ImportanceRating, SystemActivities.Activity FROM MySystems'
             + ' INNER JOIN SystemActivities ON MySystems.MySysID = SystemActivities.MySysID'
             + ' WHERE MySystems.UserID=' + userid +' and MySystems.MyBCPID = ' + BCPID + ') AS SYSTABLE'
-            + ' GROUP BY SYSTABLE.MySysID, SYSTABLE.System, SYSTABLE.Program, SYSTABLE.ImportanceRating'
+            + ' GROUP BY SYSTABLE.MySysID, SYSTABLE.System, SYSTABLE.Program'
             
-            console.log(importanceQuery)
+            console.log(importanceQuery);
 
          con.query(importanceQuery, function (err, rows, fields) { 
           if (!err) {
@@ -1787,8 +1792,8 @@ app.get("/myimportance", function (req, res) {
           
               if (rows.length > 0) {
                 for (var i = 0; i < rows.length; i++) {
-                  table += "<tr>";
 
+                  table += "<tr>";
                   table += '<td>' + rows[i].System + '</td>';
                   table += '<td>' + rows[i].Program + '</td>';
                   table += '<td>' + rows[i].NoOfActivity + '</td>';
@@ -1802,21 +1807,22 @@ app.get("/myimportance", function (req, res) {
                   table += '<td><a href=\"' + '/myimportancesys?systemid=' + rows[i].MySysID + '\">Edit</a></td>'
                   table += '</tr>';
 
-                 count = 0;
+                 var noSys = rows[i].NoOfSystems;
 
-                  if (rows[i].ImportanceRating !== null || ""){
-                    count++;
-                  }
-                  
-                  var noAct = rows[i].NoOfActivity;
+                 if (rows[i].ImpCount > 0){
+                    var count = rows[i].ImpCount;
+                 }
+                 else{
+                    var count = 0;
+                 }
 
                 }
-                    
+           
 
                       console.log(table);
       
                     res.render(path.join(__dirname, '../public', 'myImportanceHome.html'), {
-                      name:name,userid:userid,department:department, i:i, LastUpdated:LastUpdated, table:table, progress:progress, count:count,noAct:noAct
+                      name:name,userid:userid,department:department, i:i, LastUpdated:LastUpdated, table:table, progress:progress, count:count,noSys:noSys
                     });
               }
               else {
@@ -1824,10 +1830,12 @@ app.get("/myimportance", function (req, res) {
                 var system = "";
                 var i = 0;
                 var count = 0;
-                var noAct = 0;
+                var noSys = 0;
+                var progress="";
+                var table="";
 
                 res.render(path.join(__dirname, '../public', 'myImportanceHome.html'), {
-                  name:name,userid:userid,department:department, i:i, LastUpdated:LastUpdated, table:table, progress:progress, count:count, noAct:noAct
+                  name:name,userid:userid,department:department, i:i, LastUpdated:LastUpdated, table:table, progress:progress, count:count, noSys:noSys
                 });
               }
             }
@@ -1912,8 +1920,8 @@ app.get("/myimportancesys", function (req, res) {
                   }
                   if (result2.length > 0){
 
-                    console.log('--------- Result 2 Activities')
-                    console.log(result2)
+                    console.log('--------- Result 2 Activities');
+                    console.log(result2);
       
                     for (var i = 0; i < result2.length; i++) {
       
@@ -2187,9 +2195,7 @@ app.get("/myctyhome", function (req, res) {
   var name = firstname + ' ' + lastname
 
   var table = "";
-
-  var noAct = 0;
-
+  
   req.session.activityid = undefined;
   req.session.MyBCPID = undefined;
 
@@ -2206,11 +2212,18 @@ app.get("/myctyhome", function (req, res) {
 
             console.log(BCPID);
   
-            var ContinuityQuery = 'SELECT SYSTABLE.MySysID, SYSTABLE.System, SYSTABLE.Program, count(Activity) AS NoOfActivity, count(ImmediateCA) AS ImmediateCA, count(SustainableCA) AS SustainableCA'
+            var ContinuityQuery = 'SELECT SYSTABLE.MySysID, SYSTABLE.System, SYSTABLE.Program,' 
+            + ' (select count(distinct(SystemActivities.ActID)) from SystemActivities'
+            + ' INNER JOIN MySystems ON SystemActivities.MySysID = MySystems.MySysID'
+            + ' WHERE MySystems.MyBCPID ='+BCPID+') as TotalAct,'
+            + ' count(Activity) AS NoOfActivity, count(ImmediateCA) AS ImmediateCA, count(SustainableCA) AS SustainableCA,'
+            + ' (select count(distinct(SystemActivities.ActID)) from SystemActivities'
+            + ' INNER JOIN MySystems ON SystemActivities.MySysID = MySystems.MySysID'
+            + ' WHERE SystemActivities.ImmediateCA is NOT NULL and SystemActivities.SustainableCA is NOT NULL and MySystems.MyBCPID = '+BCPID+') as CompletedAct'
             + ' FROM (SELECT MySystems.MySysID, MySystems.System, MySystems.Program, SystemActivities.Activity, SystemActivities.ImmediateCA, SystemActivities.SustainableCA FROM MySystems'
             + ' INNER JOIN SystemActivities ON MySystems.MySysID = SystemActivities.MySysID'
             + ' WHERE MySystems.UserID=' + userid +' and MySystems.MyBCPID = ' + BCPID + ') AS SYSTABLE'
-            + ' GROUP BY SYSTABLE.MySysID, SYSTABLE.System, SYSTABLE.Program'
+            + ' GROUP BY SYSTABLE.MySysID'
             
             console.log('--------------1--------------' + ContinuityQuery)
 
@@ -2249,35 +2262,47 @@ app.get("/myctyhome", function (req, res) {
                   progress = '<li id="ctyprogress" class="li complete">';
                }
 
-               count = 0;
-               noAct = rows[i].NoOfActivity;
+               
+               noSys = rows[i].NoOfSystems;
 
-               if (rows[i].ImmediateCA == rows[i].NoOfActivity && rows[i].SustainableCA == rows[i].NoOfActivity){
-                 count++;
+               if (rows[i].TotalAct > 0){
+                var count = rows[i].CompletedAct;
+                var TotalAct = rows[i].TotalAct;
                }
+               else{
+                 var count = 0;
+                 var TotalAct = 0;
+               }
+
+               
                 }
+
+             
 
               
                       console.log('--------------3--------------' + table);
       
                     res.render(path.join(__dirname, '../public', 'myContinuityHome.html'), {
-                      name:name,userid:userid,department:department, i:i, LastUpdated:LastUpdated, table:table, progress:progress, count:count, noAct:noAct
+                      name:name,userid:userid,department:department, i:i, LastUpdated:LastUpdated, table:table, progress:progress, count:count, TotalAct:TotalAct
                     });
               }
               else {
               //Fail
                 var system = "";
                 var i = 0;
-                
+                var TotalAct = 0;
+                var count = i;
+
                 console.log('--------------4--------------');
 
                 res.render(path.join(__dirname, '../public', 'myContinuityHome.html'), {
-                  name:name,userid:userid,department:department, i:i, LastUpdated:LastUpdated, table:table, progress:progress, count: count, noAct:noAct
+                  name:name,userid:userid,department:department, i:i, LastUpdated:LastUpdated, table:table, progress:progress, count: count, TotalAct:TotalAct
                 });
               }
             }
             else {
               //ERROR
+              console.log(rows);
               console.log('--------------5--------------');
 
                 res.render(path.join(__dirname, '../public', 'login.html'));
@@ -2613,6 +2638,8 @@ app.get("/editcty", function (req, res) {
                         console.log("----------3----------");
                               
                       }   
+                      req.session.systemid = systemid;
+
                         res.render(path.join(__dirname, '../public', 'myContinuityActivity.html'),{name:name,userid:userid,department:department,
                           activity:activity,impact:impact,mtpd:mtpd});	  
                         console.log("----------4----------");
@@ -2654,7 +2681,8 @@ app.post("/savectyact", function (req, res) {
                   function (err, rows, fields) {
                       if (!err) {
                         req.session.activityid = undefined;
-                        res.redirect("/myctyhome");
+
+                        res.redirect("/addctyactions?systemid="+SYSID);
                       }
                       else {
                         req.session.activityid = undefined;
