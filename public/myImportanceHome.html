@@ -37,9 +37,14 @@
 	<script>
 		$( document ).ready(function() {
 			if ( $("#impprogress").hasClass("li complete")) {
-				$("#progress").html("Complete")
-				$("#dotprogress").addClass("dot-complete").removeClass("dot-inprogress")
+				$("#progress").html("Complete");
+				$("#cardprogress").addClass("card-complete").removeClass("card-inprogress");
+				$("#dotprogress").addClass("dot-complete").removeClass("dot-inprogress");
+				$('#btnSaveImportance').attr('enabled','enabled');
 			} 
+			else{
+				$('#btnSaveImportance').attr('disabled','disabled');
+			}
 		});
 		</script>
 
@@ -136,12 +141,12 @@
 	</div>
 	<div class="container-fluid">		 
  	  <div class="row m-2">
-		<div class="card col card-inprogress">	
+		<div id="cardprogress" class="card col card-inprogress">	
 			<div class="d-flex">			  
 			  <h5 class="mr-auto card-title m-2 pt-2">Importance Ratings Set: <%= count %> of <%= noSys %></h3>
 			  <div class="d-flex align-items-end flex-column">
 				  <div class="p-3">
-					  <span class="card-text p-1">In progress</span>
+					  <span id="progress" class="card-text p-1">In progress</span>
 					  <span id="dotprogress" class="dot-inprogress"></span>
 				  </div>				  
 				  <h6 class="card-subtitle mt-auto p-3">Updated: <%= LastUpdated %></h6>			    			  
@@ -187,7 +192,7 @@
 			<button type="button" onclick="window.location.href='/dashboard'" value="Redirect" class="btn btn-outline-secondary">Cancel</button>
 		  </div>
 		  <div class="col-6">	
-			<button type="button" onclick="window.location.href='/saveimportance'" value="Redirect" class="btn btn-dark float-right">Save and Continue</button>
+			<button type="button" id="btnSaveImportance" onclick="window.location.href='/saveimportance'" value="Redirect" class="btn btn-dark float-right">Save and Continue</button>
 		  </div>
 		</div>
 	<p class="mt-5 mb-3 text-muted text-center">&copy; Vistech 2019</p>

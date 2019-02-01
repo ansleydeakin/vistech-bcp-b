@@ -37,9 +37,14 @@
 	<script>
 	$( document ).ready(function() {
 		if ( $("#ctyprogress").hasClass("li complete")) {
-			$("#progress").html("Complete")
-			$("#dotprogress").addClass("dot-complete").removeClass("dot-inprogress")
-		} 
+			$("#progress").html("Complete");
+			$("#dotprogress").addClass("dot-complete").removeClass("dot-inprogress");
+			$("#cardprogress").addClass("card-complete").removeClass("card-inprogress");
+			$('#btnSaveCty').attr('enabled','enabled');
+			} 
+			else{
+			$('#btnSaveCty').attr('disabled','disabled');
+			}
 	});
 	</script>
 	
@@ -137,7 +142,7 @@
 	</div>
 	<div class="container-fluid">		 
  	  <div class="row m-2">
-		<div class="card col card-inprogress">	
+		<div id="cardprogress" class="card col card-inprogress">	
 			<div class="d-flex">			  
 			  <h5 class="mr-auto card-title m-2 pt-2">Continuity Actions Set: <%= count %> of <%= TotalAct %></h3>
 			  <div class="d-flex align-items-end flex-column">
@@ -188,7 +193,7 @@
 			<button type="button" onclick="window.location.href='/dashboard'" value="Redirect" class="btn btn-outline-secondary">Cancel</button>
 		  </div>
 		  <div class="col-6">	
-			<button type="button" onclick="window.location.href='/savecty'" value="Redirect" class="btn btn-dark float-right">Save and Continue</button>
+			<button type="button" id="btnSaveCty" onclick="window.location.href='/savecty'" value="Redirect" class="btn btn-dark float-right">Save and Continue</button>
 		  </div>
 		</div>
 	<p class="mt-5 mb-3 text-muted text-center">&copy; Vistech 2019</p>

@@ -175,7 +175,7 @@
 			  <label for="rating-mins">How critical is the activity if the system is disrupted between 1 to 60 Minutes? *</label>
 			  <div class="row ml-5 mt-3">		  
 				<div class="rangeMin">
-				  <input name = "importancerating" id="importancerating" type="range" min="1" max="5" steps="1" value="1">
+				  <input name = "importancerating" id="importancerating" type="range" min="1" max="5" steps="1" value="1" required>
 				</div>
 				<ul class="rangeMin-labels">
 				  <li>Negligible</li>
@@ -190,7 +190,7 @@
 			  <label for="ratingHrs">How critical is the activity if the system is disrupted between 1 to 24 Hours? *</label>
 			  <div class="row ml-5 mt-3">		  
     		    <div class="rangeHrs">
-				  <input id="ratingHrs" name="ratingHrs" type="range" min="1" max="5" steps="1" value="1">
+				  <input id="ratingHrs" name="ratingHrs" type="range" min="1" max="5" steps="1" value="1" required>
 				</div>
 				<ul class="rangeHrs-labels">
 				  <li>Negligible</li>
@@ -205,7 +205,7 @@
 			  <label for="ratingDay">How critical is the activity if the system is disrupted between 1 to 7 Days? *</label>
 			  <div class="row ml-5 mt-3">		  
 				<div class="rangeDay">
-				  <input id="ratingDay" name="ratingDay" type="range" min="1" max="5" steps="1" value="1">
+				  <input id="ratingDay" name="ratingDay" type="range" min="1" max="5" steps="1" value="1" required>
 				</div>
 				<ul class="rangeDay-labels">
 				  <li>Negligible</li>
@@ -220,7 +220,7 @@
 			  <label for="ratingWek">How critical is the activity if the system is disrupted between 1+ Weeks? *</label>
 			  <div class="row ml-5 mt-3">		  
 				<div class="rangeWek">
-				  <input id="ratingWek" name="ratingWek" type="range" min="1" max="5" steps="1" value="1">
+				  <input id="ratingWek" name="ratingWek" type="range" min="1" max="5" steps="1" value="1" required>
 				</div>
 				<ul class="rangeWek-labels">
 				  <li>Negligible</li>
@@ -234,8 +234,7 @@
 		  <div class="form-group mt-3">
 			  <label for="mtpd"><h6>Maximum Tolerable Data Loss (MTPD) *</h6></label>
 			  <select class="form-control" id="mtpd" name = "mtpd" required>
-				<option hidden >Make a selection</option>
-				<option value = 'Nil'>Nil</option>
+				<option value = 'Nil' selected>Nil</option>
 				<option value = '2Hr'>2 Hr</option>
 				<option value = '4Hr'>4 Hr</option>
 				<option value = '8Hr'>8 Hr</option>
@@ -249,8 +248,7 @@
 		  <div class="form-group">
 			  <label for="mtdl"><h6>Maximum Tolerable Period of Disruption (MTDL) *</h6></label>
 			  <select class="form-control" id="mtdl" name = "mtdl" required>
-				<option hidden >Make a selection</option>
-				<option value = 'Nil'>Nil</option>
+				<option value = 'Nil' selected>Nil</option>
 				<option value = '2Hr'>2 Hr</option>
 				<option value = '4Hr'>4 Hr</option>
 				<option value = '8Hr'>8 Hr</option>
